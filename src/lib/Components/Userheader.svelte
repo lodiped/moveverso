@@ -1,6 +1,7 @@
 <script>
 	import { titles } from '$lib/state.svelte';
 	let { user } = $props();
+	let conquistas = $state(false);
 </script>
 
 <div class="flex flex-col items-center justify-center gap-5">
@@ -44,5 +45,29 @@
 				style={`width: ${user.total / 75}%;`}
 			></div>
 		</div>
+		<button
+			onclick={() => {
+				conquistas = !conquistas;
+			}}
+			class="bg-primary/30 drop-shadow-accent/70 rounded-lg p-2 drop-shadow-[0_0_15px]"
+			>Conquistas <span class="opacity-30">{user.conquistas.length}</span>
+			<span class="opacity-50 {conquistas ? 'rotate-180' : ''}">v</span></button
+		>
+		{#if conquistas}
+			{#if user.conquistas.length > 0}
+				<div class="flex items-center justify-center gap-5">
+					{#each user.conquistas as conquista}
+						<div class="inline-block w-full text-center">
+							<p
+								title={conquista.title}
+								class="drop-shadow-accent/70 cursor-default text-4xl drop-shadow-[0_0_15px] hover:scale-105"
+							>
+								{conquista.img}
+							</p>
+						</div>
+					{/each}
+				</div>
+			{/if}
+		{/if}
 	</div>
 </div>

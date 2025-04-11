@@ -23,8 +23,14 @@
 						>
 						<button
 							onclick={() => {
-								user.log.splice(i, 1);
-								remove(log.points);
+								if (log.type === 'pontos') {
+									user.log.splice(i, 1);
+									remove(log.points);
+								}
+								if (log.type === 'conquista') {
+									user.log.splice(i, 1);
+									user.conquistas.splice(i, 1);
+								}
 							}}
 							class="hidden cursor-pointer rounded bg-red-500 p-1 px-3 text-white group-hover:flex"
 							>X</button

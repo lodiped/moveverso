@@ -1,5 +1,11 @@
 export type Log = {
-	date: Date;
+	date: string;
 	text: string;
 	points: number;
+	type: string;
+};
+
+export type Conquista = {
+	title: string;
+	img: string;
 };

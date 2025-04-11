@@ -97,36 +97,60 @@
 		class="cursor-pointer hover:font-bold hover:opacity-50"
 		>Prejuízo financeiro por erro <span class="text-red-600">-1</span></button
 	>
-	<div>Conquistas: <span class={conquistas ? 'rotate-180' : ''}>v</span></div>
+	<div>Conquistas:</div>
 	<button
 		onclick={() =>
-			addConquista(0, { date: date(), text: conquistas[0].title, points: 0, type: 'conquista' })}
-		>Conquista 1</button
+			addConquista(0, {
+				date: date(),
+				text: 'Conquista: ' + conquistas[0].title,
+				points: 0,
+				type: 'conquista'
+			})}>Conquista 1</button
 	>
 	<button
 		onclick={() =>
-			addConquista(1, { date: date(), text: conquistas[1].title, points: 0, type: 'conquista' })}
-		>Conquista 2</button
+			addConquista(1, {
+				date: date(),
+				text: 'Conquista: ' + conquistas[1].title,
+				points: 0,
+				type: 'conquista'
+			})}>Conquista 2</button
 	>
 	<button
 		onclick={() =>
-			addConquista(2, { date: date(), text: conquistas[2].title, points: 0, type: 'conquista' })}
-		>Conquista 3</button
+			addConquista(2, {
+				date: date(),
+				text: 'Conquista: ' + conquistas[2].title,
+				points: 0,
+				type: 'conquista'
+			})}>Conquista 3</button
 	>
 	<button
 		onclick={() =>
-			addConquista(3, { date: date(), text: conquistas[3].title, points: 0, type: 'conquista' })}
-		>Conquista 4</button
+			addConquista(3, {
+				date: date(),
+				text: 'Conquista: ' + conquistas[3].title,
+				points: 0,
+				type: 'conquista'
+			})}>Conquista 4</button
 	>
 	<button
 		onclick={() =>
-			addConquista(4, { date: date(), text: conquistas[4].title, points: 0, type: 'conquista' })}
-		>Conquista 5</button
+			addConquista(4, {
+				date: date(),
+				text: 'Conquista: ' + conquistas[4].title,
+				points: 0,
+				type: 'conquista'
+			})}>Conquista 5</button
 	>
 	<button
 		onclick={() =>
-			addConquista(5, { date: date(), text: conquistas[5].title, points: 0, type: 'conquista' })}
-		>Conquista 6</button
+			addConquista(5, {
+				date: date(),
+				text: 'Conquista: ' + conquistas[5].title,
+				points: 0,
+				type: 'conquista'
+			})}>Conquista 6</button
 	>
 	<button onclick={() => resetAll()} class="cursor-pointer hover:font-bold hover:opacity-50"
 		>RESET</button

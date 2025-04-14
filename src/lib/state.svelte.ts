@@ -2,6 +2,8 @@ import type { Log, Conquista } from '$lib/types.svelte';
 
 export let user = $state({
 	name: 'Fulano Silva',
+	email: 'fulano@email.com',
+	ingress: '05/05/23',
 	nivel: 0,
 	fase: 0,
 	total: 0,

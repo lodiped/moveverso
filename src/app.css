@@ -11,6 +11,7 @@
 	--color-bg: #13120d;
 	--color-text: #edece5;
 	--font-magic: 'Alegreya', serif;
+	--breakpoint-ultra: 121rem;
 }
 
 @font-face {

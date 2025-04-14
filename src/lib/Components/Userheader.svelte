@@ -2,25 +2,38 @@
 	import { titles } from '$lib/state.svelte';
 	let { user } = $props();
 	let conquistas = $state(false);
+	let imgsrc = $derived(`/assets/${user.fase + 1}${user.nivel + 1}.png`);
+	let imgtest = $state(`/assets/10B.png`);
 </script>
 
-<div class="flex flex-col items-center justify-center gap-5">
-	<div class="bg-secondary flex h-20 w-20 items-center justify-center rounded-3xl text-white">
-		foto
+<div class="flex items-center justify-center gap-5">
+	<div class="flex w-1/3 items-center justify-center">
+		<img src={imgsrc} alt="" class="rounded-3xl" />
 	</div>
-	<div class="flex flex-col items-center justify-center gap-2">
-		<h2>{user.name}</h2>
-		<div class="flex flex-col items-center justify-center">
-			<p>
-				Fase {user.fase + 1}:
-			</p>
-			<p class="font-magic text-4xl font-bold">{titles.fase[user.fase].title}</p>
+	<div class="flex flex-col items-start justify-center gap-4">
+		<div class="flex w-full flex-col items-center">
+			<h2 class="drop-shadow-accent/85 drop-shadow-lg">{user.name}</h2>
+			<div class="flex w-full justify-between text-sm opacity-50">
+				<span>
+					{user.email}
+				</span><span>
+					desde {user.ingress}
+				</span>
+			</div>
 		</div>
-		<div class="flex flex-col items-center justify-center">
-			<p>
-				Nivel {user.nivel + 1}:
+		<div class="flex flex-col items-start justify-center">
+			<p>Fase:</p>
+			<p class="font-magic drop-shadow-accent/50 text-4xl font-bold drop-shadow-lg">
+				<span class="font-[JetBrains_Mono] text-2xl opacity-50">{user.fase + 1}.</span>
+				{titles.fase[user.fase].title}
 			</p>
-			<p class="font-magic text-3xl font-bold">{titles.fase[user.fase].nivel[user.nivel]}</p>
+		</div>
+		<div class="flex flex-col items-start justify-center">
+			<p>Nível:</p>
+			<p class="font-magic drop-shadow-accent/50 text-3xl font-bold drop-shadow-lg">
+				<span class="font-[JetBrains_Mono] text-2xl opacity-50">{user.nivel + 1}.</span>
+				{titles.fase[user.fase].nivel[user.nivel]}
+			</p>
 		</div>
 		<p>Pontos: <span>{user.current}</span></p>
 		<div class="bg-secondary relative h-5 w-full rounded-md">
@@ -28,15 +41,15 @@
 				class="bg-accent absolute top-0 left-0 h-full w-full rounded-md content-['']"
 				style={`width: ${user.current / 15}%;`}
 			></div>
-			<div class="bg-bg absolute top-0 left-[9%] h-full w-1"></div>
-			<div class="bg-bg absolute top-0 left-[19%] h-full w-1"></div>
-			<div class="bg-bg absolute top-0 left-[29%] h-full w-1"></div>
-			<div class="bg-bg absolute top-0 left-[39%] h-full w-1"></div>
-			<div class="bg-bg absolute top-0 left-[49%] h-full w-1"></div>
-			<div class="bg-bg absolute top-0 left-[59%] h-full w-1"></div>
-			<div class="bg-bg absolute top-0 left-[69%] h-full w-1"></div>
-			<div class="bg-bg absolute top-0 left-[79%] h-full w-1"></div>
-			<div class="bg-bg absolute top-0 left-[89%] h-full w-1"></div>
+			<div class="bg-bg absolute top-0 left-[9.5%] h-full w-0.5"></div>
+			<div class="bg-bg absolute top-0 left-[19.5%] h-full w-0.5"></div>
+			<div class="bg-bg absolute top-0 left-[29.5%] h-full w-0.5"></div>
+			<div class="bg-bg absolute top-0 left-[39.5%] h-full w-0.5"></div>
+			<div class="bg-bg absolute top-0 left-[49.5%] h-full w-0.5"></div>
+			<div class="bg-bg absolute top-0 left-[59.5%] h-full w-0.5"></div>
+			<div class="bg-bg absolute top-0 left-[69.5%] h-full w-0.5"></div>
+			<div class="bg-bg absolute top-0 left-[79.5%] h-full w-0.5"></div>
+			<div class="bg-bg absolute top-0 left-[89.5%] h-full w-0.5"></div>
 		</div>
 		<p>Progresso Total: <span>{user.total}</span></p>
 		<div class="bg-secondary relative h-5 w-full rounded-md">

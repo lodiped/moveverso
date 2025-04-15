@@ -13,12 +13,12 @@ export let user = $state({
 });
 
 export let conquistas = $state([
-	{ title: '3 Meses com 100% das tarefas no prazo', img: '🛡️' },
-	{ title: '3 Meses com planilhas de atividades preenchidas', img: '⏱️' },
-	{ title: '1 ano de Move Negócios', img: '💎' },
-	{ title: '10 elogios recebidos', img: '✨' },
-	{ title: 'Maior pontuação do Mês', img: '🚀' },
-	{ title: 'Maior pontuação do Ano', img: '🌟' }
+	{ title: 'Escudo', desc: '3 Meses com 100% das tarefas no prazo', img: '🛡️' },
+	{ title: 'Relógio', desc: '3 Meses com planilhas de atividades preenchidas', img: '⏱️' },
+	{ title: 'Algum Nome', desc: '1 ano de Move Negócios', img: '💎' },
+	{ title: 'Selo Especial', desc: '10 elogios recebidos', img: '✨' },
+	{ title: 'Decolagem', desc: 'Maior pontuação do Mês', img: '🚀' },
+	{ title: 'Em Órbita', desc: 'Maior pontuação do Ano', img: '🌟' }
 ]);
 
 export let titles: any = $state({
@@ -116,13 +116,23 @@ export function calc() {
 
 export function nivelCalc() {
 	user.nivel = Math.floor(user.current / 150);
+	if (user.nivel > 9) {
+		user.nivel = 9;
+	}
 	return user.nivel;
 }
 export function faseCalc() {
 	user.fase = Math.floor(user.total / 1500);
+	if (user.fase > 4) {
+		user.fase = 4;
+	}
 	return user.fase;
 }
 export function add(n: number, log: Log) {
+	if (n <= 0 && user.total <= 0) {
+		n = 0;
+		log.points = 0;
+	}
 	user.total += n;
 	if (user.total < 0) {
 		user.total = 0;

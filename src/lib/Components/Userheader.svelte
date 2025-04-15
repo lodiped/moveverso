@@ -1,22 +1,19 @@
 <script>
 	import { titles } from '$lib/state.svelte';
 	let { user } = $props();
-	let conquistas = $state(false);
 	let imgsrc = $derived(`/assets/${user.fase + 1}${user.nivel + 1}.png`);
 	let imgtest = $state(`/assets/10B.png`);
 </script>
 
-<div class="flex items-center justify-center gap-5">
-	<div class="flex w-1/3 items-center justify-center">
+<div class="flex items-center justify-center gap-2">
+	<div class="flex w-1/2 items-center justify-center">
 		<img src={imgsrc} alt="" class="rounded-3xl" />
 	</div>
-	<div class="flex flex-col items-start justify-center gap-4">
+	<div class="flex w-1/2 flex-col items-start justify-center gap-4">
 		<div class="flex w-full flex-col items-center">
 			<h2 class="drop-shadow-accent/85 drop-shadow-lg">{user.name}</h2>
-			<div class="flex w-full justify-between text-sm opacity-50">
+			<div class="flex w-full justify-center text-sm opacity-50">
 				<span>
-					{user.email}
-				</span><span>
 					desde {user.ingress}
 				</span>
 			</div>
@@ -58,29 +55,22 @@
 				style={`width: ${user.total / 75}%;`}
 			></div>
 		</div>
-		<button
-			onclick={() => {
-				conquistas = !conquistas;
-			}}
-			class="bg-primary/30 drop-shadow-accent/70 rounded-lg p-2 drop-shadow-[0_0_15px]"
-			>Conquistas <span class="opacity-30">{user.conquistas.length}</span>
-			<span class="opacity-50 {conquistas ? 'rotate-180' : ''}">v</span></button
-		>
-		{#if conquistas}
-			{#if user.conquistas.length > 0}
-				<div class="flex items-center justify-center gap-5">
-					{#each user.conquistas as conquista}
-						<div class="inline-block w-full text-center">
-							<p
-								title={conquista.title}
-								class="drop-shadow-accent/70 cursor-default text-4xl drop-shadow-[0_0_15px] hover:scale-105"
-							>
-								{conquista.img}
-							</p>
-						</div>
-					{/each}
-				</div>
-			{/if}
+		<div class=" drop-shadow-accent/70 p-2 drop-shadow-[0_0_15px]">
+			Conquistas <span class="opacity-30">{user.conquistas.length}</span>
+		</div>
+		{#if user.conquistas.length > 0}
+			<div class="flex items-center justify-center gap-5">
+				{#each user.conquistas as conquista}
+					<div class="inline-block w-full text-center">
+						<p
+							title={conquista.desc}
+							class="drop-shadow-accent/70 cursor-default text-4xl drop-shadow-[0_0_15px] hover:scale-105"
+						>
+							{conquista.img}
+						</p>
+					</div>
+				{/each}
+			</div>
 		{/if}
 	</div>
 </div>

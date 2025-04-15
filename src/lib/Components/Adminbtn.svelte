@@ -23,26 +23,30 @@
 						type: 'pontos'
 					})}
 				class="cursor-pointer hover:font-bold hover:opacity-50"
-				>100% das tarefas concluídas <span class="text-green-600">+100</span></button
 			>
+				100% das tarefas concluídas <span class="text-green-600">+100</span>
+			</button>
 			<button
 				onclick={() =>
 					add(70, { date: date(), text: '90% das tarefas concluídas', points: 70, type: 'pontos' })}
 				class="cursor-pointer hover:font-bold hover:opacity-50"
-				>90% das tarefas concluídas <span class="text-green-600">+70</span></button
 			>
+				90% das tarefas concluídas <span class="text-green-600">+70</span>
+			</button>
 			<button
 				onclick={() =>
 					add(50, { date: date(), text: '80% das tarefas concluídas', points: 50, type: 'pontos' })}
 				class="cursor-pointer hover:font-bold hover:opacity-50"
-				>80% das tarefas concluídas <span class="text-green-600">+50</span></button
 			>
+				80% das tarefas concluídas <span class="text-green-600">+50</span>
+			</button>
 			<button
 				onclick={() =>
 					add(30, { date: date(), text: '70% das tarefas concluídas', points: 30, type: 'pontos' })}
 				class="cursor-pointer hover:font-bold hover:opacity-50"
-				>70% das tarefas concluídas <span class="text-green-600">+30</span></button
 			>
+				70% das tarefas concluídas <span class="text-green-600">+30</span>
+			</button>
 			<button
 				onclick={() =>
 					add(30, {
@@ -52,20 +56,23 @@
 						type: 'pontos'
 					})}
 				class="cursor-pointer hover:font-bold hover:opacity-50"
-				>Controle de Atividades Atualizado <span class="text-green-600">+30</span></button
 			>
+				Controle de Atividades Atualizado <span class="text-green-600">+30</span>
+			</button>
 			<button
 				onclick={() =>
 					add(10, { date: date(), text: 'Elogio do Cliente', points: 10, type: 'pontos' })}
 				class="cursor-pointer hover:font-bold hover:opacity-50"
-				>Elogio do Cliente <span class="text-green-600">+10</span></button
 			>
+				Elogio do Cliente <span class="text-green-600">+10</span>
+			</button>
 			<button
 				onclick={() =>
 					add(10, { date: date(), text: 'Ideia de Melhoria Aplicada', points: 10, type: 'pontos' })}
 				class="cursor-pointer hover:font-bold hover:opacity-50"
-				>Ideia de Melhoria Aplicada <span class="text-green-600">+10</span></button
 			>
+				Ideia de Melhoria Aplicada <span class="text-green-600">+10</span>
+			</button>
 			<button
 				onclick={() =>
 					add(15, {
@@ -75,14 +82,16 @@
 						type: 'pontos'
 					})}
 				class="cursor-pointer hover:font-bold hover:opacity-50"
-				>Maior número de Ideias no mês <span class="text-green-600">+15</span></button
 			>
+				Maior número de Ideias no mês <span class="text-green-600">+15</span>
+			</button>
 			<button
 				onclick={() =>
 					add(20, { date: date(), text: 'Melhor ideia do Mês', points: 20, type: 'pontos' })}
 				class="cursor-pointer hover:font-bold hover:opacity-50"
-				>Melhor ideia do Mês <span class="text-green-600">+20</span></button
 			>
+				Melhor ideia do Mês <span class="text-green-600">+20</span>
+			</button>
 			<button
 				onclick={() =>
 					add(100, {
@@ -92,31 +101,35 @@
 						type: 'pontos'
 					})}
 				class="cursor-pointer hover:font-bold hover:opacity-50"
-				>Indicação de cliente que fecha contrato <span class="text-green-600">+100</span></button
 			>
+				Indicação de cliente que fecha contrato <span class="text-green-600">+100</span>
+			</button>
 			<button
 				onclick={() =>
 					add(20, { date: date(), text: 'Atualização profissional', points: 20, type: 'pontos' })}
 				class="cursor-pointer hover:font-bold hover:opacity-50"
-				>Atualização profissional <span class="text-green-600">+20</span></button
 			>
+				Atualização profissional <span class="text-green-600">+20</span>
+			</button>
 			<button
 				onclick={() =>
 					add(-10, { date: date(), text: 'Reclamação de cliente', points: -10, type: 'pontos' })}
 				class="cursor-pointer hover:font-bold hover:opacity-50"
-				>Reclamação de cliente <span class="text-red-600">-10</span></button
 			>
+				Reclamação de cliente <span class="text-red-600">-10</span>
+			</button>
 			<button
 				onclick={() =>
 					add(-10, { date: date(), text: 'Erro cometido', points: -10, type: 'pontos' })}
 				class="cursor-pointer hover:font-bold hover:opacity-50"
-				>Erro cometido <span class="text-red-600">-10</span></button
 			>
+				Erro cometido <span class="text-red-600">-10</span>
+			</button>
 			<button
 				onclick={() => (prejuizo = !prejuizo)}
 				class="cursor-pointer hover:font-bold hover:opacity-50"
-				>Prejuízo financeiro por erro <span class="text-red-600">-1/R$10,00</span></button
-			>
+				>Prejuízo financeiro por erro <span class="text-red-600">-1/R$10,00</span>
+			</button>
 		</div>
 	</div>
 	<div class="flex w-full flex-col">
@@ -130,8 +143,10 @@
 						text: 'Conquista: ' + conquistas[0].title,
 						points: 0,
 						type: 'conquista'
-					})}>{conquistas[0].title}</button
+					})}
 			>
+				{conquistas[0].title}
+			</button>
 			<button
 				onclick={() =>
 					addConquista(1, {
@@ -139,8 +154,10 @@
 						text: 'Conquista: ' + conquistas[1].title,
 						points: 0,
 						type: 'conquista'
-					})}>{conquistas[1].title}</button
+					})}
 			>
+				{conquistas[1].title}
+			</button>
 			<button
 				onclick={() =>
 					addConquista(2, {
@@ -148,8 +165,10 @@
 						text: 'Conquista: ' + conquistas[2].title,
 						points: 0,
 						type: 'conquista'
-					})}>{conquistas[2].title}</button
+					})}
 			>
+				{conquistas[2].title}
+			</button>
 			<button
 				onclick={() =>
 					addConquista(3, {
@@ -157,8 +176,10 @@
 						text: 'Conquista: ' + conquistas[3].title,
 						points: 0,
 						type: 'conquista'
-					})}>{conquistas[3].title}</button
+					})}
 			>
+				{conquistas[3].title}
+			</button>
 			<button
 				onclick={() =>
 					addConquista(4, {
@@ -166,8 +187,10 @@
 						text: 'Conquista: ' + conquistas[4].title,
 						points: 0,
 						type: 'conquista'
-					})}>{conquistas[4].title}</button
+					})}
 			>
+				{conquistas[4].title}
+			</button>
 			<button
 				onclick={() =>
 					addConquista(5, {
@@ -175,8 +198,10 @@
 						text: 'Conquista: ' + conquistas[5].title,
 						points: 0,
 						type: 'conquista'
-					})}>{conquistas[5].title}</button
+					})}
 			>
+				{conquistas[5].title}
+			</button>
 		</div>
 	</div>
 </div>

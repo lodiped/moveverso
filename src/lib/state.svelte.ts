@@ -12,6 +12,130 @@ export let user = $state({
 	conquistas: [] as Conquista[]
 });
 
+export let users = $state([
+	{
+		name: 'Andreus Siegrist',
+		ingress: '04/04/22',
+		nivel: 0,
+		fase: 0,
+		total: 0,
+		current: 0,
+		log: [] as Log[],
+		conquistas: [] as Conquista[]
+	},
+	{
+		name: 'Larissa Martins',
+		ingress: '11/09/23',
+		nivel: 0,
+		fase: 0,
+		total: 0,
+		current: 0,
+		log: [] as Log[],
+		conquistas: [] as Conquista[]
+	},
+	{
+		name: 'Franciely Oliveira',
+		ingress: '18/11/24',
+		nivel: 0,
+		fase: 0,
+		total: 0,
+		current: 0,
+		log: [] as Log[],
+		conquistas: [] as Conquista[]
+	},
+
+	{
+		name: 'Cristina Meyer',
+		ingress: '02/12/24',
+		nivel: 0,
+		fase: 0,
+		total: 0,
+		current: 0,
+		log: [] as Log[],
+		conquistas: [] as Conquista[]
+	},
+	{
+		name: 'Phelipe Mendes',
+		ingress: '22/04/24',
+		nivel: 0,
+		fase: 0,
+		total: 0,
+		current: 0,
+		log: [] as Log[],
+		conquistas: [] as Conquista[]
+	},
+	{
+		name: 'Rafael Wolski',
+		ingress: '16/01/24',
+		nivel: 0,
+		fase: 0,
+		total: 0,
+		current: 0,
+		log: [] as Log[],
+		conquistas: [] as Conquista[]
+	},
+	{
+		name: 'Roberson Correa',
+		ingress: '24/08/23',
+		nivel: 0,
+		fase: 0,
+		total: 0,
+		current: 0,
+		log: [] as Log[],
+		conquistas: [] as Conquista[]
+	},
+	{
+		name: 'Tamiris Rosa ',
+		ingress: '01/02/21',
+		nivel: 0,
+		fase: 0,
+		total: 0,
+		current: 0,
+		log: [] as Log[],
+		conquistas: [] as Conquista[]
+	},
+	{
+		name: 'Lucas Eyng',
+		ingress: '17/03/25',
+		nivel: 0,
+		fase: 0,
+		total: 0,
+		current: 0,
+		log: [] as Log[],
+		conquistas: [] as Conquista[]
+	},
+	{
+		name: 'Fernanda Frandoloso',
+		ingress: '12/02/25',
+		nivel: 0,
+		fase: 0,
+		total: 0,
+		current: 0,
+		log: [] as Log[],
+		conquistas: [] as Conquista[]
+	},
+	{
+		name: 'Arthur Rezner',
+		ingress: '14/04/25',
+		nivel: 0,
+		fase: 0,
+		total: 0,
+		current: 0,
+		log: [] as Log[],
+		conquistas: [] as Conquista[]
+	},
+	{
+		name: 'Luiz Faquim',
+		ingress: '14/04/25',
+		nivel: 0,
+		fase: 0,
+		total: 0,
+		current: 0,
+		log: [] as Log[],
+		conquistas: [] as Conquista[]
+	}
+]);
+
 export let conquistas = $state([
 	{ title: 'Escudo', desc: '3 Meses com 100% das tarefas no prazo', img: '🛡️' },
 	{ title: 'Relógio', desc: '3 Meses com planilhas de atividades preenchidas', img: '⏱️' },

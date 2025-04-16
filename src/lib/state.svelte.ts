@@ -1,6 +1,6 @@
-import type { Log, Conquista } from '$lib/types.svelte';
+import type { Log, UserConquista, BaseConquista } from '$lib/types.svelte';
 
-export let user = $state({
+/*export let user = $state({
 	name: 'Fulano Silva',
 	email: 'fulano@email.com',
 	ingress: '05/05/23',
@@ -9,11 +9,53 @@ export let user = $state({
 	total: 0,
 	current: 0,
 	log: [] as Log[],
-	conquistas: [] as Conquista[]
+	conquistas: createUserConquistas()
 });
+
+export let baseConquistas = $state<BaseConquista[]>([
+	{
+		title: 'Escudo',
+		desc: '3 Meses com 100% das tarefas no prazo',
+		img: '🛡️'
+	},
+	{
+		title: 'Relógio',
+		desc: '3 Meses com planilhas de atividades preenchidas',
+		img: '⏱️'
+	},
+	{
+		title: 'Algum Nome',
+		desc: '1 ano de Move Negócios',
+		img: '💎'
+	},
+	{
+		title: 'Selo Especial',
+		desc: '10 elogios recebidos',
+		img: '✨'
+	},
+	{
+		title: 'Decolagem',
+		desc: 'Maior pontuação do Mês',
+		img: '🚀'
+	},
+	{
+		title: 'Em Órbita',
+		desc: 'Maior pontuação do Ano',
+		img: '🌟'
+	}
+]);
+
+function createUserConquistas(): UserConquista[] {
+	return baseConquistas.map((conquista) => ({
+		...structuredClone(conquista),
+		number: 0,
+		date: null
+	}));
+}
 
 export let users = $state([
 	{
+		id: 'andreussiegrist',
 		name: 'Andreus Siegrist',
 		ingress: '04/04/22',
 		nivel: 0,
@@ -21,9 +63,10 @@ export let users = $state([
 		total: 0,
 		current: 0,
 		log: [] as Log[],
-		conquistas: [] as Conquista[]
+		conquistas: createUserConquistas()
 	},
 	{
+		id: 'larissamartins',
 		name: 'Larissa Martins',
 		ingress: '11/09/23',
 		nivel: 0,
@@ -31,9 +74,10 @@ export let users = $state([
 		total: 0,
 		current: 0,
 		log: [] as Log[],
-		conquistas: [] as Conquista[]
+		conquistas: createUserConquistas()
 	},
 	{
+		id: 'francielyoliveira',
 		name: 'Franciely Oliveira',
 		ingress: '18/11/24',
 		nivel: 0,
@@ -41,10 +85,10 @@ export let users = $state([
 		total: 0,
 		current: 0,
 		log: [] as Log[],
-		conquistas: [] as Conquista[]
+		conquistas: createUserConquistas()
 	},
-
 	{
+		id: 'cristinameyer',
 		name: 'Cristina Meyer',
 		ingress: '02/12/24',
 		nivel: 0,
@@ -52,9 +96,10 @@ export let users = $state([
 		total: 0,
 		current: 0,
 		log: [] as Log[],
-		conquistas: [] as Conquista[]
+		conquistas: createUserConquistas()
 	},
 	{
+		id: 'phelipemendes',
 		name: 'Phelipe Mendes',
 		ingress: '22/04/24',
 		nivel: 0,
@@ -62,9 +107,10 @@ export let users = $state([
 		total: 0,
 		current: 0,
 		log: [] as Log[],
-		conquistas: [] as Conquista[]
+		conquistas: createUserConquistas()
 	},
 	{
+		id: 'rafaelwolski',
 		name: 'Rafael Wolski',
 		ingress: '16/01/24',
 		nivel: 0,
@@ -72,9 +118,10 @@ export let users = $state([
 		total: 0,
 		current: 0,
 		log: [] as Log[],
-		conquistas: [] as Conquista[]
+		conquistas: createUserConquistas()
 	},
 	{
+		id: 'robersoncorrea',
 		name: 'Roberson Correa',
 		ingress: '24/08/23',
 		nivel: 0,
@@ -82,9 +129,10 @@ export let users = $state([
 		total: 0,
 		current: 0,
 		log: [] as Log[],
-		conquistas: [] as Conquista[]
+		conquistas: createUserConquistas()
 	},
 	{
+		id: 'tamirisrosa',
 		name: 'Tamiris Rosa ',
 		ingress: '01/02/21',
 		nivel: 0,
@@ -92,9 +140,10 @@ export let users = $state([
 		total: 0,
 		current: 0,
 		log: [] as Log[],
-		conquistas: [] as Conquista[]
+		conquistas: createUserConquistas()
 	},
 	{
+		id: 'lucaseyng',
 		name: 'Lucas Eyng',
 		ingress: '17/03/25',
 		nivel: 0,
@@ -102,9 +151,10 @@ export let users = $state([
 		total: 0,
 		current: 0,
 		log: [] as Log[],
-		conquistas: [] as Conquista[]
+		conquistas: createUserConquistas()
 	},
 	{
+		id: 'fernandafrandoloso',
 		name: 'Fernanda Frandoloso',
 		ingress: '12/02/25',
 		nivel: 0,
@@ -112,9 +162,10 @@ export let users = $state([
 		total: 0,
 		current: 0,
 		log: [] as Log[],
-		conquistas: [] as Conquista[]
+		conquistas: createUserConquistas()
 	},
 	{
+		id: 'arthurrezner',
 		name: 'Arthur Rezner',
 		ingress: '14/04/25',
 		nivel: 0,
@@ -122,9 +173,10 @@ export let users = $state([
 		total: 0,
 		current: 0,
 		log: [] as Log[],
-		conquistas: [] as Conquista[]
+		conquistas: createUserConquistas()
 	},
 	{
+		id: 'luizfaquim',
 		name: 'Luiz Faquim',
 		ingress: '14/04/25',
 		nivel: 0,
@@ -132,18 +184,9 @@ export let users = $state([
 		total: 0,
 		current: 0,
 		log: [] as Log[],
-		conquistas: [] as Conquista[]
+		conquistas: createUserConquistas()
 	}
-]);
-
-export let conquistas = $state([
-	{ title: 'Escudo', desc: '3 Meses com 100% das tarefas no prazo', img: '🛡️' },
-	{ title: 'Relógio', desc: '3 Meses com planilhas de atividades preenchidas', img: '⏱️' },
-	{ title: 'Algum Nome', desc: '1 ano de Move Negócios', img: '💎' },
-	{ title: 'Selo Especial', desc: '10 elogios recebidos', img: '✨' },
-	{ title: 'Decolagem', desc: 'Maior pontuação do Mês', img: '🚀' },
-	{ title: 'Em Órbita', desc: 'Maior pontuação do Ano', img: '🌟' }
-]);
+]);*/
 
 export let titles: any = $state({
 	fase: [
@@ -225,7 +268,7 @@ export let titles: any = $state({
 	]
 });
 
-export function resetAll() {
+/*export function resetAll() {
 	user.total = 0;
 	calc();
 	user.log = [];
@@ -268,8 +311,9 @@ export function add(n: number, log: Log) {
 	calc();
 }
 
-export function addConquista(n: number, log: Log) {
+/*export function addConquista(n: number, log: Log) {
 	user.conquistas.push(conquistas[n]);
+
 	user.log.unshift(log);
 }
 
@@ -291,4 +335,4 @@ export function date() {
 		' • ' +
 		date.toLocaleTimeString('pt-BR')
 	);
-}
+}*/

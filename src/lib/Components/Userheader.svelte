@@ -67,6 +67,9 @@
 							class="drop-shadow-accent/70 cursor-default text-4xl drop-shadow-[0_0_15px] hover:scale-105"
 						>
 							{conquista.img}
+							{#if conquista.number > 0}
+								<span>{conquista.number}</span>
+							{/if}
 						</p>
 					</div>
 				{/each}

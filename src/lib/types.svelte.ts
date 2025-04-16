@@ -5,7 +5,13 @@ export type Log = {
 	type: string;
 };
 
-export type Conquista = {
+export type BaseConquista = {
 	title: string;
+	desc: string;
 	img: string;
+};
+
+export type UserConquista = BaseConquista & {
+	number: number;
+	date: string | null;
 };

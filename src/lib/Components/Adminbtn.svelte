@@ -1,5 +1,5 @@
 <script>
-	import { user, conquistas, date, addConquista } from '$lib/state.svelte';
+	import { user, date } from '$lib/state.svelte';
 
 	let { add, resetAll } = $props();
 
@@ -132,7 +132,7 @@
 			</button>
 		</div>
 	</div>
-	<div class="flex w-full flex-col">
+	<!-- <div class="flex w-full flex-col">
 		<div
 			class="*:bg-primary/30 flex flex-col items-center gap-2 *:w-full *:rounded-md *:p-1 *:px-4"
 		>
@@ -203,7 +203,7 @@
 				{conquistas[5].title}
 			</button>
 		</div>
-	</div>
+	</div> -->
 </div>
 
 {#if prejuizo}

@@ -28,7 +28,18 @@
 			loading = true;
 			const snapshot = await get(child(dbRef, '/users'));
 			data = snapshot.exists() ? snapshot.val() : null;
-			console.log(data.larissamartins);
+			console.log('before ', data.larissamartins);
+			const array = data
+				? Object.keys(data).map((key) => ({
+						id: key,
+						...data[key]
+					}))
+				: [];
+
+			console.log('after ', array);
+			array.forEach((user) => {
+				console.log(user.id, user.total, user.name);
+			});
 			loading = false;
 		} catch (error) {
 			console.error(error);

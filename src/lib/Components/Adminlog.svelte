@@ -1,5 +1,5 @@
 <script lang="ts">
-	let { remove, user } = $props();
+	//let { remove, user } = $props();
 </script>
 
 {#if user.log.length > 0}

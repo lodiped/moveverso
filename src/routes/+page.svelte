@@ -2,6 +2,8 @@
 	import { db, get, ref, onValue, getDatabase, child } from '$lib/firebase';
 	import { set } from 'firebase/database';
 	import { onMount } from 'svelte';
+	import { auth } from '$lib/firebase';
+	import { check } from '$lib/state.svelte';
 	let loading = $state(false);
 
 	const dbRef = ref(getDatabase());
@@ -13,6 +15,7 @@
 			console.error('User not found');
 			return;
 		}
+		console.log(JSON.stringify(data, null, 4));
 
 		const newTotal = data.larissamartins.total + 100;
 		loading = true;
@@ -20,33 +23,14 @@
 			.then(() => {
 				check(), (loading = false);
 			})
-			.catch(console.error);
-	}
-
-	async function check() {
-		try {
-			loading = true;
-			const snapshot = await get(child(dbRef, '/users'));
-			data = snapshot.exists() ? snapshot.val() : null;
-			console.log('before ', data.larissamartins);
-			const array = data
-				? Object.keys(data).map((key) => ({
-						id: key,
-						...data[key]
-					}))
-				: [];
-
-			console.log('after ', array);
-			array.forEach((user) => {
-				console.log(user.id, user.total, user.name);
+			.catch(() => {
+				console.error, (loading = false);
 			});
-			loading = false;
-		} catch (error) {
-			console.error(error);
-		}
 	}
 
-	onMount(() => {});
+	onMount(() => {
+		console.log('auth.currentUser', auth.currentUser);
+	});
 </script>
 
 <!-- <div class="flex flex-col items-center justify-center">

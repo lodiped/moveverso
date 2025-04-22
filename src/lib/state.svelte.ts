@@ -1,4 +1,74 @@
 import type { Log, UserConquista, BaseConquista } from '$lib/types.svelte';
+import { db, get, ref, onValue, getDatabase, child } from '$lib/firebase';
+import { set } from 'firebase/database';
+
+export let isAdmin = $state({ value: false });
+
+const dbRef = ref(getDatabase());
+export let loading = $state({ value: false });
+let data: any = $state();
+export let userArray = $state({ value: [] as any[] });
+
+export function addPoints(n: number, uid: string) {
+	if (!data?.[uid]) {
+		console.error('User not found');
+		return;
+	}
+	console.log(JSON.stringify(data, null, 4));
+
+	const newTotal = data?.[uid].total + n;
+	loading.value = true;
+	set(ref(db, `users/${uid}/total`), newTotal)
+		.then(() => {
+			check(), (loading.value = false);
+		})
+		.catch(() => {
+			console.error, (loading.value = false);
+		});
+}
+
+export async function check() {
+	try {
+		loading.value = true;
+		const snapshot = await get(child(dbRef, '/users'));
+		data = snapshot.exists() ? snapshot.val() : null;
+		console.log('before ', data);
+		userArray.value = Object.entries(data).map(([uid, userData]: any) => {
+			const total = userData.total;
+			const fase = faseCalc(total);
+			const current = currentCalc(total, fase);
+			const nivel = nivelCalc(current);
+			const conquistasArray = userData.conquistas
+				? Object.entries(userData.conquistas).map(([conqId, conqData]: any) => ({
+						id: conqId,
+						number: conqData.number,
+						title: baseConquistas[conqId]?.title ?? '--',
+						desc: baseConquistas[conqId]?.desc ?? '--',
+						img: baseConquistas[conqId]?.img ?? '--'
+					}))
+				: [];
+			// TODO iterate through conquistas.number to sum the total amount of conquistas the user has for the front-end
+
+			return {
+				id: uid,
+				...userData,
+				current,
+				fase,
+				nivel,
+				conquistas: conquistasArray
+			};
+		});
+
+		console.log('after ', JSON.stringify(userArray, null, 4));
+
+		userArray.value.forEach((banana) => {
+			console.log(banana.id, banana.total, banana.name);
+		});
+		loading.value = false;
+	} catch (error) {
+		console.error(error);
+	}
+}
 
 /*export let user = $state({
 	name: 'Fulano Silva',
@@ -11,48 +81,41 @@ import type { Log, UserConquista, BaseConquista } from '$lib/types.svelte';
 	log: [] as Log[],
 	conquistas: createUserConquistas()
 });
-
-export let baseConquistas = $state<BaseConquista[]>([
-	{
-		title: 'Escudo',
-		desc: '3 Meses com 100% das tarefas no prazo',
-		img: '🛡️'
-	},
-	{
-		title: 'Relógio',
-		desc: '3 Meses com planilhas de atividades preenchidas',
-		img: '⏱️'
-	},
-	{
-		title: 'Algum Nome',
+*/
+const baseConquistas: any = {
+	ano: {
+		title: 'Um Ano',
 		desc: '1 ano de Move Negócios',
 		img: '💎'
 	},
-	{
+	dezelogios: {
 		title: 'Selo Especial',
 		desc: '10 elogios recebidos',
 		img: '✨'
 	},
-	{
+	maiordoano: {
+		title: 'Em Órbita',
+		desc: 'Maior pontuação do Ano',
+		img: '🌟'
+	},
+	maiordomes: {
 		title: 'Decolagem',
 		desc: 'Maior pontuação do Mês',
 		img: '🚀'
 	},
-	{
-		title: 'Em Órbita',
-		desc: 'Maior pontuação do Ano',
-		img: '🌟'
+	tresmesesplanilha: {
+		title: 'Relógio',
+		desc: '3 Meses com planilhas de atividades preenchidas',
+		img: '⏱️'
+	},
+	tresmesestarefa: {
+		title: 'Escudo',
+		desc: '3 Meses com 100% das tarefas no prazo',
+		img: '🛡️'
 	}
-]);
+};
 
-function createUserConquistas(): UserConquista[] {
-	return baseConquistas.map((conquista) => ({
-		...structuredClone(conquista),
-		number: 0,
-		date: null
-	}));
-}
-
+/*
 export let users = $state([
 	{
 		id: 'andreussiegrist',
@@ -273,28 +336,38 @@ export let titles: any = $state({
 	calc();
 	user.log = [];
 	user.conquistas = [];
-}
+}*/
 
-export function calc() {
-	user.current = Math.abs(1500 * (faseCalc() + 1) - user.total - 1500);
-	nivelCalc();
-	faseCalc();
-}
+let user = $state({
+	current: 0,
+	nivel: 0,
+	fase: 0
+});
+// export function calc(uid: string) {
+// 	user.current = Math.abs(1500 * (faseCalc(uid) + 1) - data?.[uid].total - 1500);
+// 	nivelCalc();
+// 	faseCalc(uid);
+// }
 
-export function nivelCalc() {
-	user.nivel = Math.floor(user.current / 150);
-	if (user.nivel > 9) {
-		user.nivel = 9;
-	}
-	return user.nivel;
+// export function nivelCalc() {
+// 	user.nivel = Math.floor(user.current / 150);
+// 	if (user.nivel > 9) {
+// 		user.nivel = 9;
+// 	}
+// 	return user.nivel;
+// }
+export function faseCalc(total: number) {
+	const f = Math.floor(total / 1500);
+	return f > 4 ? 5 : f + 1;
 }
-export function faseCalc() {
-	user.fase = Math.floor(user.total / 1500);
-	if (user.fase > 4) {
-		user.fase = 4;
-	}
-	return user.fase;
+export function currentCalc(total: number, fase: number): number {
+	return Math.abs(1500 * fase - total - 1500);
 }
+export function nivelCalc(current: number): number {
+	const lvl = Math.floor(current / 150);
+	return lvl > 9 ? 10 : lvl + 1;
+}
+/*
 export function add(n: number, log: Log) {
 	if (n <= 0 && user.total <= 0) {
 		n = 0;

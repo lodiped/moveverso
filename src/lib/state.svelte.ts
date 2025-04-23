@@ -37,13 +37,13 @@ export async function check() {
 		loading.value = true;
 		const snapshot = await get(child(dbRef, '/users'));
 		data = snapshot.exists() ? snapshot.val() : null;
-		console.log('before ', data);
+		console.log('before ', JSON.stringify(data, null, 4));
 		userArray.value = Object.entries(data).map(([uid, userData]: any) => {
 			const total = userData.total;
 			const fase = faseCalc(total);
 			const current = currentCalc(total, fase);
 			const nivel = nivelCalc(current);
-			const conquistasArray = userData.conquistas
+			const conquistas = userData.conquistas
 				? Object.entries(userData.conquistas).map(([conqId, conqData]: any) => ({
 						id: conqId,
 						number: conqData.number,
@@ -60,15 +60,16 @@ export async function check() {
 				current,
 				fase,
 				nivel,
-				conquistas: conquistasArray
+				conquistas
 			};
 		});
 
-		console.log('after ', JSON.stringify(userArray, null, 4));
+		userArray.value = userArray.value.map((user, idx) => ({
+			...user,
+			arrayId: idx
+		}));
 
-		userArray.value.forEach((banana) => {
-			console.log(banana.id, banana.total, banana.name);
-		});
+		console.log('after ', JSON.stringify(userArray, null, 4));
 		loading.value = false;
 	} catch (error) {
 		console.error(error);

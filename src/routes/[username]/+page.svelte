@@ -4,31 +4,20 @@
 	import { runTransaction, get } from 'firebase/database';
 	import { db, ref } from '$lib/firebase';
 	import { userArray, check, sumConquistasCalc, isAdmin } from '$lib/state.svelte';
-	import type { UserConquista } from '$lib/types.svelte';
+	import type { UserConquista, UserType } from '$lib/types.svelte';
 	import Userheader from '$lib/Components/Userheader.svelte';
 	import Leaderboard from '$lib/Components/Leaderboard.svelte';
 
 	let person: any = $state();
 	let userId: number | undefined | null = $state();
 
-	let username = page.params.username;
+	let username = $derived(page.params.username);
 	let message = $state('loading');
 	let loading = $state(false);
 	let userData = $state<{ name: string; total: number } | null>(null);
 	let imgsrc: string = $state('');
 	let u: any = $state();
-	let user = $state(
-		{} as {
-			id: string;
-			ingress: string;
-			name: string;
-			fase: number;
-			nivel: number;
-			total: number;
-			current: number;
-			conquistas: UserConquista[];
-		}
-	);
+	let user = $state({} as UserType);
 
 	async function updateUI() {
 		u = userArray.value[userId!];
@@ -39,6 +28,7 @@
 		user.nivel = u.nivel;
 		user.total = u.total;
 		user.current = u.current;
+		user.gender = u.gender;
 		user.conquistas = u.conquistas;
 		imgsrc = `/assets/${user.fase}${user.nivel}.png`;
 		sumConquistasCalc(userId!);
@@ -48,6 +38,11 @@
 		loading = true;
 		try {
 			await runTransaction(ref(db, `users/${uid}/total`), (total) => {
+				if (total + n < 0) {
+					total = 0;
+					return total;
+				}
+
 				return total + n;
 			});
 			await check();
@@ -59,8 +54,7 @@
 		}
 	}
 
-	onMount(async () => {
-		loading = true;
+	async function load() {
 		try {
 			await check();
 
@@ -82,6 +76,19 @@
 		} finally {
 			loading = false;
 		}
+	}
+
+	onMount(async () => {
+		loading = true;
+		await load();
+	});
+
+	$effect(() => {
+		if (!username) return;
+
+		(async () => {
+			await load();
+		})();
 	});
 </script>
 
@@ -90,15 +97,30 @@
 		<Userheader {user} {imgsrc} />
 		{#if isAdmin.value}
 			<div>
-				<h2>Admin stuff</h2>
+				<h2>administração</h2>
 				<div
 					class="*:bg-primary/30 {loading
 						? 'pointer-events-none cursor-default opacity-50'
-						: ''} flex flex-col gap-3 *:w-fit *:cursor-pointer *:rounded-lg *:p-2"
+						: ''} flex flex-col gap-3 *:w-1/2 *:cursor-pointer *:rounded-lg *:p-2"
 				>
-					<button onclick={() => addSomething(100, user.id)}>Add 100</button>
-					<button onclick={() => addSomething(50, user.id)}>Add 50</button>
-					<button onclick={() => addSomething(-25, user.id)}>Subtract 25</button>
+					<button onclick={() => addSomething(100, user.id)}> 100% das tarefas concluídas </button>
+					<button onclick={() => addSomething(70, user.id)}> 90% das tarefas concluídas </button>
+					<button onclick={() => addSomething(50, user.id)}> 80% das tarefas concluídas </button>
+					<button onclick={() => addSomething(30, user.id)}> 70% das tarefas concluídas </button>
+					<button onclick={() => addSomething(30, user.id)}>
+						Controle de Atividades atualizado
+					</button>
+					<button onclick={() => addSomething(10, user.id)}> Elogio do cliente </button>
+					<button onclick={() => addSomething(10, user.id)}> Ideia de melhoria aplicada </button>
+					<button onclick={() => addSomething(15, user.id)}> Maior número de ideias no mês </button>
+					<button onclick={() => addSomething(20, user.id)}> Melhor ideia do mês </button>
+					<button onclick={() => addSomething(100, user.id)}>
+						Indicação de cliente que fecha contrato
+					</button>
+					<button onclick={() => addSomething(20, user.id)}> Atualização profissional </button>
+					<button onclick={() => addSomething(-10, user.id)}> Reclamação de cliente </button>
+					<button onclick={() => addSomething(-10, user.id)}> Erro cometido </button>
+					<button onclick={() => addSomething(-1000, user.id)}> Prejuízo financeiro TO DO </button>
 				</div>
 			</div>
 		{/if}

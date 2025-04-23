@@ -13,5 +13,17 @@ export type BaseConquista = {
 
 export type UserConquista = BaseConquista & {
 	number: number;
-	date: string | null;
+	id: string;
+};
+
+export type UserType = {
+	id: string;
+	ingress: string;
+	name: string;
+	fase: number;
+	nivel: number;
+	total: number;
+	current: number;
+	gender: string;
+	conquistas: UserConquista[];
 };

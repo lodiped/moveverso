@@ -257,6 +257,85 @@ export let users = $state([
 	}
 ]);*/
 
+export let titlesfem: any = $state({
+	fase: [
+		{
+			title: 'Origem dos Poderes',
+			nivel: [
+				'Recruta',
+				'Estudante',
+				'Visionária Iniciante',
+				'Treinando as Habilidades',
+				'Exploradora de Dados',
+				'Cidadã Vigilante',
+				'Portadora de Propósito',
+				'Aprendiz de Herói',
+				'Heroína em Formação',
+				'Estagiária de Superpoderes'
+			]
+		},
+		{
+			title: 'Superação',
+			nivel: [
+				'Defensora de Prazos',
+				'Veloz das Tarefas',
+				'Comunicadora Ágil',
+				'Sentinela de Rotina',
+				'Domadora de Demandas',
+				'Guardiã do Cliente',
+				'Organizadora Notável',
+				'Corajosa das Planilhas',
+				'Escudo contra Erros',
+				'Protetora da Ordem'
+			]
+		},
+		{
+			title: 'Ascensão',
+			nivel: [
+				'Heroína Operacional',
+				'Executora Incansável',
+				'Controladora do Caos',
+				'Mestre de Sistemas',
+				'Construtora de Processos',
+				'Inspiradora da Equipe',
+				'Protetora da Qualidade',
+				'Rastreadora de Soluções',
+				'Inteligente Tático',
+				'Comandante de Resultados'
+			]
+		},
+		{
+			title: 'Elite Heroica',
+			nivel: [
+				'General de Perfomance',
+				'Mente Estratégica',
+				'Líder de Missão',
+				'Caçadora de Melhorias',
+				'Guardiã Supremo da Rotina',
+				'Capitã da Eficiência',
+				'Arquiteta da Cultura',
+				'Comandante de Processos',
+				'Embaixadora da Excelência',
+				'Guerreira da Alta Perfomance'
+			]
+		},
+		{
+			title: 'Lendas Imortais',
+			nivel: [
+				'Mestre Supremo',
+				'Mentora de Novas Gerações',
+				'Campeã de Valores',
+				'Guardiã Universal',
+				'Mito da Rotina',
+				'Heroína dos Heróis',
+				'Consciência Operacional',
+				'Ícone do Time',
+				'Espirito da Excelência',
+				'Lenda Imortal'
+			]
+		}
+	]
+});
 export let titles: any = $state({
 	fase: [
 		{

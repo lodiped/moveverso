@@ -1,5 +1,12 @@
 <script lang="ts">
-	import { titles, userArray, check, sumConquistasCalc, totalConquistas } from '$lib/state.svelte';
+	import {
+		titlesfem,
+		titles,
+		userArray,
+		check,
+		sumConquistasCalc,
+		totalConquistas
+	} from '$lib/state.svelte';
 	import { onMount } from 'svelte';
 	import type { UserConquista } from '$lib/types.svelte';
 	let { user, imgsrc } = $props();
@@ -33,7 +40,9 @@
 			<p>Nível:</p>
 			<p class="font-magic drop-shadow-accent/50 text-3xl font-bold drop-shadow-lg">
 				<span class="font-[JetBrains_Mono] text-2xl opacity-50">{user.nivel}.</span>
-				{titles.fase?.[user.fase]?.nivel[user.nivel] ?? '--'}
+				{user.gender === 'f'
+					? titlesfem.fase?.[user.fase - 1]?.nivel[user.nivel - 1]
+					: (titles.fase?.[user.fase - 1]?.nivel[user.nivel - 1] ?? '--')}
 			</p>
 		</div>
 		<p>Pontos: <span>{user.current}</span></p>

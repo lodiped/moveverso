@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { auth } from '$lib/firebase';
 	import { check, userArray } from '$lib/state.svelte';
 	import Leaderboard from '$lib/Components/Leaderboard.svelte';
 	let loading = $state(false);
@@ -12,7 +11,6 @@
 			sortedUsers = [...userArray.value].sort((a, b) => b.total - a.total);
 			loading = false;
 		});
-		console.log('auth.currentUser', auth.currentUser);
 	});
 </script>
 

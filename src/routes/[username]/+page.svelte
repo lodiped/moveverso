@@ -54,6 +54,9 @@
 		}
 	}
 
+	let erroModal = $state(false);
+	let cost = $state(0);
+
 	async function load() {
 		try {
 			await check();
@@ -96,12 +99,16 @@
 	{#if userData}
 		<Userheader {user} {imgsrc} />
 		{#if isAdmin.value}
-			<div>
-				<h2>administração</h2>
+			<h2 class="w-full text-center">Administração</h2>
+			<div class="flex w-full">
+				<h3 class="w-1/2 text-center">Pontuações</h3>
+				<h3 class="w-1/2 text-center">Conquistas</h3>
+			</div>
+			<div class="flex gap-2">
 				<div
 					class="*:bg-primary/30 {loading
 						? 'pointer-events-none cursor-default opacity-50'
-						: ''} flex flex-col gap-3 *:w-1/2 *:cursor-pointer *:rounded-lg *:p-2"
+						: ''} flex w-full flex-col gap-3 *:w-full *:cursor-pointer *:rounded-lg *:p-2"
 				>
 					<button onclick={() => addSomething(100, user.id)}> 100% das tarefas concluídas </button>
 					<button onclick={() => addSomething(70, user.id)}> 90% das tarefas concluídas </button>
@@ -120,7 +127,15 @@
 					<button onclick={() => addSomething(20, user.id)}> Atualização profissional </button>
 					<button onclick={() => addSomething(-10, user.id)}> Reclamação de cliente </button>
 					<button onclick={() => addSomething(-10, user.id)}> Erro cometido </button>
-					<button onclick={() => addSomething(-1000, user.id)}> Prejuízo financeiro TO DO </button>
+					<button onclick={() => (erroModal = !erroModal)}> Prejuízo financeiro por erro </button>
+				</div>
+
+				<div
+					class="*:bg-primary/30 {loading
+						? 'pointer-events-none cursor-default opacity-50'
+						: ''} flex w-full flex-col gap-3 *:w-full *:cursor-pointer *:rounded-lg *:p-2"
+				>
+					<button>1 Ano de Move Negócios</button>
 				</div>
 			</div>
 		{/if}
@@ -129,3 +144,25 @@
 		<div class="w-full text-center">{message}</div>
 	{/if}
 </div>
+
+{#if erroModal}
+	<div class="fixed inset-0 flex items-center justify-center bg-black/30">
+		<div class="flex flex-col gap-2">
+			<h1 class="text-center">Prejuízo financeiro por erro</h1>
+			<p>R$10,00 = 1 ponto</p>
+			<div class="flex flex-col gap-2">
+				<input type="number" name="cost" id="cost" bind:value={cost} placeholder="Custo" />
+				<button
+					onclick={() => addSomething(-cost * 0.1, user.id)}
+					class="cursor-pointer hover:font-bold hover:opacity-50"
+				>
+					Prejuízo financeiro por erro <span class="text-red-600">-1</span>
+				</button>
+				<button
+					class="cursor-pointer hover:font-bold hover:opacity-50"
+					onclick={() => (erroModal = !erroModal)}>Fechar</button
+				>
+			</div>
+		</div>
+	</div>
+{/if}

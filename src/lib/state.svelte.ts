@@ -1,6 +1,4 @@
-import type { Log, UserConquista, BaseConquista } from '$lib/types.svelte';
-import { db, get, ref, onValue, getDatabase, child } from '$lib/firebase';
-import { set } from 'firebase/database';
+import { get, ref, getDatabase, child } from '$lib/firebase';
 import { auth } from '$lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 
@@ -25,6 +23,7 @@ export const userArray = $state({ value: [] as any[] });
 //Front-end stuff
 export const totalConquistas = $state({ value: 0 });
 export function sumConquistasCalc(i: number) {
+	totalConquistas.value = 0;
 	for (let y = 0; y < userArray.value?.[i].conquistas.length; y++) {
 		if (userArray.value?.[i].conquistas[y].number > 0) {
 			totalConquistas.value += userArray.value?.[i].conquistas[y].number;
@@ -37,7 +36,6 @@ export async function check() {
 		loading.value = true;
 		const snapshot = await get(child(dbRef, '/users'));
 		data = snapshot.exists() ? snapshot.val() : null;
-		console.log('before ', JSON.stringify(data, null, 4));
 		userArray.value = Object.entries(data).map(([uid, userData]: any) => {
 			const total = userData.total;
 			const fase = faseCalc(total);
@@ -69,25 +67,12 @@ export async function check() {
 			arrayId: idx
 		}));
 
-		console.log('after ', JSON.stringify(userArray, null, 4));
 		loading.value = false;
 	} catch (error) {
 		console.error(error);
 	}
 }
 
-/*export let user = $state({
-	name: 'Fulano Silva',
-	email: 'fulano@email.com',
-	ingress: '05/05/23',
-	nivel: 0,
-	fase: 0,
-	total: 0,
-	current: 0,
-	log: [] as Log[],
-	conquistas: createUserConquistas()
-});
-*/
 const baseConquistas: any = {
 	ano: {
 		title: 'Um Ano',
@@ -127,127 +112,6 @@ export let users = $state([
 		id: 'andreussiegrist',
 		name: 'Andreus Siegrist',
 		ingress: '04/04/22',
-		nivel: 0,
-		fase: 0,
-		total: 0,
-		current: 0,
-		log: [] as Log[],
-		conquistas: createUserConquistas()
-	},
-	{
-		id: 'larissamartins',
-		name: 'Larissa Martins',
-		ingress: '11/09/23',
-		nivel: 0,
-		fase: 0,
-		total: 0,
-		current: 0,
-		log: [] as Log[],
-		conquistas: createUserConquistas()
-	},
-	{
-		id: 'francielyoliveira',
-		name: 'Franciely Oliveira',
-		ingress: '18/11/24',
-		nivel: 0,
-		fase: 0,
-		total: 0,
-		current: 0,
-		log: [] as Log[],
-		conquistas: createUserConquistas()
-	},
-	{
-		id: 'cristinameyer',
-		name: 'Cristina Meyer',
-		ingress: '02/12/24',
-		nivel: 0,
-		fase: 0,
-		total: 0,
-		current: 0,
-		log: [] as Log[],
-		conquistas: createUserConquistas()
-	},
-	{
-		id: 'phelipemendes',
-		name: 'Phelipe Mendes',
-		ingress: '22/04/24',
-		nivel: 0,
-		fase: 0,
-		total: 0,
-		current: 0,
-		log: [] as Log[],
-		conquistas: createUserConquistas()
-	},
-	{
-		id: 'rafaelwolski',
-		name: 'Rafael Wolski',
-		ingress: '16/01/24',
-		nivel: 0,
-		fase: 0,
-		total: 0,
-		current: 0,
-		log: [] as Log[],
-		conquistas: createUserConquistas()
-	},
-	{
-		id: 'robersoncorrea',
-		name: 'Roberson Correa',
-		ingress: '24/08/23',
-		nivel: 0,
-		fase: 0,
-		total: 0,
-		current: 0,
-		log: [] as Log[],
-		conquistas: createUserConquistas()
-	},
-	{
-		id: 'tamirisrosa',
-		name: 'Tamiris Rosa ',
-		ingress: '01/02/21',
-		nivel: 0,
-		fase: 0,
-		total: 0,
-		current: 0,
-		log: [] as Log[],
-		conquistas: createUserConquistas()
-	},
-	{
-		id: 'lucaseyng',
-		name: 'Lucas Eyng',
-		ingress: '17/03/25',
-		nivel: 0,
-		fase: 0,
-		total: 0,
-		current: 0,
-		log: [] as Log[],
-		conquistas: createUserConquistas()
-	},
-	{
-		id: 'fernandafrandoloso',
-		name: 'Fernanda Frandoloso',
-		ingress: '12/02/25',
-		nivel: 0,
-		fase: 0,
-		total: 0,
-		current: 0,
-		log: [] as Log[],
-		conquistas: createUserConquistas()
-	},
-	{
-		id: 'arthurrezner',
-		name: 'Arthur Rezner',
-		ingress: '14/04/25',
-		nivel: 0,
-		fase: 0,
-		total: 0,
-		current: 0,
-		log: [] as Log[],
-		conquistas: createUserConquistas()
-	},
-	{
-		id: 'luizfaquim',
-		name: 'Luiz Faquim',
-		ingress: '14/04/25',
 		nivel: 0,
 		fase: 0,
 		total: 0,
@@ -416,31 +280,18 @@ export let titles: any = $state({
 	]
 });
 
-/*export function resetAll() {
-	user.total = 0;
-	calc();
-	user.log = [];
-	user.conquistas = [];
-}*/
+export function date() {
+	let date = new Date();
+	let diaSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'];
+	return (
+		date.toLocaleDateString('pt-BR') +
+		' • ' +
+		diaSemana[date.getDay()] +
+		' • ' +
+		date.toLocaleTimeString('pt-BR')
+	);
+}
 
-let user = $state({
-	current: 0,
-	nivel: 0,
-	fase: 0
-});
-// export function calc(uid: string) {
-// 	user.current = Math.abs(1500 * (faseCalc(uid) + 1) - data?.[uid].total - 1500);
-// 	nivelCalc();
-// 	faseCalc(uid);
-// }
-
-// export function nivelCalc() {
-// 	user.nivel = Math.floor(user.current / 150);
-// 	if (user.nivel > 9) {
-// 		user.nivel = 9;
-// 	}
-// 	return user.nivel;
-// }
 export function faseCalc(total: number) {
 	const f = Math.floor(total / 1500);
 	return f > 4 ? 5 : f + 1;
@@ -452,22 +303,13 @@ export function nivelCalc(current: number): number {
 	const lvl = Math.floor(current / 150);
 	return lvl > 9 ? 10 : lvl + 1;
 }
-/*
-export function add(n: number, log: Log) {
-	if (n <= 0 && user.total <= 0) {
-		n = 0;
-		log.points = 0;
-	}
-	user.total += n;
-	if (user.total < 0) {
-		user.total = 0;
-	}
-	if (user.total >= 7500) {
-		user.total = 7500;
-	}
-	user.log.unshift(log);
+
+/*export function resetAll() {
+	user.total = 0;
 	calc();
-}
+	user.log = [];
+	user.conquistas = [];
+}*/
 
 /*export function addConquista(n: number, log: Log) {
 	user.conquistas.push(conquistas[n]);
@@ -483,14 +325,3 @@ export function remove(n: number) {
 	calc();
 }
 */
-export function date() {
-	let date = new Date();
-	let diaSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'];
-	return (
-		date.toLocaleDateString('pt-BR') +
-		' • ' +
-		diaSemana[date.getDay()] +
-		' • ' +
-		date.toLocaleTimeString('pt-BR')
-	);
-}

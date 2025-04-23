@@ -1,30 +1,35 @@
 import type { Log, UserConquista, BaseConquista } from '$lib/types.svelte';
 import { db, get, ref, onValue, getDatabase, child } from '$lib/firebase';
 import { set } from 'firebase/database';
+import { auth } from '$lib/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 
-export let isAdmin = $state({ value: false });
+// Checa se o usuário está logado persistentemente
+if (typeof window !== 'undefined') {
+	onAuthStateChanged(auth, (user) => {
+		if (user) {
+			isAdmin.value = true;
+		} else {
+			isAdmin.value = false;
+		}
+	});
+}
+
+export const isAdmin = $state({ value: false });
 
 const dbRef = ref(getDatabase());
-export let loading = $state({ value: false });
+export const loading = $state({ value: false });
 let data: any = $state();
-export let userArray = $state({ value: [] as any[] });
+export const userArray = $state({ value: [] as any[] });
 
-export function addPoints(n: number, uid: string) {
-	if (!data?.[uid]) {
-		console.error('User not found');
-		return;
+//Front-end stuff
+export const totalConquistas = $state({ value: 0 });
+export function sumConquistasCalc(i: number) {
+	for (let y = 0; y < userArray.value?.[i].conquistas.length; y++) {
+		if (userArray.value?.[i].conquistas[y].number > 0) {
+			totalConquistas.value += userArray.value?.[i].conquistas[y].number;
+		}
 	}
-	console.log(JSON.stringify(data, null, 4));
-
-	const newTotal = data?.[uid].total + n;
-	loading.value = true;
-	set(ref(db, `users/${uid}/total`), newTotal)
-		.then(() => {
-			check(), (loading.value = false);
-		})
-		.catch(() => {
-			console.error, (loading.value = false);
-		});
 }
 
 export async function check() {
@@ -397,7 +402,7 @@ export function remove(n: number) {
 	}
 	calc();
 }
-
+*/
 export function date() {
 	let date = new Date();
 	let diaSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'];
@@ -408,4 +413,4 @@ export function date() {
 		' • ' +
 		date.toLocaleTimeString('pt-BR')
 	);
-}*/
+}

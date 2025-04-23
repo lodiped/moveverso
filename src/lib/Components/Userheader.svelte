@@ -1,44 +1,17 @@
 <script lang="ts">
-	import { titles, userArray, check } from '$lib/state.svelte';
+	import { titles, userArray, check, sumConquistasCalc, totalConquistas } from '$lib/state.svelte';
 	import { onMount } from 'svelte';
 	import type { UserConquista } from '$lib/types.svelte';
+	let { user, imgsrc } = $props();
 
-	let user = $state(
-		{} as {
-			id: string;
-			ingress: string;
-			name: string;
-			fase: number;
-			nivel: number;
-			total: number;
-			current: number;
-			conquistas: UserConquista[];
-		}
-	);
-
-	let imgsrc = $derived(`/assets/${user.fase}${user.nivel}.png`);
-	onMount(() => {
-		check().then(() => {
-			console.log(userArray);
-			const u = userArray.value[0];
-			user.id = u.id;
-			user.ingress = u.ingress;
-			user.name = u.name;
-			user.fase = u.fase;
-			console.log(user.fase);
-			user.nivel = u.nivel;
-			user.total = u.total;
-			user.current = u.current;
-			user.conquistas = u.conquistas;
-			console.log('user.conquistas = ', user.conquistas);
-			console.log('user = ', JSON.stringify(user, null, 4));
-		});
-	});
+	onMount(() => {});
 </script>
 
 <div class="flex items-center justify-center gap-2">
 	<div class="flex w-1/2 items-center justify-center">
-		<img src={imgsrc} alt="" class="rounded-3xl" />
+		{#if imgsrc}
+			<img src={imgsrc} alt="" class="rounded-3xl" />
+		{/if}
 	</div>
 	<div class="flex w-1/2 flex-col items-start justify-center gap-4">
 		<div class="flex w-full flex-col items-center">
@@ -87,7 +60,7 @@
 			></div>
 		</div>
 		<div class=" drop-shadow-accent/70 p-2 drop-shadow-[0_0_15px]">
-			Conquistas <span class="opacity-30">{user.conquistas?.length ?? 0}</span>
+			Conquistas <span class="opacity-30">{totalConquistas.value}</span>
 		</div>
 		{#if user.conquistas?.length > 0}
 			<div class="flex items-center justify-center gap-5">
@@ -100,7 +73,7 @@
 							>
 								{conquista.img}
 								{#if conquista.number > 1}
-									<span>{conquista.number}</span>
+									<span>{conquista.number}x</span>
 								{/if}
 							</p>
 						</div>

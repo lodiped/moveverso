@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { db, get, ref, onValue, getDatabase, child } from '$lib/firebase';
-	import { set } from 'firebase/database';
+	import { set, runTransaction } from 'firebase/database';
 	import { onMount } from 'svelte';
 	import { auth } from '$lib/firebase';
-	import { check } from '$lib/state.svelte';
+	import { check, userArray } from '$lib/state.svelte';
 	let loading = $state(false);
 
 	const dbRef = ref(getDatabase());
@@ -28,7 +28,12 @@
 			});
 	}
 
+	let sortedUsers = $state([] as any[]);
+
 	onMount(() => {
+		check().then(() => {
+			sortedUsers = [...userArray.value].sort((a, b) => b.total - a.total);
+		});
 		console.log('auth.currentUser', auth.currentUser);
 	});
 </script>
@@ -60,4 +65,20 @@
 	{#if loading}
 		<div class="w-full text-center">loading</div>
 	{/if}
+	<div>
+		<h1>Leaderboard</h1>
+		<div>
+			{#each sortedUsers as user, i}
+				<div class="flex">
+					<div class="flex w-full justify-between">
+						<span class="w-10">{i + 1}.</span>
+						<span class="w-full text-left">{user.name}</span>
+						<span class="w-full text-left">{user.nivel}</span>
+						<span class="w-full text-left">{user.fase}</span>
+						<span class="w-10 text-end">{user.total}</span>
+					</div>
+				</div>
+			{/each}
+		</div>
+	</div>
 </div>

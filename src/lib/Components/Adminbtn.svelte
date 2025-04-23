@@ -1,5 +1,6 @@
 <script>
 	//import { user, date } from '$lib/state.svelte';
+	import { date } from '$lib/state.svelte';
 
 	let { add, resetAll } = $props();
 

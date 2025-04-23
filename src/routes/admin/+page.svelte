@@ -33,6 +33,7 @@
 	onMount(() => {
 		check().then(() => {
 			sortedUsers = [...userArray.value].sort((a, b) => b.total - a.total);
+			console.log(isAdmin.value);
 		});
 	});
 </script>

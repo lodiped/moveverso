@@ -35,6 +35,22 @@
 		sumConquistasCalc(userId!);
 	}
 
+	async function addConquista(conqUid: string, uid: string) {
+		loading = true;
+		try {
+			await runTransaction(ref(db, `users/${uid}/conquistas/${conqUid}/number`), (conquista) => {
+				conquista++;
+				return conquista;
+			});
+			await check();
+			await updateUI();
+		} catch (error) {
+			console.error(error);
+		} finally {
+			loading = false;
+		}
+	}
+
 	async function addSomething(n: number, uid: string) {
 		if (typeof n !== 'number') return;
 		loading = true;
@@ -101,7 +117,7 @@
 	{#if userData}
 		<Userheader {user} {imgsrc} />
 		{#if isAdmin.value}
-			<Adminpanel {loading} {addSomething} {erroModal} {user} {cost} />
+			<Adminpanel {loading} {addSomething} {addConquista} {erroModal} {user} {cost} />
 		{/if}
 		<Leaderboard />
 	{:else}

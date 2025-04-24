@@ -2,6 +2,7 @@
 	let {
 		loading,
 		addSomething = $bindable(),
+		addConquista = $bindable(),
 		erroModal = $bindable(),
 		user,
 		cost = $bindable()
@@ -13,7 +14,7 @@
 	<h3 class="w-1/2 text-center">Pontuações</h3>
 	<h3 class="w-1/2 text-center">Conquistas</h3>
 </div>
-<div class="flex gap-2">
+<div class="flex gap-5">
 	<div
 		class="*:bg-primary/30 {loading
 			? 'pointer-events-none cursor-default opacity-50'
@@ -42,7 +43,16 @@
 			? 'pointer-events-none cursor-default opacity-50'
 			: ''} flex w-full flex-col gap-3 *:w-full *:cursor-pointer *:rounded-lg *:p-2"
 	>
-		<button>1 Ano de Move Negócios</button>
+		<button onclick={() => addConquista('ano', user.id)}>1 Ano de Move Negócios</button>
+		<button onclick={() => addConquista('tresmesestarefa', user.id)}
+			>3 Meses com 100% das tarefas no prazo</button
+		>
+		<button onclick={() => addConquista('tresmesesplanilha', user.id)}
+			>3 Meses com planilhas de atividades preenchidas</button
+		>
+		<button onclick={() => addConquista('dezelogios', user.id)}>10 elogios recebidos</button>
+		<button onclick={() => addConquista('maiordomes', user.id)}>Maior pontuação do Mês</button>
+		<button onclick={() => addConquista('maiordoano', user.id)}>Maior pontuação do Ano</button>
 	</div>
 </div>
 

@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { page } from '$app/state';
-	import { runTransaction, get } from 'firebase/database';
+	import { runTransaction } from 'firebase/database';
 	import { db, ref } from '$lib/firebase';
 	import { userArray, check, sumConquistasCalc, isAdmin } from '$lib/state.svelte';
-	import type { UserConquista, UserType } from '$lib/types.svelte';
+	import type { UserType } from '$lib/types.svelte';
 	import Userheader from '$lib/Components/Userheader.svelte';
 	import Leaderboard from '$lib/Components/Leaderboard.svelte';
 	import Adminpanel from '$lib/Components/Adminpanel.svelte';
@@ -27,6 +27,7 @@
 		user.name = u.name;
 		user.fase = u.fase;
 		user.nivel = u.nivel;
+		user.xp = u.xp;
 		user.total = u.total;
 		user.current = u.current;
 		user.gender = u.gender;
@@ -41,6 +42,26 @@
 			await runTransaction(ref(db, `users/${uid}/conquistas/${conqUid}/number`), (conquista) => {
 				conquista++;
 				return conquista;
+			});
+			await check();
+			await updateUI();
+		} catch (error) {
+			console.error(error);
+		} finally {
+			loading = false;
+		}
+	}
+
+	// FIXME apparently it doesn't work but nothing gets logged as error
+	async function clearConquistas(uid: string) {
+		loading = true;
+		try {
+			await runTransaction(ref(db, `users/${uid}/conquistas`), (conquistas) => {
+				if (conquistas === null) return;
+				for (const conqUid of Object.keys(conquistas)) {
+					conquistas[conqUid].number = 0;
+				}
+				return conquistas;
 			});
 			await check();
 			await updateUI();
@@ -113,12 +134,24 @@
 	});
 </script>
 
-<div class="my-2 flex w-[1000px] flex-col gap-5">
+<div
+	class="my-2 flex w-[1000px] flex-col gap-5 2xl:w-full 2xl:max-w-[1500px] 2xl:flex-row 2xl:gap-20"
+>
 	{#if userData}
-		<Userheader {user} {imgsrc} />
-		{#if isAdmin.value}
-			<Adminpanel {loading} {addSomething} {addConquista} {erroModal} {user} {cost} />
-		{/if}
+		<div class="flex flex-col gap-5">
+			<Userheader {user} {imgsrc} />
+			{#if isAdmin.value}
+				<Adminpanel
+					{loading}
+					{clearConquistas}
+					{addSomething}
+					{addConquista}
+					{erroModal}
+					{user}
+					{cost}
+				/>
+			{/if}
+		</div>
 		<Leaderboard />
 	{:else}
 		<div class="w-full text-center">{message}</div>

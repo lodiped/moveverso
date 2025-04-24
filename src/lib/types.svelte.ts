@@ -22,6 +22,7 @@ export type UserType = {
 	name: string;
 	fase: number;
 	nivel: number;
+	xp: number;
 	total: number;
 	current: number;
 	gender: string;

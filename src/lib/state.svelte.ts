@@ -41,6 +41,7 @@ export async function check() {
 			const fase = faseCalc(total);
 			const current = currentCalc(total, fase);
 			const nivel = nivelCalc(current);
+			const xp = currentXP(current, nivel);
 			const conquistas = userData.conquistas
 				? Object.entries(userData.conquistas).map(([conqId, conqData]: any) => ({
 						id: conqId,
@@ -58,6 +59,7 @@ export async function check() {
 				current,
 				fase,
 				nivel,
+				xp,
 				conquistas
 			};
 		});
@@ -298,6 +300,9 @@ export function faseCalc(total: number) {
 }
 export function currentCalc(total: number, fase: number): number {
 	return Math.abs(1500 * fase - total - 1500);
+}
+export function currentXP(current: number, nivel: number): number {
+	return Math.abs(150 * nivel - current - 150);
 }
 export function nivelCalc(current: number): number {
 	const lvl = Math.floor(current / 150);

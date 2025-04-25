@@ -47,6 +47,9 @@
 		font-family: 'JetBrains Mono', monospace;
 		@apply bg-bg text-text;
 	}
+	#gtx-trans {
+		display: none;
+	}
 }
 
 /* 

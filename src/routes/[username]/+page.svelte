@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { runTransaction, set } from 'firebase/database';
+	import { runTransaction, set, getDatabase, push } from 'firebase/database';
 	import { db, ref, get } from '$lib/firebase';
 	import { userArray, check, sumConquistasCalc, isAdmin } from '$lib/state.svelte';
 	import type { UserType } from '$lib/types.svelte';
@@ -119,6 +119,22 @@
 		}
 	}
 
+	async function testLog() {
+		loading = true;
+		try {
+			const db = getDatabase();
+			const postListRef = ref(db, 'logs/andreussiegrist');
+			const newPostRef = push(postListRef);
+			await set(newPostRef, {
+				actionId: 'something'
+			});
+		} catch (error) {
+			console.error(error);
+		} finally {
+			loading = false;
+		}
+	}
+
 	$effect(() => {
 		if (!username) return;
 		loading = true;
@@ -137,6 +153,7 @@
 			{#if isAdmin.value}
 				<Adminpanel
 					{loading}
+					{testLog}
 					{clearConquistas}
 					{addSomething}
 					{addConquista}

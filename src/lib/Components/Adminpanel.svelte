@@ -6,6 +6,7 @@
 		clearConquistas = $bindable(),
 		erroModal = $bindable(),
 		testLog,
+		clearLog,
 		user,
 		cost = $bindable()
 	} = $props();
@@ -107,10 +108,16 @@
 				Apagar o Log
 			</button>
 			<button
-				onclick={() => testLog()}
+				onclick={() => testLog(user.id)}
 				class="w-full cursor-pointer rounded-lg !bg-red-500/70 p-2 hover:opacity-50"
 			>
 				Test Log
+			</button>
+			<button
+				onclick={() => clearLog(user.id)}
+				class="w-full cursor-pointer rounded-lg !bg-red-500/70 p-2 hover:opacity-50"
+			>
+				Clear Log
 			</button>
 		</div>
 	</div>

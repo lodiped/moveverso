@@ -22,6 +22,7 @@ export const userArray = $state({ value: [] as any[] });
 
 //Front-end stuff
 export const totalConquistas = $state({ value: 0 });
+
 export function sumConquistasCalc(i: number) {
 	totalConquistas.value = 0;
 	for (let y = 0; y < userArray.value?.[i].conquistas.length; y++) {
@@ -106,6 +107,12 @@ const baseConquistas: any = {
 		img: '🛡️'
 	}
 };
+
+export let logText = $state({
+	ano: { text: 'Conquista: 1 Ano de Move Negócios' },
+	dezelogios: { text: '10 elogios recebidos' },
+	elogio: { text: 'Elogio recebido', points: 10 }
+});
 
 /*
 export let users = $state([

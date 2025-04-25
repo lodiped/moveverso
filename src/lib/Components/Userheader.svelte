@@ -1,9 +1,13 @@
 <script lang="ts">
 	import { titlesfem, titles, totalConquistas } from '$lib/state.svelte';
-	import { onMount } from 'svelte';
 	let { user, imgsrc } = $props();
 
-	onMount(() => {});
+	let firstname = $state('');
+	let lastname = $state('');
+
+	$effect(() => {
+		[firstname, lastname] = user.name.split(' ');
+	});
 </script>
 
 <div class="flex flex-col items-center justify-center gap-5 lg:flex-row">
@@ -14,14 +18,15 @@
 	</div>
 	<div class="flex w-full flex-col items-start justify-center gap-4 px-2 lg:w-1/2 lg:px-0">
 		<div class="flex w-full flex-col items-center pt-5">
-			<h2 class="drop-shadow-accent/70 drop-shadow-[0_0_10px]">{user.name}</h2>
-			<div class="bg-secondary relative h-3 w-2/3 rounded-md">
+			<h2 class="drop-shadow-accent/70 -mb-4 drop-shadow-[0_0_10px]">{firstname}</h2>
+			<h2 class="drop-shadow-accent/70 drop-shadow-[0_0_10px]">{lastname}</h2>
+			<div class="bg-secondary relative -mt-1 h-3 w-2/3 rounded-md">
 				<div
 					class="bg-accent drop-shadow-accent/70 absolute top-0 left-0 h-full w-full rounded-md drop-shadow-[0_0_10px] transition-all content-['']"
 					style={`width: ${user.total / 75}%;`}
 				></div>
 			</div>
-			<div class="flex w-full justify-center text-sm opacity-50">
+			<div class="mt-0.5 flex w-full justify-center text-sm opacity-50">
 				<span>
 					desde {user.ingress}
 				</span>

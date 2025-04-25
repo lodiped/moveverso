@@ -14,7 +14,7 @@
 	let dangerZoneConquistas = $state(false);
 </script>
 
-<h2 class="w-full text-center">Administração</h2>
+<h2 class="w-full text-center">Gerenciar:</h2>
 <div class="flex w-full flex-col gap-5 px-2 lg:flex-row lg:px-0">
 	<div class="w-full lg:w-1/2">
 		<h3 class="w-full text-center">Pontuações</h3>

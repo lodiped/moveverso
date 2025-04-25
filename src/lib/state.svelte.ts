@@ -51,7 +51,6 @@ export async function check() {
 						img: baseConquistas[conqId]?.img ?? '--'
 					}))
 				: [];
-			// TODO iterate through conquistas.number to sum the total amount of conquistas the user has for the front-end
 
 			return {
 				id: uid,

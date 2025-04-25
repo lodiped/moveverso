@@ -1,8 +1,7 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { page } from '$app/state';
-	import { runTransaction } from 'firebase/database';
-	import { db, ref } from '$lib/firebase';
+	import { runTransaction, set } from 'firebase/database';
+	import { db, ref, get } from '$lib/firebase';
 	import { userArray, check, sumConquistasCalc, isAdmin } from '$lib/state.svelte';
 	import type { UserType } from '$lib/types.svelte';
 	import Userheader from '$lib/Components/Userheader.svelte';
@@ -14,7 +13,7 @@
 
 	let username = $derived(page.params.username);
 	let message = $state('loading');
-	let loading = $state(false);
+	let loading = $state(true);
 	let userData = $state<{ name: string; total: number } | null>(null);
 	let imgsrc: string = $state('');
 	let u: any = $state();
@@ -52,17 +51,17 @@
 		}
 	}
 
-	// FIXME apparently it doesn't work but nothing gets logged as error
 	async function clearConquistas(uid: string) {
 		loading = true;
 		try {
-			await runTransaction(ref(db, `users/${uid}/conquistas`), (conquistas) => {
-				if (conquistas === null) return;
-				for (const conqUid of Object.keys(conquistas)) {
-					conquistas[conqUid].number = 0;
-				}
-				return conquistas;
-			});
+			const snap = await get(ref(db, `users/${uid}/conquistas`));
+			const raw = snap.exists() ? snap.val() : {};
+
+			const resetMap: Record<string, { number: number }> = Object.fromEntries(
+				Object.entries(raw).map(([key, val]: [string, any]) => [key, { ...val, number: 0 }])
+			);
+
+			await set(ref(db, `users/${uid}/conquistas`), resetMap);
 			await check();
 			await updateUI();
 		} catch (error) {
@@ -120,14 +119,9 @@
 		}
 	}
 
-	onMount(async () => {
-		loading = true;
-		await load();
-	});
-
 	$effect(() => {
 		if (!username) return;
-
+		loading = true;
 		(async () => {
 			await load();
 		})();

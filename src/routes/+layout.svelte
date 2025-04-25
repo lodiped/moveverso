@@ -21,6 +21,12 @@
 	let { children } = $props();
 </script>
 
+<svelte:head>
+	<title>Moveverso</title>
+	<meta name="google" value="notranslate" />
+	<meta name="google" content="notranslate" />
+</svelte:head>
+
 {@render children()}
 
 {#if isAdmin.value}

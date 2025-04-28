@@ -11,8 +11,10 @@
 		cost = $bindable()
 	} = $props();
 
+	let horas = $state(0);
 	let dangerZonePoints = $state(false);
 	let dangerZoneConquistas = $state(false);
+	let estudoModal = $state(false);
 </script>
 
 <h2 class="w-full text-center">Gerenciar:</h2>
@@ -27,10 +29,10 @@
 			<button onclick={() => addSomething(100, user.id)}>
 				100% das tarefas concluídas <span class="text-green-600">+100</span></button
 			>
-			<button onclick={() => addSomething(70, user.id)}>
+			<button onclick={() => addSomething(80, user.id)}>
 				90% das tarefas concluídas <span class="text-green-600">+70</span></button
 			>
-			<button onclick={() => addSomething(50, user.id)}>
+			<button onclick={() => addSomething(60, user.id)}>
 				80% das tarefas concluídas <span class="text-green-600">+50</span></button
 			>
 			<button onclick={() => addSomething(30, user.id)}>
@@ -42,21 +44,19 @@
 			<button onclick={() => addSomething(10, user.id)}>
 				Elogio do cliente <span class="text-green-600">+10</span></button
 			>
-			<button onclick={() => addSomething(10, user.id)}>
-				Ideia de melhoria aplicada <span class="text-green-600">+10</span>
+			<button onclick={() => addSomething(5, user.id)}>
+				Ideia de melhoria <span class="text-green-600">+10</span>
 			</button>
-			<button onclick={() => addSomething(15, user.id)}>
+			<button onclick={() => addSomething(10, user.id)}>
 				Maior número de ideias no mês <span class="text-green-600">+15</span>
 			</button>
-			<button onclick={() => addSomething(20, user.id)}>
+			<button onclick={() => addSomething(15, user.id)}>
 				Melhor ideia do mês <span class="text-green-600">+20</span>
 			</button>
-			<button onclick={() => addSomething(100, user.id)}>
-				Indicação de cliente que fecha contrato <span class="text-green-600">+100</span>
+			<button onclick={() => addSomething(15, user.id)}>
+				Indicação de cliente <span class="text-green-600">+100</span>
 			</button>
-			<button onclick={() => addSomething(20, user.id)}>
-				Atualização profissional <span class="text-green-600">+20</span>
-			</button>
+			<button onclick={() => (estudoModal = true)}> Atualização profissional </button>
 			<button onclick={() => addSomething(-10, user.id)}>
 				Reclamação de cliente <span class="text-red-600">-10</span>
 			</button>
@@ -74,16 +74,17 @@
 				? 'pointer-events-none cursor-default opacity-50'
 				: ''} flex w-full flex-col gap-3 *:w-full *:cursor-pointer *:rounded-lg *:p-2"
 		>
-			<button onclick={() => addConquista('ano', user.id)}>1 Ano de Move Negócios</button>
-			<button onclick={() => addConquista('tresmesestarefa', user.id)}
-				>3 Meses com 100% das tarefas no prazo</button
+			<button onclick={() => addConquista('mestarefa', user.id)}
+				>Mês com 100% das tarefas no prazo</button
 			>
-			<button onclick={() => addConquista('tresmesesplanilha', user.id)}
-				>3 Meses com planilhas de atividades preenchidas</button
+			<button onclick={() => addConquista('mesplanilha', user.id)}
+				>Mês com planilha de atividades preenchidas</button
 			>
-			<button onclick={() => addConquista('dezelogios', user.id)}>10 elogios recebidos</button>
+			<button onclick={() => addConquista('elogio', user.id)}>Elogio de cliente recebido</button>
 			<button onclick={() => addConquista('maiordomes', user.id)}>Maior pontuação do Mês</button>
 			<button onclick={() => addConquista('maiordoano', user.id)}>Maior pontuação do Ano</button>
+			<button onclick={() => addConquista('formacao', user.id)}>Formação Superior concluída</button>
+			<button onclick={() => addConquista('mesideia', user.id)}>Mês com melhor ideia</button>
 		</div>
 		<h3 class="mt-4 w-full text-center text-red-500">Danger Zone</h3>
 		<p class="mb-2 w-full text-center text-sm opacity-50">Estas ações exigem confirmação:</p>
@@ -208,6 +209,42 @@
 				<button
 					class="bg-primary/30 border-primary w-fit cursor-pointer rounded-lg border p-2 hover:font-bold hover:opacity-50"
 					onclick={() => (dangerZoneConquistas = false)}>Fechar</button
+				>
+			</div>
+		</div>
+	</div>
+{/if}
+
+{#if estudoModal}
+	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+		<div class="bg-secondary/30 flex flex-col gap-10 rounded-xl p-10 backdrop-blur">
+			<h2 class="text-center">Horas de estudo</h2>
+			<div class="flex flex-col items-center gap-5">
+				<div class="flex flex-col items-center gap-1">
+					<div class="flex w-full items-center gap-1">
+						<input
+							class="bg-primary/30 w-full rounded-lg placeholder:text-white/40"
+							type="number"
+							name="horas"
+							id="horas"
+							bind:value={horas}
+							placeholder="Horas de curso"
+						/>
+					</div>
+					<p class="opacity-50">1 hora = 1 ponto</p>
+				</div>
+				<button
+					disabled={horas <= 0 || typeof horas !== 'number'}
+					onclick={() => {
+						addSomething(horas, user.id), (estudoModal = false);
+					}}
+					class="bg-primary w-fit cursor-pointer rounded-lg p-2 text-black hover:font-bold hover:opacity-50 disabled:pointer-events-none disabled:cursor-default disabled:opacity-50"
+				>
+					Horas de curso: <span class="text-green-600">{horas}</span>
+				</button>
+				<button
+					class="bg-primary/30 border-primary w-fit cursor-pointer rounded-lg border p-2 hover:font-bold hover:opacity-50"
+					onclick={() => (estudoModal = false)}>Fechar</button
 				>
 			</div>
 		</div>

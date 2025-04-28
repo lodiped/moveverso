@@ -76,14 +76,19 @@ export async function check() {
 }
 
 const baseConquistas: any = {
-	ano: {
-		title: 'Um Ano',
-		desc: '1 ano de Move Negócios',
+	formacao: {
+		title: 'Formação Superior',
+		desc: 'Concluiu uma formação superior',
 		img: '💎'
 	},
-	dezelogios: {
+	elogio: {
 		title: 'Selo Especial',
-		desc: '10 elogios recebidos',
+		desc: 'Elogio de cliente recebido',
+		img: '✨'
+	},
+	mesideia: {
+		title: 'Selo Especial',
+		desc: 'Melhor ideia do mês',
 		img: '✨'
 	},
 	maiordoano: {
@@ -96,22 +101,22 @@ const baseConquistas: any = {
 		desc: 'Maior pontuação do Mês',
 		img: '🚀'
 	},
-	tresmesesplanilha: {
+	mesplanilha: {
 		title: 'Relógio',
-		desc: '3 Meses com planilhas de atividades preenchidas',
+		desc: 'Mês com planilha de atividades preenchidas',
 		img: '⏱️'
 	},
-	tresmesestarefa: {
+	mestarefa: {
 		title: 'Escudo',
-		desc: '3 Meses com 100% das tarefas no prazo',
+		desc: 'Mês com 100% das tarefas no prazo',
 		img: '🛡️'
 	}
 };
 
 export let logText = $state({
 	ano: { text: 'Conquista: 1 Ano de Move Negócios' },
-	dezelogios: { text: '10 elogios recebidos' },
-	elogio: { text: 'Elogio recebido', points: 10 }
+	elogio: { text: '10 elogios recebidos' },
+	elogiopoints: { text: 'Elogio recebido', points: 10 }
 });
 
 /*

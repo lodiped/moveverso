@@ -1,7 +1,7 @@
 <script lang="ts">
 	let {
 		loading,
-		addSomething = $bindable(),
+		addPoints = $bindable(),
 		addConquista = $bindable(),
 		clearConquistas = $bindable(),
 		erroModal = $bindable(),
@@ -26,41 +26,41 @@
 				? 'pointer-events-none cursor-default opacity-50'
 				: ''} flex w-full flex-col gap-3 *:w-full *:cursor-pointer *:rounded-lg *:p-2"
 		>
-			<button onclick={() => addSomething(100, user.id)}>
+			<button onclick={() => addPoints(100, user.id, '100tarefas')}>
 				100% das tarefas concluídas <span class="text-green-600">+100</span></button
 			>
-			<button onclick={() => addSomething(80, user.id)}>
+			<button onclick={() => addPoints(80, user.id, '90tarefas')}>
 				90% das tarefas concluídas <span class="text-green-600">+70</span></button
 			>
-			<button onclick={() => addSomething(60, user.id)}>
+			<button onclick={() => addPoints(60, user.id, '80tarefas')}>
 				80% das tarefas concluídas <span class="text-green-600">+50</span></button
 			>
-			<button onclick={() => addSomething(30, user.id)}>
+			<button onclick={() => addPoints(30, user.id, '70tarefas')}>
 				70% das tarefas concluídas <span class="text-green-600">+30</span></button
 			>
-			<button onclick={() => addSomething(30, user.id)}>
+			<button onclick={() => addPoints(30, user.id, 'controleAtv')}>
 				Controle de Atividades atualizado <span class="text-green-600">+30</span></button
 			>
-			<button onclick={() => addSomething(10, user.id)}>
+			<button onclick={() => addPoints(10, user.id, 'elogio')}>
 				Elogio do cliente <span class="text-green-600">+10</span></button
 			>
-			<button onclick={() => addSomething(5, user.id)}>
+			<button onclick={() => addPoints(5, user.id, 'ideia')}>
 				Ideia de melhoria <span class="text-green-600">+10</span>
 			</button>
-			<button onclick={() => addSomething(10, user.id)}>
+			<button onclick={() => addPoints(10, user.id, 'maiorideia')}>
 				Maior número de ideias no mês <span class="text-green-600">+15</span>
 			</button>
-			<button onclick={() => addSomething(15, user.id)}>
+			<button onclick={() => addPoints(15, user.id, 'melhorideia')}>
 				Melhor ideia do mês <span class="text-green-600">+20</span>
 			</button>
-			<button onclick={() => addSomething(15, user.id)}>
+			<button onclick={() => addPoints(15, user.id, 'indicacao')}>
 				Indicação de cliente <span class="text-green-600">+100</span>
 			</button>
 			<button onclick={() => (estudoModal = true)}> Atualização profissional </button>
-			<button onclick={() => addSomething(-10, user.id)}>
+			<button onclick={() => addPoints(-10, user.id, 'reclamacao')}>
 				Reclamação de cliente <span class="text-red-600">-10</span>
 			</button>
-			<button onclick={() => addSomething(-10, user.id)}>
+			<button onclick={() => addPoints(-10, user.id, 'erro')}>
 				Erro cometido <span class="text-red-600">-10</span>
 			</button>
 			<button onclick={() => (erroModal = true)}> Prejuízo financeiro por erro</button>
@@ -146,7 +146,7 @@
 				<button
 					disabled={cost <= 0 || typeof cost !== 'number'}
 					onclick={() => {
-						addSomething(Math.ceil(-cost * 0.1), user.id), (erroModal = false);
+						addPoints(Math.ceil(-cost * 0.1), user.id, 'errovalor'), (erroModal = false);
 					}}
 					class="bg-primary w-fit cursor-pointer rounded-lg p-2 text-black hover:font-bold hover:opacity-50 disabled:pointer-events-none disabled:cursor-default disabled:opacity-50"
 				>
@@ -173,7 +173,7 @@
 				</div>
 				<button
 					onclick={() => {
-						addSomething(-1000000, user.id), (dangerZonePoints = false);
+						addPoints(-1000000, user.id, 'zerarpontos'), (dangerZonePoints = false);
 					}}
 					class="bg-primary w-fit cursor-pointer rounded-lg p-2 text-black hover:font-bold hover:opacity-50"
 				>
@@ -236,7 +236,7 @@
 				<button
 					disabled={horas <= 0 || typeof horas !== 'number'}
 					onclick={() => {
-						addSomething(horas, user.id), (estudoModal = false);
+						addPoints(horas, user.id, 'horacurso'), (estudoModal = false);
 					}}
 					class="bg-primary w-fit cursor-pointer rounded-lg p-2 text-black hover:font-bold hover:opacity-50 disabled:pointer-events-none disabled:cursor-default disabled:opacity-50"
 				>

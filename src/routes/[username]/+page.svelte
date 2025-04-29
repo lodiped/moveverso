@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { runTransaction, set, getDatabase, push, serverTimestamp } from 'firebase/database';
+	import { runTransaction, set, getDatabase, push } from 'firebase/database';
 	import { db, ref, get } from '$lib/firebase';
 	import { userArray, check, sumConquistasCalc, isAdmin } from '$lib/state.svelte';
 	import type { UserType } from '$lib/types.svelte';
@@ -71,10 +71,14 @@
 		}
 	}
 
-	async function addSomething(n: number, uid: string) {
+	async function addPoints(n: number, uid: string, actionId: string) {
 		if (typeof n !== 'number') return;
 		loading = true;
 		try {
+			await set(push(ref(getDatabase(), `logs/${uid}`)), {
+				action: actionId,
+				value: actionId === 'errovalor' || actionId === 'horacurso' ? n : null
+			});
 			await runTransaction(ref(db, `users/${uid}/total`), (total) => {
 				if (total + n < 0) {
 					total = 0;
@@ -166,7 +170,7 @@
 					{clearLog}
 					{testLog}
 					{clearConquistas}
-					{addSomething}
+					{addPoints}
 					{addConquista}
 					{erroModal}
 					{user}

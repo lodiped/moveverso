@@ -2,7 +2,16 @@
 	import { page } from '$app/state';
 	import { runTransaction, set, getDatabase, push } from 'firebase/database';
 	import { db, ref, get } from '$lib/firebase';
-	import { userArray, check, sumConquistasCalc, isAdmin } from '$lib/state.svelte';
+	import {
+		userArray,
+		check,
+		sumConquistasCalc,
+		isAdmin,
+		checkLog,
+		decodePushKeyTime,
+		userLog,
+		date
+	} from '$lib/state.svelte';
 	import type { UserType } from '$lib/types.svelte';
 	import Userheader from '$lib/Components/Userheader.svelte';
 	import Leaderboard from '$lib/Components/Leaderboard.svelte';
@@ -38,11 +47,15 @@
 	async function addConquista(conqUid: string, uid: string) {
 		loading = true;
 		try {
+			await set(push(ref(getDatabase(), `logs/${uid}`)), {
+				action: conqUid
+			});
 			await runTransaction(ref(db, `users/${uid}/conquistas/${conqUid}/number`), (conquista) => {
 				conquista++;
 				return conquista;
 			});
 			await check();
+			await checkLog(uid);
 			await updateUI();
 		} catch (error) {
 			console.error(error);
@@ -71,14 +84,16 @@
 		}
 	}
 
-	async function addPoints(n: number, uid: string, actionId: string) {
+	async function addPoints(n: number, uid: string, actionId?: string) {
 		if (typeof n !== 'number') return;
 		loading = true;
 		try {
-			await set(push(ref(getDatabase(), `logs/${uid}`)), {
-				action: actionId,
-				value: actionId === 'errovalor' || actionId === 'horacurso' ? n : null
-			});
+			if (actionId) {
+				await set(push(ref(getDatabase(), `logs/${uid}`)), {
+					action: actionId,
+					value: actionId === 'errovalor' || actionId === 'horacurso' ? n : null
+				});
+			}
 			await runTransaction(ref(db, `users/${uid}/total`), (total) => {
 				if (total + n < 0) {
 					total = 0;
@@ -87,6 +102,7 @@
 
 				return total + n;
 			});
+			await checkLog(uid);
 			await check();
 			await updateUI();
 		} catch (error) {
@@ -123,23 +139,13 @@
 		}
 	}
 
-	async function testLog(uid: string) {
-		loading = true;
-		try {
-			await set(push(ref(getDatabase(), `logs/${uid}`)), {
-				actionId: 'dezelogios'
-			});
-		} catch (error) {
-			console.error(error);
-		} finally {
-			loading = false;
-		}
-	}
-
 	async function clearLog(uid: string) {
 		loading = true;
 		try {
+			await addPoints(-user.total, uid);
+			await clearConquistas(uid);
 			await set(ref(db, `logs/${uid}`), '');
+			await checkLog(uid);
 			await check();
 			await updateUI();
 		} catch (error) {
@@ -154,6 +160,7 @@
 		loading = true;
 		(async () => {
 			await load();
+			await checkLog(user.id);
 		})();
 	});
 </script>
@@ -164,11 +171,28 @@
 	{#if userData}
 		<div class="flex flex-col gap-5">
 			<Userheader {user} {imgsrc} />
+			<div class="flex flex-col gap-5">
+				{#each userLog.value as log}
+					<div class="flex justify-between">
+						<div>
+							<p class="flex gap-5">
+								<span class={log.points > 0 ? 'text-green-600' : 'text-red-600'}>{log.points}</span>
+								<span>{log.text}</span>
+							</p>
+							<p class="text-sm opacity-50">{date(log.id)}</p>
+						</div>
+						{#if isAdmin.value}
+							<button class="cursor-pointer rounded-lg border border-red-500 p-2 hover:bg-red-500"
+								>X</button
+							>
+						{/if}
+					</div>
+				{/each}
+			</div>
 			{#if isAdmin.value}
 				<Adminpanel
 					{loading}
 					{clearLog}
-					{testLog}
 					{clearConquistas}
 					{addPoints}
 					{addConquista}

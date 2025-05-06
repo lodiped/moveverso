@@ -19,6 +19,7 @@ const dbRef = ref(getDatabase());
 export const loading = $state({ value: false });
 let data: any = $state();
 export const userArray = $state({ value: [] as any[] });
+export const userLog = $state({ value: [] as any[] });
 
 //Front-end stuff
 export const totalConquistas = $state({ value: 0 });
@@ -29,6 +30,27 @@ export function sumConquistasCalc(i: number) {
 		if (userArray.value?.[i].conquistas[y].number > 0) {
 			totalConquistas.value += userArray.value?.[i].conquistas[y].number;
 		}
+	}
+}
+
+export async function checkLog(uid: string) {
+	try {
+		loading.value = true;
+		const snapshot = await get(child(dbRef, `/logs/${uid}`));
+		data = snapshot.exists() ? snapshot.val() : null;
+		userLog.value = Object.entries(data).map(([id, entry]: any) => {
+			return {
+				id,
+				text: logText[entry.action]?.desc ?? '--',
+				type: logText[entry.action]?.type ?? '--',
+				points: logText[entry.action]?.points ?? logText[entry.action]?.img,
+				...entry
+			};
+		});
+	} catch (error) {
+		console.error(error);
+	} finally {
+		loading.value = false;
 	}
 }
 
@@ -47,9 +69,9 @@ export async function check() {
 				? Object.entries(userData.conquistas).map(([conqId, conqData]: any) => ({
 						id: conqId,
 						number: conqData.number,
-						title: baseConquistas[conqId]?.title ?? '--',
-						desc: baseConquistas[conqId]?.desc ?? '--',
-						img: baseConquistas[conqId]?.img ?? '--'
+						title: logText[conqId]?.title ?? '--',
+						desc: logText[conqId]?.desc ?? '--',
+						img: logText[conqId]?.img ?? '--'
 					}))
 				: [];
 
@@ -75,48 +97,61 @@ export async function check() {
 	}
 }
 
-const baseConquistas: any = {
-	formacao: {
+export let logText: any = $state({
+	conqformacao: {
 		title: 'Formação Superior',
 		desc: 'Concluiu uma formação superior',
-		img: '💎'
+		img: '💎',
+		type: 'conq'
 	},
-	elogio: {
+	conqelogio: {
 		title: 'Selo Especial',
 		desc: 'Elogio de cliente recebido',
-		img: '✨'
+		img: '✨',
+		type: 'conq'
 	},
-	mesideia: {
+	conqmesideia: {
 		title: 'Selo Especial',
 		desc: 'Melhor ideia do mês',
-		img: '✨'
+		img: '✨',
+		type: 'conq'
 	},
-	maiordoano: {
+	conqmaiordoano: {
 		title: 'Em Órbita',
 		desc: 'Maior pontuação do Ano',
-		img: '🌟'
+		img: '🌟',
+		type: 'conq'
 	},
-	maiordomes: {
+	conqmaiordomes: {
 		title: 'Decolagem',
 		desc: 'Maior pontuação do Mês',
-		img: '🚀'
+		img: '🚀',
+		type: 'conq'
 	},
-	mesplanilha: {
+	conqmesplanilha: {
 		title: 'Relógio',
 		desc: 'Mês com planilha de atividades preenchidas',
-		img: '⏱️'
+		img: '⏱️',
+		type: 'conq'
 	},
-	mestarefa: {
+	conqmestarefa: {
 		title: 'Escudo',
 		desc: 'Mês com 100% das tarefas no prazo',
-		img: '🛡️'
-	}
-};
-
-export let logText = $state({
-	ano: { text: 'Conquista: 1 Ano de Move Negócios' },
-	elogio: { text: '10 elogios recebidos' },
-	elogiopoints: { text: 'Elogio recebido', points: 10 }
+		img: '🛡️',
+		type: 'conq'
+	},
+	elogio: { desc: 'Elogio recebido de cliente', points: 10, type: 'point' },
+	tarefas70: { desc: '70% das tarefas concluídas', points: 30, type: 'point' },
+	tarefas90: { desc: '90% das tarefas concluídas', points: 70, type: 'point' },
+	tarefas80: { desc: '80% das tarefas concluídas', points: 50, type: 'point' },
+	tarefas100: { desc: '100% das tarefas concluídas', points: 100, type: 'point' },
+	controleAtv: { desc: 'Controle de Atividades atualizado', points: 30, type: 'point' },
+	reclamacao: { desc: 'Reclamação de cliente', points: -10, type: 'point' },
+	ideia: { desc: 'Ideia de melhoria', points: 10, type: 'point' },
+	melhorideia: { desc: 'Melhor ideia do mês', points: 20, type: 'point' },
+	maiorideia: { desc: 'Melhor ideia do mês', points: 15, type: 'point' },
+	indicacao: { desc: 'Indicação de cliente', points: 100, type: 'point' },
+	erro: { desc: 'Erro cometido', points: -10, type: 'point' }
 });
 
 /*
@@ -293,8 +328,30 @@ export let titles: any = $state({
 	]
 });
 
-export function date() {
-	let date = new Date();
+export function decodePushKeyTime(pushKey: string): number {
+	const PUSH_CHARS = '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
+	const timeChars = pushKey.substring(0, 8);
+	let timestamp = 0;
+	for (let i = 0; i < 8; i++) {
+		const c = timeChars.charAt(i);
+		const idx = PUSH_CHARS.indexOf(c);
+		if (idx < -1) {
+			throw new Error(`Invalid push key at pos ${i}: ${pushKey}`);
+		}
+		timestamp = timestamp * 64 + idx;
+	}
+	return timestamp;
+}
+
+export function date(pushKey?: string): string {
+	let date;
+	let ms;
+	if (pushKey === undefined) {
+		date = new Date();
+	} else {
+		ms = decodePushKeyTime(pushKey);
+		date = new Date(ms);
+	}
 	let diaSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'];
 	return (
 		date.toLocaleDateString('pt-BR') +

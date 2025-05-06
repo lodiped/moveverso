@@ -104,11 +104,23 @@ export let logText: any = $state({
 		img: '💎',
 		type: 'conq'
 	},
+	remconqformacao: {
+		title: 'Remoção de Conquista',
+		desc: 'Formação Superior: Concluiu uma formação superior',
+		img: '💎',
+		type: 'remconq'
+	},
 	conqelogio: {
 		title: 'Selo Especial',
 		desc: 'Elogio de cliente recebido',
 		img: '✨',
 		type: 'conq'
+	},
+	remconqelogio: {
+		title: 'Remoção de Conquista',
+		desc: 'Selo Especial: Elogio de cliente recebido',
+		img: '✨',
+		type: 'remconq'
 	},
 	conqmesideia: {
 		title: 'Selo Especial',
@@ -116,11 +128,23 @@ export let logText: any = $state({
 		img: '✨',
 		type: 'conq'
 	},
+	remconqmesideia: {
+		title: 'Remoção de Conquista',
+		desc: 'Selo Especial: Melhor ideia do mês',
+		img: '✨',
+		type: 'remconq'
+	},
 	conqmaiordoano: {
 		title: 'Em Órbita',
 		desc: 'Maior pontuação do Ano',
 		img: '🌟',
 		type: 'conq'
+	},
+	remconqmaiordoano: {
+		title: 'Remoção de Conquista',
+		desc: 'Em Órbita: Maior pontuação do Ano',
+		img: '🌟',
+		type: 'remconq'
 	},
 	conqmaiordomes: {
 		title: 'Decolagem',
@@ -128,17 +152,35 @@ export let logText: any = $state({
 		img: '🚀',
 		type: 'conq'
 	},
+	remconqmaiordomes: {
+		title: 'Remoção de Conquista',
+		desc: 'Decolagem: Maior pontuação do Mês',
+		img: '🚀',
+		type: 'remconq'
+	},
 	conqmesplanilha: {
 		title: 'Relógio',
 		desc: 'Mês com planilha de atividades preenchidas',
 		img: '⏱️',
 		type: 'conq'
 	},
+	remconqmesplanilha: {
+		title: 'Remoção de Conquista',
+		desc: 'Relógio: Mês com planilha de atividades preenchidas',
+		img: '⏱️',
+		type: 'remconq'
+	},
 	conqmestarefa: {
 		title: 'Escudo',
 		desc: 'Mês com 100% das tarefas no prazo',
 		img: '🛡️',
 		type: 'conq'
+	},
+	remconqmestarefa: {
+		title: 'Remoção de Conquista',
+		desc: 'Escudo: Mês com 100% das tarefas no prazo',
+		img: '🛡️',
+		type: 'remconq'
 	},
 	elogio: { desc: 'Elogio recebido de cliente', points: 10, type: 'point' },
 	tarefas70: { desc: '70% das tarefas concluídas', points: 30, type: 'point' },
@@ -151,7 +193,9 @@ export let logText: any = $state({
 	melhorideia: { desc: 'Melhor ideia do mês', points: 20, type: 'point' },
 	maiorideia: { desc: 'Melhor ideia do mês', points: 15, type: 'point' },
 	indicacao: { desc: 'Indicação de cliente', points: 100, type: 'point' },
-	erro: { desc: 'Erro cometido', points: -10, type: 'point' }
+	erro: { desc: 'Erro cometido', points: -10, type: 'point' },
+	horacurso: { desc: 'Atualização profissional', type: 'point' },
+	errovalor: { desc: 'Prejuízo financeiro por erro', type: 'point' }
 });
 
 /*

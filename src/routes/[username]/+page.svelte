@@ -155,6 +155,33 @@
 		}
 	}
 
+	async function remove(pushkey: string, uid: string, actionId: string) {
+		loading = true;
+		try {
+			if (actionId === 'conq') {
+				await runTransaction(ref(db, `users/${uid}/conquistas/${actionId}/number`), (conquista) => {
+					conquista--;
+					return conquista;
+				});
+				// TODO limpar Log da conquista através do pushkey
+			} else if (actionId === 'point') {
+				await runTransaction(ref(db, `users/${uid}/total`), (total) => {
+					total--;
+					return total;
+				});
+				// TODO limpar Log da conquista através do pushkey
+			}
+			await set(ref(db, `logs/${uid}/${pushkey}`), null);
+			await checkLog(uid);
+			await check();
+			await updateUI();
+		} catch (error) {
+			console.error(error);
+		} finally {
+			loading = false;
+		}
+	}
+
 	$effect(() => {
 		if (!username) return;
 		loading = true;
@@ -176,7 +203,13 @@
 					<div class="flex justify-between">
 						<div>
 							<p class="flex gap-5">
-								<span class={log.points > 0 ? 'text-green-600' : 'text-red-600'}>{log.points}</span>
+								{#if log.value}
+									<span class={log.value > 0 ? 'text-green-600' : 'text-red-600'}>{log.value}</span>
+								{:else}
+									<span class={log.points > 0 ? 'text-green-600' : 'text-red-600'}
+										>{log.points}</span
+									>
+								{/if}
 								<span>{log.text}</span>
 							</p>
 							<p class="text-sm opacity-50">{date(log.id)}</p>

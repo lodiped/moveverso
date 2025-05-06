@@ -28,12 +28,6 @@
 		}
 	}
 
-	async function handleLogout() {
-		loading = true;
-		await signOut(auth);
-		isAdmin.value = false;
-		loading = false;
-	}
 	let sortedUsers = $state([] as any[]);
 
 	onMount(() => {

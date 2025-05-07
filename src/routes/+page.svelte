@@ -20,7 +20,7 @@
 	});
 </script>
 
-<div class="mt-10 flex w-[1000px] flex-col items-center gap-15">
+<div class="mt-10 flex w-full max-w-[1000px] flex-col items-center gap-15">
 	{#if loading}
 		<div class="w-full text-center">loading</div>
 	{:else}

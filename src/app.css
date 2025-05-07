@@ -45,6 +45,7 @@
 		display: flex;
 		justify-content: center;
 		font-family: 'JetBrains Mono', monospace;
+		background-color: black;
 		@apply text-text bg-gradient-to-b bg-[url(/assets/background2.png)] from-black to-black/0 bg-fixed;
 	}
 	#gtx-trans {

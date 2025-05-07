@@ -9,6 +9,7 @@ import {
 } from 'firebase/database';
 import { onAuthStateChanged } from 'firebase/auth';
 
+export const homepage = $state({ value: true });
 // Checa se o usuário está logado persistentemente
 if (typeof window !== 'undefined') {
 	onAuthStateChanged(auth, (user) => {
@@ -236,21 +237,6 @@ export let logText: any = $state({
 	errovalor: { desc: 'Prejuízo financeiro por erro', type: 'point' }
 });
 
-/*
-export let users = $state([
-	{
-		id: 'andreussiegrist',
-		name: 'Andreus Siegrist',
-		ingress: '04/04/22',
-		nivel: 0,
-		fase: 0,
-		total: 0,
-		current: 0,
-		log: [] as Log[],
-		conquistas: createUserConquistas()
-	}
-]);*/
-
 export let titlesfem: any = $state({
 	fase: [
 		{
@@ -458,25 +444,3 @@ export function nivelCalc(current: number): number {
 	const lvl = Math.floor(current / 150);
 	return lvl > 9 ? 10 : lvl + 1;
 }
-
-/*export function resetAll() {
-	user.total = 0;
-	calc();
-	user.log = [];
-	user.conquistas = [];
-}*/
-
-/*export function addConquista(n: number, log: Log) {
-	user.conquistas.push(conquistas[n]);
-
-	user.log.unshift(log);
-}
-
-export function remove(n: number) {
-	user.total -= n;
-	if (user.total < 0) {
-		user.total = 0;
-	}
-	calc();
-}
-*/

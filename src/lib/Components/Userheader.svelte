@@ -16,7 +16,7 @@
 			<img src={imgsrc} alt="" class="rounded-3xl" />
 		{/if}
 	</div>
-	<div class="flex w-full flex-col items-start justify-center gap-4 px-2 lg:w-1/2 lg:px-0">
+	<div class="flex w-full flex-col items-start justify-center gap-8 px-2 lg:w-1/2 lg:px-0">
 		<div class="flex w-full flex-col items-center pt-5">
 			<h2 class="drop-shadow-accent/70 -mb-4 drop-shadow-[0_0_10px]">{firstname}</h2>
 			<h2 class="drop-shadow-accent/70 drop-shadow-[0_0_10px]">{lastname}</h2>
@@ -32,48 +32,68 @@
 				</span>
 			</div>
 		</div>
-		<div class="flex w-full flex-col items-center justify-center lg:items-start">
-			<p class="opacity-50">Fase:</p>
-			<p class="font-magic text-4xl font-bold">
-				<span class="text-accent font-[JetBrains_Mono] text-3xl opacity-50">{user.fase}</span>
-				{titles.fase?.[user.fase - 1]?.title ?? '--'}
-			</p>
-		</div>
-		<div class="flex w-full flex-col items-start justify-center gap-2">
-			<div class="bg-secondary relative h-4 w-full rounded-md">
-				<div
-					class="bg-accent drop-shadow-accent/70 absolute top-0 left-0 h-full w-full rounded-md drop-shadow-[0_0_10px] transition-all content-['']"
-					style={`width: ${user.current / 15}%;`}
-				></div>
-			</div>
-			<div class="flex w-full justify-between text-sm">
-				<p><span class="opacity-50">Pontos nesta fase:</span> <span>{user.current}</span></p>
-				<p>
-					<span class="opacity-50">p/ próxima fase:</span> <span>{1500 - user.current}</span>
+		<div class="flex w-full items-center justify-start gap-3 pl-5 lg:pl-0">
+			<div class="bg-primary/20 flex w-15 flex-col items-center justify-between rounded-lg">
+				<p
+					class="text-accent drop-shadow-accent/70 flex items-center py-1.5 text-3xl font-bold drop-shadow-[0_0_5px]"
+				>
+					{user.fase}
+				</p>
+				<p
+					class="bg-accent/20 drop-shadow-accent/70 w-full rounded-b-lg py-0.5 text-center text-xs text-black drop-shadow-[0_0_5px]"
+				>
+					Fase
 				</p>
 			</div>
-		</div>
-		<div class="flex w-full flex-col items-center justify-center lg:items-start">
-			<p class="opacity-50">Nível:</p>
-			<p class="font-magic text-3xl font-bold">
-				<span class="text-accent font-[JetBrains_Mono] text-3xl opacity-50">{user.nivel}</span>
-				{user.gender === 'f'
-					? titlesfem.fase?.[user.fase - 1]?.nivel[user.nivel - 1]
-					: (titles.fase?.[user.fase - 1]?.nivel[user.nivel - 1] ?? '--')}
-			</p>
-		</div>
-		<div class="flex w-full flex-col items-start justify-center gap-2">
-			<div class="bg-secondary relative h-4 w-full rounded-md">
-				<div
-					class="bg-accent drop-shadow-accent/70 absolute top-0 left-0 h-full w-full rounded-md drop-shadow-[0_0_10px] transition-all content-['']"
-					style={`width: ${user.xp / 1.5}%;`}
-				></div>
-			</div>
-			<div class="flex w-full justify-between text-sm">
-				<p><span class="opacity-50">Pontos:</span> <span>{user.xp}</span></p>
-				<p>
-					<span class="opacity-50">p/ próximo nível:</span> <span>{150 - user.xp}</span>
+			<div class="flex w-full flex-col items-start justify-center gap-0.5">
+				<p class="font-magic text-3xl font-bold">
+					{titles.fase?.[user.fase - 1]?.title ?? '--'}
 				</p>
+				<div class="bg-secondary relative h-4 w-full rounded-md">
+					<div
+						class="bg-accent drop-shadow-accent/70 absolute top-0 left-0 h-full w-full rounded-md drop-shadow-[0_0_10px] transition-all content-['']"
+						style={`width: ${user.current / 15}%;`}
+					></div>
+				</div>
+				<div class="flex w-full justify-between text-xs">
+					<p><span class="opacity-50">Pontos nesta fase:</span> <span>{user.current}</span></p>
+					<p>
+						<span class="opacity-50">p/ próxima fase:</span> <span>{1500 - user.current}</span>
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="flex w-full items-center justify-start gap-3 pl-5 lg:pl-0">
+			<div class="bg-primary/20 flex w-15 flex-col items-center rounded-lg">
+				<p
+					class="text-accent drop-shadow-accent/70 py-1.5 text-3xl font-bold drop-shadow-[0_0_5px]"
+				>
+					{user.nivel}
+				</p>
+				<p
+					class="bg-accent/20 drop-shadow-accent/70 w-full rounded-b-lg py-0.5 text-center text-xs text-black drop-shadow-[0_0_5px]"
+				>
+					Nível
+				</p>
+			</div>
+			<div class="flex w-full flex-col items-start justify-center gap-0.5">
+				<p class="font-magic text-3xl font-bold">
+					{user.gender === 'f'
+						? titlesfem.fase?.[user.fase - 1]?.nivel[user.nivel - 1]
+						: (titles.fase?.[user.fase - 1]?.nivel[user.nivel - 1] ?? '--')}
+				</p>
+				<div class="bg-secondary relative h-4 w-full rounded-md">
+					<div
+						class="bg-accent drop-shadow-accent/70 absolute top-0 left-0 h-full w-full rounded-md drop-shadow-[0_0_10px] transition-all content-['']"
+						style={`width: ${user.xp / 1.5}%;`}
+					></div>
+				</div>
+				<div class="flex w-full justify-between text-xs">
+					<p><span class="opacity-50">Pontos neste nível:</span> <span>{user.xp}</span></p>
+					<p>
+						<span class="opacity-50">p/ próximo nível:</span> <span>{150 - user.xp}</span>
+					</p>
+				</div>
 			</div>
 		</div>
 		<div class="flex w-full flex-col items-center justify-center gap-2 lg:items-start">

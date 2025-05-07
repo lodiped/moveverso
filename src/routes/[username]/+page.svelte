@@ -24,7 +24,8 @@
 		logText,
 		logPage,
 		pageDirection,
-		hasMore
+		hasMore,
+		homepage
 	} from '$lib/state.svelte';
 	import type { UserType } from '$lib/types.svelte';
 	import Userheader from '$lib/Components/Userheader.svelte';
@@ -204,6 +205,7 @@
 	}
 
 	$effect(() => {
+		homepage.value = false;
 		if (!username) return;
 		loading = true;
 		(async () => {

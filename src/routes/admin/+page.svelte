@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { auth } from '$lib/firebase';
-	import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
-	import { userArray, check, isAdmin } from '$lib/state.svelte';
+	import { signInWithEmailAndPassword } from 'firebase/auth';
+	import { userArray, check, isAdmin, homepage } from '$lib/state.svelte';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 
@@ -31,6 +31,7 @@
 	let sortedUsers = $state([] as any[]);
 
 	onMount(() => {
+		homepage.value = false;
 		check().then(() => {
 			sortedUsers = [...userArray.value].sort((a, b) => b.total - a.total);
 		});

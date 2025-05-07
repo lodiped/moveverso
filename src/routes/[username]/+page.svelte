@@ -228,9 +228,7 @@
 	}
 </script>
 
-<div
-	class="my-2 flex w-[1000px] flex-col gap-5 2xl:w-full 2xl:max-w-[1500px] 2xl:flex-row 2xl:gap-20"
->
+<div class="my-2 flex w-full flex-col gap-5 2xl:w-full 2xl:max-w-[1500px] 2xl:flex-row 2xl:gap-20">
 	{#if userData}
 		<div class="flex flex-col gap-5">
 			<Userheader {user} {imgsrc} />

@@ -11,8 +11,6 @@
 	} = $props();
 
 	let horas = $state(0);
-	let dangerZonePoints = $state(false);
-	let dangerZoneConquistas = $state(false);
 	let dangerZoneAll = $state(false);
 	let estudoModal = $state(false);
 </script>
@@ -92,24 +90,12 @@
 			<button onclick={() => addConquista('conqmesideia', user.id)}>Mês com melhor ideia</button>
 		</div>
 		<h3 class="mt-4 w-full text-center text-red-500">Danger Zone</h3>
-		<p class="mb-2 w-full text-center text-sm opacity-50">Estas ações exigem confirmação:</p>
+		<p class="mb-2 w-full text-center text-sm opacity-50">Esta ação exige confirmação:</p>
 		<div
 			class="*:bg-primary/30 {loading
 				? 'pointer-events-none cursor-default opacity-50'
 				: ''} flex w-full flex-col gap-3 *:w-full *:cursor-pointer *:rounded-lg *:p-2"
 		>
-			<button
-				onclick={() => (dangerZonePoints = true)}
-				class="w-full cursor-pointer rounded-lg !bg-red-500/70 p-2 hover:opacity-50"
-			>
-				Zerar todos os pontos
-			</button>
-			<button
-				onclick={() => (dangerZoneConquistas = true)}
-				class="w-full cursor-pointer rounded-lg !bg-red-500/70 p-2 hover:opacity-50"
-			>
-				Apagar todas as conquistas
-			</button>
 			<button
 				onclick={() => (dangerZoneAll = true)}
 				class="w-full cursor-pointer rounded-lg !bg-red-500/70 p-2 hover:opacity-50"
@@ -157,33 +143,6 @@
 	</div>
 {/if}
 
-{#if dangerZonePoints}
-	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
-		<div class="bg-secondary/30 flex flex-col gap-10 rounded-xl p-10 backdrop-blur">
-			<h2 class="text-center">Tem certeza?</h2>
-			<div class="flex flex-col items-center gap-5">
-				<div class="flex flex-col items-center gap-1">
-					<div class="flex flex-col items-center gap-2">
-						<p>Esta ação irá zerar todos os pontos desta pessoa</p>
-					</div>
-				</div>
-				<button
-					onclick={() => {
-						addPoints(-1000000, user.id, 'zerarpontos', 'point'), (dangerZonePoints = false);
-					}}
-					class="bg-primary w-fit cursor-pointer rounded-lg p-2 text-black hover:font-bold hover:opacity-50"
-				>
-					Apagar pontos
-				</button>
-				<button
-					class="bg-primary/30 border-primary w-fit cursor-pointer rounded-lg border p-2 hover:font-bold hover:opacity-50"
-					onclick={() => (dangerZonePoints = false)}>Fechar</button
-				>
-			</div>
-		</div>
-	</div>
-{/if}
-
 {#if dangerZoneAll}
 	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
 		<div class="bg-secondary/30 flex flex-col gap-10 rounded-xl p-10 backdrop-blur">
@@ -205,33 +164,6 @@
 				<button
 					class="bg-primary/30 border-primary w-fit cursor-pointer rounded-lg border p-2 hover:font-bold hover:opacity-50"
 					onclick={() => (dangerZoneAll = false)}>Fechar</button
-				>
-			</div>
-		</div>
-	</div>
-{/if}
-
-{#if dangerZoneConquistas}
-	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
-		<div class="bg-secondary/30 flex flex-col gap-10 rounded-xl p-10 backdrop-blur">
-			<h2 class="text-center">Tem certeza?</h2>
-			<div class="flex flex-col items-center gap-5">
-				<div class="flex flex-col items-center gap-1">
-					<div class="flex flex-col items-center gap-2">
-						<p>Esta ação irá apagar todas as conquistas desta pessoa</p>
-					</div>
-				</div>
-				<button
-					onclick={() => {
-						clearConquistas(user.id), (dangerZoneConquistas = false);
-					}}
-					class="bg-primary w-fit cursor-pointer rounded-lg p-2 text-black hover:font-bold hover:opacity-50"
-				>
-					Apagar conquistas
-				</button>
-				<button
-					class="bg-primary/30 border-primary w-fit cursor-pointer rounded-lg border p-2 hover:font-bold hover:opacity-50"
-					onclick={() => (dangerZoneConquistas = false)}>Fechar</button
 				>
 			</div>
 		</div>

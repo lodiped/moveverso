@@ -1,5 +1,12 @@
-import { get, ref, getDatabase, child } from '$lib/firebase';
-import { auth } from '$lib/firebase';
+import { get, ref, getDatabase, child, auth } from '$lib/firebase';
+import {
+	query,
+	startAfter,
+	limitToFirst,
+	orderByKey,
+	endBefore,
+	limitToLast
+} from 'firebase/database';
 import { onAuthStateChanged } from 'firebase/auth';
 
 // Checa se o usuário está logado persistentemente
@@ -33,20 +40,50 @@ export function sumConquistasCalc(i: number) {
 	}
 }
 
+export const logPage = $state({ value: 1 });
+export const firstKey = $state({ value: null });
+export const lastKey = $state({ value: null });
+export const pageDirection = $state({ value: 'next' });
+export const hasMore = $state({ value: false });
+
 export async function checkLog(uid: string) {
+	const logsRef = ref(getDatabase(), `/logs/${uid}`);
+	console.log('checking log');
 	try {
 		loading.value = true;
-		const snapshot = await get(child(dbRef, `/logs/${uid}`));
-		data = snapshot.exists() ? snapshot.val() : null;
-		userLog.value = Object.entries(data).map(([id, entry]: any) => {
-			return {
-				id,
-				text: logText[entry.action]?.desc ?? '--',
-				type: logText[entry.action]?.type ?? '--',
-				points: logText[entry.action]?.points ?? logText[entry.action]?.img,
-				...entry
-			};
-		});
+		let q;
+		if (logPage.value === 1) {
+			q = query(logsRef, orderByKey(), limitToLast(10));
+		} else if (pageDirection.value === 'next') {
+			if (!firstKey) return;
+			q = query(logsRef, orderByKey(), endBefore(firstKey.value), limitToLast(10));
+		} else {
+			if (!lastKey) return;
+			q = query(logsRef, orderByKey(), startAfter(lastKey.value), limitToFirst(10));
+		}
+		const sortSnap = await get(q);
+		const sortData = sortSnap.exists() ? sortSnap.val() : null;
+		if (sortData) {
+			userLog.value = Object.entries(sortData).map(([id, entry]: any) => {
+				return {
+					id,
+					text: logText[entry.action]?.desc ?? '--',
+					type: logText[entry.action]?.type ?? '--',
+					points: logText[entry.action]?.points ?? logText[entry.action]?.img,
+					...entry
+				};
+			});
+			userLog.value.sort((a, b) => (a.id < b.id ? 1 : -1));
+			if (userLog.value.length > 0) {
+				lastKey.value = userLog.value[0].id;
+				firstKey.value = userLog.value[userLog.value.length - 1].id;
+			} else {
+				hasMore.value = false;
+			}
+			hasMore.value = userLog.value.length === 10;
+		} else {
+			userLog.value = [];
+		}
 	} catch (error) {
 		console.error(error);
 	} finally {
@@ -55,6 +92,7 @@ export async function checkLog(uid: string) {
 }
 
 export async function check() {
+	console.log('checking Check');
 	try {
 		loading.value = true;
 		const snapshot = await get(child(dbRef, '/users'));

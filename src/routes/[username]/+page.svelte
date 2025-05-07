@@ -1,6 +1,17 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { runTransaction, set, getDatabase, push } from 'firebase/database';
+	import {
+		runTransaction,
+		set,
+		getDatabase,
+		push,
+		orderByKey,
+		query,
+		limitToLast,
+		limitToFirst,
+		startAfter,
+		endBefore
+	} from 'firebase/database';
 	import { db, ref, get } from '$lib/firebase';
 	import {
 		userArray,
@@ -8,9 +19,12 @@
 		sumConquistasCalc,
 		isAdmin,
 		checkLog,
-		decodePushKeyTime,
 		userLog,
-		date
+		date,
+		logText,
+		logPage,
+		pageDirection,
+		hasMore
 	} from '$lib/state.svelte';
 	import type { UserType } from '$lib/types.svelte';
 	import Userheader from '$lib/Components/Userheader.svelte';
@@ -29,6 +43,7 @@
 	let user = $state({} as UserType);
 
 	async function updateUI() {
+		console.log('updatingUI');
 		u = userArray.value[userId!];
 		user.id = u.id;
 		user.ingress = u.ingress;
@@ -46,6 +61,7 @@
 
 	async function addConquista(conqUid: string, uid: string) {
 		loading = true;
+		logPage.value = 1;
 		try {
 			await set(push(ref(getDatabase(), `logs/${uid}`)), {
 				action: conqUid
@@ -66,6 +82,7 @@
 
 	async function clearConquistas(uid: string) {
 		loading = true;
+		logPage.value = 1;
 		try {
 			const snap = await get(ref(db, `users/${uid}/conquistas`));
 			const raw = snap.exists() ? snap.val() : {};
@@ -87,6 +104,7 @@
 	async function addPoints(n: number, uid: string, actionId?: string) {
 		if (typeof n !== 'number') return;
 		loading = true;
+		logPage.value = 1;
 		try {
 			if (actionId) {
 				await set(push(ref(getDatabase(), `logs/${uid}`)), {
@@ -116,6 +134,7 @@
 	let cost = $state();
 
 	async function load() {
+		console.log('Loading data');
 		try {
 			await check();
 
@@ -140,8 +159,10 @@
 	}
 
 	async function clearLog(uid: string) {
+		console.log('Clearing Log');
 		loading = true;
 		try {
+			logPage.value = 1;
 			await addPoints(-user.total, uid);
 			await clearConquistas(uid);
 			await set(ref(db, `logs/${uid}`), '');
@@ -155,21 +176,21 @@
 		}
 	}
 
-	async function remove(pushkey: string, uid: string, actionId: string) {
+	async function remove(pushkey: string, uid: string, actionId: string, type: string) {
 		loading = true;
+		logPage.value = 1;
 		try {
-			if (actionId === 'conq') {
+			if (type === 'conq') {
 				await runTransaction(ref(db, `users/${uid}/conquistas/${actionId}/number`), (conquista) => {
 					conquista--;
 					return conquista;
 				});
-				// TODO limpar Log da conquista através do pushkey
-			} else if (actionId === 'point') {
+			} else if (type === 'point') {
+				let points = logText[actionId]?.points ?? 0;
 				await runTransaction(ref(db, `users/${uid}/total`), (total) => {
-					total--;
+					total -= points;
 					return total;
 				});
-				// TODO limpar Log da conquista através do pushkey
 			}
 			await set(ref(db, `logs/${uid}/${pushkey}`), null);
 			await checkLog(uid);
@@ -190,6 +211,19 @@
 			await checkLog(user.id);
 		})();
 	});
+	async function nextPage() {
+		if (!hasMore.value) return;
+		pageDirection.value = 'next';
+		logPage.value += 1;
+		await checkLog(user.id);
+	}
+	async function prevPage() {
+		if (logPage.value > 1) {
+			pageDirection.value = 'prev';
+			logPage.value -= 1;
+			await checkLog(user.id);
+		}
+	}
 </script>
 
 <div
@@ -215,12 +249,29 @@
 							<p class="text-sm opacity-50">{date(log.id)}</p>
 						</div>
 						{#if isAdmin.value}
-							<button class="cursor-pointer rounded-lg border border-red-500 p-2 hover:bg-red-500"
+							<button
+								onclick={() => {
+									remove(log.id, user.id, log.action, log.type);
+								}}
+								class="cursor-pointer rounded-lg border border-red-500 px-3 hover:bg-red-500"
 								>X</button
 							>
 						{/if}
 					</div>
 				{/each}
+				<div class="flex w-full items-center justify-center gap-8">
+					<div>
+						<button class={logPage.value === 1 ? 'opacity-40' : ''} onclick={prevPage}
+							>&lt; Anterior</button
+						>
+					</div>
+					<span class="rounded-lg border border-white/20 p-1 px-2.5">{logPage.value}</span>
+					<div>
+						<button class={hasMore.value ? '' : 'opacity-40'} onclick={nextPage}
+							>Próxima &gt;</button
+						>
+					</div>
+				</div>
 			</div>
 			{#if isAdmin.value}
 				<Adminpanel

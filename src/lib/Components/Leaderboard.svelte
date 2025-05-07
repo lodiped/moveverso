@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { userArray } from '$lib/state.svelte';
+	import { userArray, logPage } from '$lib/state.svelte';
 	let sortedUsers = $state([] as any[]);
 
 	$effect(() => {
@@ -23,6 +23,9 @@
 			>
 				<span class="w-[7%] pr-0.5 text-end opacity-50">{i + 1}.</span>
 				<a
+					onclick={() => {
+						logPage.value = 1;
+					}}
 					href={`/${user.id}`}
 					class="bg-primary/30 hover:bg-primary/50 w-[57%] rounded-lg p-1 px-2 text-left transition-all"
 					>{user.name}</a

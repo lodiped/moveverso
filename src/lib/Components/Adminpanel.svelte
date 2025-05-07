@@ -20,7 +20,7 @@
 	<div class="w-full lg:w-1/2">
 		<h3 class="w-full text-center">Pontuações</h3>
 		<div
-			class="*:bg-primary/30 {loading
+			class="*:bg-primary/30 *:backdrop-blur-xs {loading
 				? 'pointer-events-none cursor-default opacity-50'
 				: ''} flex w-full flex-col gap-3 *:w-full *:cursor-pointer *:rounded-lg *:p-2"
 		>
@@ -68,7 +68,7 @@
 	<div class="w-full lg:w-1/2">
 		<h3 class="w-full text-center">Conquistas</h3>
 		<div
-			class="*:bg-primary/30 {loading
+			class="*:bg-primary/30 *:backdrop-blur-xs {loading
 				? 'pointer-events-none cursor-default opacity-50'
 				: ''} flex w-full flex-col gap-3 *:w-full *:cursor-pointer *:rounded-lg *:p-2"
 		>
@@ -92,7 +92,7 @@
 		<h3 class="mt-4 w-full text-center text-red-500">Danger Zone</h3>
 		<p class="mb-2 w-full text-center text-sm opacity-50">Esta ação exige confirmação:</p>
 		<div
-			class="*:bg-primary/30 {loading
+			class="*:bg-primary/30 *:backdrop-blur-xs {loading
 				? 'pointer-events-none cursor-default opacity-50'
 				: ''} flex w-full flex-col gap-3 *:w-full *:cursor-pointer *:rounded-lg *:p-2"
 		>

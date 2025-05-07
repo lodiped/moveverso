@@ -33,7 +33,9 @@
 			</div>
 		</div>
 		<div class="flex w-full items-center justify-start gap-3 pl-5 lg:pl-0">
-			<div class="bg-primary/20 flex w-15 flex-col items-center justify-between rounded-lg">
+			<div
+				class="bg-primary/20 flex w-15 flex-col items-center justify-between rounded-lg backdrop-blur-xs"
+			>
 				<p
 					class="text-accent drop-shadow-accent/70 flex items-center py-1.5 text-3xl font-bold drop-shadow-[0_0_5px]"
 				>
@@ -64,7 +66,7 @@
 			</div>
 		</div>
 		<div class="flex w-full items-center justify-start gap-3 pl-5 lg:pl-0">
-			<div class="bg-primary/20 flex w-15 flex-col items-center rounded-lg">
+			<div class="bg-primary/20 flex w-15 flex-col items-center rounded-lg backdrop-blur-xs">
 				<p
 					class="text-accent drop-shadow-accent/70 py-1.5 text-3xl font-bold drop-shadow-[0_0_5px]"
 				>

@@ -140,86 +140,44 @@ export let logText: any = $state({
 	conqformacao: {
 		title: 'Formação Superior',
 		desc: 'Concluiu uma formação superior',
-		img: '💎',
+		img: '🎓',
 		type: 'conq'
-	},
-	remconqformacao: {
-		title: 'Remoção de Conquista',
-		desc: 'Formação Superior: Concluiu uma formação superior',
-		img: '💎',
-		type: 'remconq'
 	},
 	conqelogio: {
 		title: 'Selo Especial',
 		desc: 'Elogio de cliente recebido',
-		img: '✨',
+		img: '💎',
 		type: 'conq'
-	},
-	remconqelogio: {
-		title: 'Remoção de Conquista',
-		desc: 'Selo Especial: Elogio de cliente recebido',
-		img: '✨',
-		type: 'remconq'
 	},
 	conqmesideia: {
 		title: 'Selo Especial',
 		desc: 'Melhor ideia do mês',
-		img: '✨',
+		img: '💡',
 		type: 'conq'
-	},
-	remconqmesideia: {
-		title: 'Remoção de Conquista',
-		desc: 'Selo Especial: Melhor ideia do mês',
-		img: '✨',
-		type: 'remconq'
 	},
 	conqmaiordoano: {
 		title: 'Em Órbita',
 		desc: 'Maior pontuação do Ano',
-		img: '🌟',
+		img: '🏆',
 		type: 'conq'
-	},
-	remconqmaiordoano: {
-		title: 'Remoção de Conquista',
-		desc: 'Em Órbita: Maior pontuação do Ano',
-		img: '🌟',
-		type: 'remconq'
 	},
 	conqmaiordomes: {
 		title: 'Decolagem',
 		desc: 'Maior pontuação do Mês',
-		img: '🚀',
+		img: '🎖️',
 		type: 'conq'
-	},
-	remconqmaiordomes: {
-		title: 'Remoção de Conquista',
-		desc: 'Decolagem: Maior pontuação do Mês',
-		img: '🚀',
-		type: 'remconq'
 	},
 	conqmesplanilha: {
 		title: 'Relógio',
 		desc: 'Mês com planilha de atividades preenchidas',
-		img: '⏱️',
+		img: '📜',
 		type: 'conq'
-	},
-	remconqmesplanilha: {
-		title: 'Remoção de Conquista',
-		desc: 'Relógio: Mês com planilha de atividades preenchidas',
-		img: '⏱️',
-		type: 'remconq'
 	},
 	conqmestarefa: {
 		title: 'Escudo',
 		desc: 'Mês com 100% das tarefas no prazo',
-		img: '🛡️',
+		img: '🌟',
 		type: 'conq'
-	},
-	remconqmestarefa: {
-		title: 'Remoção de Conquista',
-		desc: 'Escudo: Mês com 100% das tarefas no prazo',
-		img: '🛡️',
-		type: 'remconq'
 	},
 	elogio: { desc: 'Elogio recebido de cliente', points: 10, type: 'point' },
 	tarefas70: { desc: '70% das tarefas concluídas', points: 30, type: 'point' },

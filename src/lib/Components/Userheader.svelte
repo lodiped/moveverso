@@ -111,7 +111,7 @@
 									title={conquista.desc}
 									class="drop-shadow-accent/70 flex cursor-default flex-col justify-start text-4xl drop-shadow-[0_0_15px] hover:scale-105"
 								>
-									<p class="">
+									<p>
 										{conquista.img}
 									</p>
 									{#if conquista.number > 1}

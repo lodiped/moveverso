@@ -99,11 +99,8 @@
 			</div>
 		</div>
 		<div class="flex w-full flex-col items-center justify-center gap-2 lg:items-start">
-			<div>
-				<span class="opacity-50">Conquistas:</span> <span>{totalConquistas.value}</span>
-			</div>
 			{#if user.conquistas?.length > 0}
-				<div class=" flex items-start justify-center gap-5">
+				<div class=" flex items-start justify-center gap-4">
 					{#each user.conquistas as conquista}
 						{#if conquista.number > 0}
 							<div class=" inline-block w-full text-center align-top">

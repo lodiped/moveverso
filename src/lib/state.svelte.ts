@@ -54,13 +54,13 @@ export async function checkLog(uid: string) {
 		loading.value = true;
 		let q;
 		if (logPage.value === 1) {
-			q = query(logsRef, orderByKey(), limitToLast(10));
+			q = query(logsRef, orderByKey(), limitToLast(7));
 		} else if (pageDirection.value === 'next') {
 			if (!firstKey) return;
-			q = query(logsRef, orderByKey(), endBefore(firstKey.value), limitToLast(10));
+			q = query(logsRef, orderByKey(), endBefore(firstKey.value), limitToLast(7));
 		} else {
 			if (!lastKey) return;
-			q = query(logsRef, orderByKey(), startAfter(lastKey.value), limitToFirst(10));
+			q = query(logsRef, orderByKey(), startAfter(lastKey.value), limitToFirst(7));
 		}
 		const sortSnap = await get(q);
 		const sortData = sortSnap.exists() ? sortSnap.val() : null;
@@ -81,7 +81,7 @@ export async function checkLog(uid: string) {
 			} else {
 				hasMore.value = false;
 			}
-			hasMore.value = userLog.value.length === 10;
+			hasMore.value = userLog.value.length === 7;
 		} else {
 			userLog.value = [];
 		}

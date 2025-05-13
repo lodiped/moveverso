@@ -97,7 +97,7 @@ export async function check() {
 	try {
 		loading.value = true;
 		const snapshot = await get(child(dbRef, '/users'));
-		data = snapshot.exists() ? snapshot.val() : null;
+		const data = snapshot.exists() ? snapshot.val() : null;
 		userArray.value = Object.entries(data).map(([uid, userData]: any) => {
 			const total = userData.total;
 			const fase = faseCalc(total);

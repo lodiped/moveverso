@@ -26,5 +26,8 @@ export type UserType = {
 	total: number;
 	current: number;
 	gender: string;
+	log: Log[];
 	conquistas: UserConquista[];
 };
+
+export type UserArray = UserType[];

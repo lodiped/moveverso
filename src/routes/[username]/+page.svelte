@@ -1,18 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import {
-		runTransaction,
-		set,
-		getDatabase,
-		push,
-		orderByKey,
-		query,
-		limitToLast,
-		limitToFirst,
-		startAfter,
-		endBefore,
-		onValue
-	} from 'firebase/database';
+	import { runTransaction, set, getDatabase, push } from 'firebase/database';
 	import { db, ref, get } from '$lib/firebase';
 	import {
 		userArray,
@@ -20,8 +8,6 @@
 		sumConquistasCalc,
 		isAdmin,
 		checkLog,
-		userLog,
-		date,
 		logText,
 		logPage,
 		pageDirection,
@@ -33,10 +19,6 @@
 	import Leaderboard from '$lib/Components/Leaderboard.svelte';
 	import Adminpanel from '$lib/Components/Adminpanel.svelte';
 	import Log from '$lib/Components/Log.svelte';
-	import { onMount } from 'svelte';
-
-	let person: any = $state();
-	let userId: number | undefined | null = $state();
 
 	let username = $derived(page.params.username);
 	let message = $state('loading');
@@ -116,13 +98,26 @@
 					value: actionId === 'errovalor' || actionId === 'horacurso' ? n : null
 				});
 			}
+			let newTotal = 0;
 			await runTransaction(ref(db, `users/${uid}/total`), (total) => {
 				if (total + n < 0) {
 					total = 0;
 					return total;
 				}
+				newTotal = total + n;
 
 				return total + n;
+			});
+			await runTransaction(ref(db, `totals/${uid}`), (total) => {
+				if (total + n < 0) {
+					total = 0;
+					return total;
+				} else if (total + n !== newTotal) {
+					total = newTotal;
+					return total;
+				} else {
+					return total + n;
+				}
 			});
 			await checkLog(uid);
 			await check();
@@ -136,6 +131,9 @@
 
 	let erroModal = $state(false);
 	let cost = $state();
+
+	let person: any = $state();
+	let userId: number | undefined | null = $state();
 
 	async function load() {
 		console.log('Loading data');
@@ -206,7 +204,6 @@
 			loading = false;
 		}
 	}
-	onMount(async () => {});
 
 	$effect(() => {
 		homepage.value = false;
@@ -214,14 +211,6 @@
 		loading = true;
 		(async () => {
 			await load();
-			onValue(ref(db, `users/${username}`), async (snapshot) => {
-				if (!snapshot.exists()) {
-					return;
-				}
-				await checkLog(user.id);
-				await check();
-				await updateUI();
-			});
 		})();
 	});
 	async function nextPage() {

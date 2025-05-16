@@ -229,6 +229,8 @@
 			await checkLog(user.id);
 		}
 	}
+
+	// FIXME: ajuste do card do personagem quando em widescreen
 </script>
 
 <div

@@ -117,3 +117,5 @@ export const pulseira = $state({
 		text: '11 Anos'
 	}
 });
+
+// TODO: login para cada usuário ver o seu histórico

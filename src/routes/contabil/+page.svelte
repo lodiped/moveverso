@@ -5,8 +5,6 @@
 	import { onValue, ref, getDatabase, get } from 'firebase/database';
 	let loading = $state(true);
 	let error = $state(false);
-	// @ts-ignore
-	import Star from 'virtual:icons/mdi/star-four-points';
 
 	let loadDb;
 	// async function getTotals() {
@@ -36,9 +34,7 @@
 
 <div class="mt-10 flex w-full max-w-[1000px] flex-col items-center gap-15">
 	{#if loading}
-		<div class="relative flex w-full justify-center text-center">
-			<Star class="text-accent drop-shadow-accent animate-spin text-xl drop-shadow-[0_0_10px]" />
-		</div>
+		<div class="w-full text-center">loading</div>
 	{:else}
 		<!-- <div>{currentUser.value?.name}</div> -->
 		<div class="flex w-full flex-col items-center px-2 lg:px-0">

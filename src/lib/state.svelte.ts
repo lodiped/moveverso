@@ -1,4 +1,5 @@
 import { get, ref, getDatabase, child, auth } from '$lib/firebase';
+import { date, decodePushKeyTime, msToString } from '$lib/time.svelte';
 import {
 	query,
 	startAfter,
@@ -100,6 +101,7 @@ export async function check() {
 		const data = snapshot.exists() ? snapshot.val() : null;
 		userArray.value = Object.entries(data).map(([uid, userData]: any) => {
 			const total = userData.total;
+			const ingress = msToString(userData.ingress);
 			const fase = faseCalc(total);
 			const current = currentCalc(total, fase);
 			const nivel = nivelCalc(current);
@@ -117,6 +119,7 @@ export async function check() {
 			return {
 				id: uid,
 				...userData,
+				ingress,
 				current,
 				fase,
 				nivel,
@@ -353,40 +356,6 @@ export let titles: any = $state({
 		}
 	]
 });
-
-export function decodePushKeyTime(pushKey: string): number {
-	const PUSH_CHARS = '-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz';
-	const timeChars = pushKey.substring(0, 8);
-	let timestamp = 0;
-	for (let i = 0; i < 8; i++) {
-		const c = timeChars.charAt(i);
-		const idx = PUSH_CHARS.indexOf(c);
-		if (idx < -1) {
-			throw new Error(`Invalid push key at pos ${i}: ${pushKey}`);
-		}
-		timestamp = timestamp * 64 + idx;
-	}
-	return timestamp;
-}
-
-export function date(pushKey?: string): string {
-	let date;
-	let ms;
-	if (pushKey === undefined) {
-		date = new Date();
-	} else {
-		ms = decodePushKeyTime(pushKey);
-		date = new Date(ms);
-	}
-	let diaSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'];
-	return (
-		date.toLocaleDateString('pt-BR') +
-		' • ' +
-		diaSemana[date.getDay()] +
-		' • ' +
-		date.toLocaleTimeString('pt-BR')
-	);
-}
 
 export function faseCalc(total: number) {
 	const f = Math.floor(total / 1500);

@@ -8,7 +8,7 @@
 </script>
 
 <div class="flex w-full flex-col items-center px-2 lg:px-0">
-	<h2 class="-z-10 text-center">Ranking</h2>
+	<h2 class=" text-center">Ranking</h2>
 	<div class="flex w-full max-w-[750px] flex-col items-center gap-2 backdrop-blur-xs">
 		<div class="flex w-full items-center justify-center">
 			<span class="w-[7%] text-end text-sm">Nº.</span>

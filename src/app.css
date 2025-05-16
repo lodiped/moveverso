@@ -51,6 +51,10 @@
 	#gtx-trans {
 		display: none;
 	}
+	.hexagon {
+		aspect-ratio: 1 / cos(30deg);
+		clip-path: polygon(50% -50%, 100% 50%, 50% 150%, 0 50%);
+	}
 }
 
 /* 

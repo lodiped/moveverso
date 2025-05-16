@@ -19,6 +19,8 @@
 	import Leaderboard from '$lib/Components/Leaderboard.svelte';
 	import Adminpanel from '$lib/Components/Adminpanel.svelte';
 	import Log from '$lib/Components/Log.svelte';
+	// @ts-ignore
+	import Star from 'virtual:icons/mdi/star-four-points';
 
 	let username = $derived(page.params.username);
 	let message = $state('loading');
@@ -41,7 +43,7 @@
 		user.current = u.current;
 		user.gender = u.gender;
 		user.conquistas = u.conquistas;
-		imgsrc = `/assets/${user.fase}${user.nivel}.png`;
+		imgsrc = `/assets/${user.gender}/${user.fase}${user.nivel}.png`;
 		sumConquistasCalc(userId!);
 	}
 
@@ -139,6 +141,7 @@
 		console.log('Loading data');
 		try {
 			await check();
+			await checkLog(username);
 
 			const idx = userArray.value.findIndex((u) => u.id === username);
 			if (idx < 0) {
@@ -228,7 +231,9 @@
 	}
 </script>
 
-<div class="my-2 flex w-full flex-col gap-5 2xl:w-full 2xl:max-w-[1500px] 2xl:flex-row 2xl:gap-20">
+<div
+	class="my-2 flex w-full flex-col gap-5 md:w-[44rem] 2xl:w-full 2xl:max-w-[1500px] 2xl:flex-row 2xl:gap-20"
+>
 	{#if userData}
 		<div class="flex flex-col gap-5">
 			<Userheader {user} {imgsrc} />
@@ -248,6 +253,8 @@
 		</div>
 		<Leaderboard />
 	{:else}
-		<div class="w-full text-center">{message}</div>
+		<div class="relative flex w-full justify-center text-center">
+			<Star class="text-accent drop-shadow-accent animate-spin text-xl drop-shadow-[0_0_10px]" />
+		</div>
 	{/if}
 </div>

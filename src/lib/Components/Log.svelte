@@ -1,5 +1,6 @@
 <script lang="ts">
-	import { userLog, isAdmin, date, logPage, hasMore } from '$lib/state.svelte';
+	import { userLog, isAdmin, logPage, hasMore } from '$lib/state.svelte';
+	import { date } from '$lib/time.svelte';
 	let { user, remove, prevPage, nextPage } = $props();
 </script>
 

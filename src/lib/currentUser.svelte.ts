@@ -36,6 +36,22 @@ function processData(data: any) {
 		})
 		.sort((a, b) => b.total - a.total);
 }
+
+export function daysSince(ms: number): number {
+	const diffMs = Math.max(0, Date.now() - ms);
+	const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+	return days;
+}
+
+export function msToString(ms: number): string {
+	const fmt = new Intl.DateTimeFormat('pt-BR', {
+		day: '2-digit',
+		month: '2-digit',
+		year: '2-digit'
+	});
+	return fmt.format(new Date(ms));
+}
+
 let names: Record<string, string> = {
 	andreussiegrist: 'Andreus Siegrist',
 	arthurrezner: 'Arthur Rezner',
@@ -50,3 +66,54 @@ let names: Record<string, string> = {
 	robersoncorrea: 'Roberson Correa',
 	tamirisrosa: 'Tamiris Rosa'
 };
+
+export const pulseira = $state({
+	tresMeses: {
+		color: 'white',
+		text: '3 Meses'
+	},
+	umAno: {
+		color: 'yellow',
+		text: '1 Ano'
+	},
+	doisAnos: {
+		color: 'grey',
+		text: '2 Anos'
+	},
+	tresAnos: {
+		color: 'orange',
+		text: '3 Anos'
+	},
+	quatroAnos: {
+		color: 'green',
+		text: '4 Anos'
+	},
+	cincoAnos: {
+		color: 'dodgerblue',
+		text: '5 Anos'
+	},
+	seisAnos: {
+		color: 'purple',
+		text: '6 Anos'
+	},
+	seteAnos: {
+		color: 'brown',
+		text: '7 Anos'
+	},
+	oitoAnos: {
+		color: 'black',
+		text: '8 Anos'
+	},
+	noveAnos: {
+		color: 'red',
+		text: '9 Anos'
+	},
+	dezAnos: {
+		color: 'red',
+		text: '10 Anos'
+	},
+	onzeAnos: {
+		color: 'red',
+		text: '11 Anos'
+	}
+});

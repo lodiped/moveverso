@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { pulseira } from '$lib/currentUser.svelte';
 	import { titlesfem, titles, totalConquistas } from '$lib/state.svelte';
+	import movesports from '$lib/assets/sports.png';
 	// @ts-ignore
 	import Info from 'virtual:icons/mdi/information-slab-circle-outline';
 	// @ts-ignore
@@ -152,7 +153,7 @@
 					<Info class="text-base" />
 				</button>
 			</h3>
-			<div class="flex w-full items-center justify-around">
+			<div class="flex w-full items-center justify-between">
 				<div
 					class="drop-shadow-accent flex w-full flex-col items-center gap-1 drop-shadow-[0_0_20px]"
 				>
@@ -168,18 +169,36 @@
 					</div>
 				</div>
 				<div
-					class="drop-shadow-accent/40 flex w-full flex-col items-center justify-center gap-1 drop-shadow-[0_0_20px]"
+					class="flex w-full flex-col items-center justify-between gap-3.5 drop-shadow-[0_0_20px] drop-shadow-red-600"
 				>
-					<div class="drop-shadow-md drop-shadow-black">
+					<img src={movesports} class="w-[50%]" alt="" />
+					<p class="text-sm font-bold">Participando</p>
+				</div>
+				<div
+					class="drop-shadow-accent/40 group relative flex w-full flex-col items-center justify-center gap-1 drop-shadow-[0_0_20px] transition-all"
+				>
+					<div
+						class="pointer-events-none absolute top-0 right-0 flex h-full w-full -translate-y-10 cursor-default flex-col items-center justify-center opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100"
+					>
+						<p class="text-sm">Recebidas: 12</p>
+						<p class="text-sm">Entregues: 8</p>
+					</div>
+					<div
+						class="pointer-events-none drop-shadow-md drop-shadow-black transition-all group-hover:translate-y-10 group-hover:opacity-0"
+					>
 						<div class="hexagon bg-accent/80 flex h-12 items-center justify-center">
 							<div
-								class="hexagon bg-secondary text-accent flex h-10 items-center justify-center text-xl font-bold"
+								class="hexagon bg-secondary text-accent flex h-10 cursor-default items-center justify-center text-xl font-bold"
 							>
 								12
 							</div>
 						</div>
 					</div>
-					<p class="text-sm font-bold">Coins</p>
+					<p
+						class="pointer-events-none text-sm font-bold transition-all group-hover:translate-y-10 group-hover:opacity-0"
+					>
+						Coins
+					</p>
 				</div>
 			</div>
 			<button

@@ -51,3 +51,5 @@ export function date(pushKey?: string): string {
 		date.toLocaleTimeString('pt-BR')
 	);
 }
+
+// TODO: Linkar as pulseiras com espaços de tempo

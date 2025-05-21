@@ -16,6 +16,22 @@ export type UserConquista = BaseConquista & {
 	id: string;
 };
 
+type Cultura = {
+	media: string;
+	coins: {
+		entregues: number;
+		recebidas: number;
+	};
+	presenca: {
+		cumbuca: number;
+		treinamento: number;
+	};
+	sports: {
+		conq: boolean;
+		presente: boolean;
+	};
+};
+
 export type UserType = {
 	id: string;
 	ingress: string;
@@ -26,6 +42,8 @@ export type UserType = {
 	total: number;
 	current: number;
 	gender: string;
+	arrayId: number;
+	cultura: Cultura;
 	log: Log[];
 	conquistas: UserConquista[];
 };

@@ -21,6 +21,7 @@
 	import Log from '$lib/Components/Log.svelte';
 	// @ts-ignore
 	import Star from 'virtual:icons/mdi/star-four-points';
+	import { getCultura } from '$lib/currentUser.svelte';
 
 	let username = $derived(page.params.username);
 	let message = $state('loading');
@@ -43,6 +44,8 @@
 		user.current = u.current;
 		user.gender = u.gender;
 		user.conquistas = u.conquistas;
+		user.arrayId = u.arrayId;
+		user.cultura = u.cultura;
 		imgsrc = `/assets/${user.gender}/${user.fase}${user.nivel}.png`;
 		sumConquistasCalc(userId!);
 	}
@@ -140,7 +143,12 @@
 	async function load() {
 		console.log('Loading data');
 		try {
-			await check();
+			if (userArray.value.length === 0) {
+				console.log('userArray is empty');
+				await check();
+			} else {
+				console.log('userArray is not empty');
+			}
 			await checkLog(username);
 
 			const idx = userArray.value.findIndex((u) => u.id === username);
@@ -155,6 +163,7 @@
 				name: person.name,
 				total: person.total
 			};
+			await getCultura(person.id);
 			updateUI();
 		} catch (err) {
 			message = 'User not found';
@@ -236,7 +245,7 @@
 <div
 	class="my-2 flex w-full flex-col gap-5 md:w-[44rem] 2xl:w-full 2xl:max-w-[1500px] 2xl:flex-row 2xl:gap-20"
 >
-	{#if userData}
+	{#if userData && user && user.cultura}
 		<div class="flex flex-col gap-5">
 			<Userheader {user} {imgsrc} />
 			<Log {user} {remove} {prevPage} {nextPage} />

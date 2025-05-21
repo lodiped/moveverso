@@ -1,6 +1,6 @@
 import type { UserType, UserArray } from '$lib/types.svelte';
 import { onValue, ref, getDatabase, get } from 'firebase/database';
-import { faseCalc, nivelCalc, currentCalc } from '$lib/state.svelte';
+import { faseCalc, nivelCalc, currentCalc, userArray } from '$lib/state.svelte';
 export const currentUid = $state({ value: 'andreussiegrist' });
 // export const currentUser = $state({ value: {} as UserType });
 export const currentUser = $state({ value: {} });
@@ -119,3 +119,24 @@ export const pulseira = $state({
 });
 
 // TODO: login para cada usuário ver o seu histórico
+
+export async function getCultura(uid: string) {
+	console.log('getting Cultura');
+	try {
+		const snapshot = await get(ref(getDatabase(), `cultura/${uid}`));
+		const data = snapshot.exists() ? snapshot.val() : null;
+		console.log(data);
+		console.log(userArray.value);
+		const idx = userArray.value.findIndex((u) => u.id === uid);
+		if (idx < 0) {
+			return;
+		}
+		if (data) {
+			userArray.value[idx].cultura = data;
+		}
+		console.log(userArray.value);
+	} catch (error) {
+		console.log('error getting cultura try/catch');
+		console.error(error);
+	}
+}

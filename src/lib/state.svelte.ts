@@ -28,6 +28,8 @@ const dbRef = ref(getDatabase());
 export const loading = $state({ value: false });
 let data: any = $state();
 export const userArray = $state({ value: [] as any[] });
+export const contabilArray = $state({ value: [] as any[] });
+export const bpoArray = $state({ value: [] as any[] });
 export const userLog = $state({ value: [] as any[] });
 
 //Front-end stuff
@@ -38,6 +40,24 @@ export function sumConquistasCalc(i: number) {
 	for (let y = 0; y < userArray.value?.[i].conquistas.length; y++) {
 		if (userArray.value?.[i].conquistas[y].number > 0) {
 			totalConquistas.value += userArray.value?.[i].conquistas[y].number;
+		}
+	}
+}
+
+export function sumConquistasBpo(i: number) {
+	totalConquistas.value = 0;
+	for (let y = 0; y < bpoArray.value?.[i].conquistas.length; y++) {
+		if (bpoArray.value?.[i].conquistas[y].number > 0) {
+			totalConquistas.value += bpoArray.value?.[i].conquistas[y].number;
+		}
+	}
+}
+
+export function sumConquistasContabil(i: number) {
+	totalConquistas.value = 0;
+	for (let y = 0; y < contabilArray.value?.[i].conquistas.length; y++) {
+		if (contabilArray.value?.[i].conquistas[y].number > 0) {
+			totalConquistas.value += contabilArray.value?.[i].conquistas[y].number;
 		}
 	}
 }
@@ -90,6 +110,98 @@ export async function checkLog(uid: string) {
 		console.error(error);
 	} finally {
 		loading.value = false;
+	}
+}
+
+export async function checkBpo() {
+	console.log('checking CheckBpo');
+	try {
+		loading.value = true;
+		const snapshot = await get(child(dbRef, '/bpo'));
+		const data = snapshot.exists() ? snapshot.val() : null;
+		bpoArray.value = Object.entries(data).map(([uid, userData]: any) => {
+			const total = userData.total;
+			const ingress = msToString(userData.ingress);
+			const fase = faseCalc(total);
+			const current = currentCalc(total, fase);
+			const nivel = nivelCalc(current);
+			const xp = currentXP(current, nivel);
+			const conquistas = userData.conquistas
+				? Object.entries(userData.conquistas).map(([conqId, conqData]: any) => ({
+						id: conqId,
+						number: conqData.number,
+						title: logText[conqId]?.title ?? '--',
+						desc: logText[conqId]?.desc ?? '--',
+						img: logText[conqId]?.img ?? '--'
+					}))
+				: [];
+
+			return {
+				id: uid,
+				...userData,
+				ingress,
+				current,
+				fase,
+				nivel,
+				xp,
+				conquistas
+			};
+		});
+
+		bpoArray.value = bpoArray.value.map((user, idx) => ({
+			...user,
+			arrayId: idx
+		}));
+
+		loading.value = false;
+	} catch (error) {
+		console.error(error);
+	}
+}
+
+export async function checkContabil() {
+	console.log('checking CheckContabil');
+	try {
+		loading.value = true;
+		const snapshot = await get(child(dbRef, '/contabil'));
+		const data = snapshot.exists() ? snapshot.val() : null;
+		contabilArray.value = Object.entries(data).map(([uid, userData]: any) => {
+			const total = userData.total;
+			const ingress = msToString(userData.ingress);
+			const fase = faseCalc(total);
+			const current = currentCalc(total, fase);
+			const nivel = nivelCalc(current);
+			const xp = currentXP(current, nivel);
+			const conquistas = userData.conquistas
+				? Object.entries(userData.conquistas).map(([conqId, conqData]: any) => ({
+						id: conqId,
+						number: conqData.number,
+						title: logText[conqId]?.title ?? '--',
+						desc: logText[conqId]?.desc ?? '--',
+						img: logText[conqId]?.img ?? '--'
+					}))
+				: [];
+
+			return {
+				id: uid,
+				...userData,
+				ingress,
+				current,
+				fase,
+				nivel,
+				xp,
+				conquistas
+			};
+		});
+
+		contabilArray.value = contabilArray.value.map((user, idx) => ({
+			...user,
+			arrayId: idx
+		}));
+
+		loading.value = false;
+	} catch (error) {
+		console.error(error);
 	}
 }
 
@@ -180,6 +292,12 @@ export let logText: any = $state({
 		title: 'Escudo',
 		desc: 'Mês com 100% das tarefas no prazo',
 		img: '🌟',
+		type: 'conq'
+	},
+	conqsports: {
+		title: 'Move Sports',
+		desc: 'Completou o desafio Move Sports',
+		img: '🏃‍♂️',
 		type: 'conq'
 	},
 	elogio: { desc: 'Elogio recebido de cliente', points: 10, type: 'point' },

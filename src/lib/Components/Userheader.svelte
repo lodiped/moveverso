@@ -2,6 +2,7 @@
 	import { getCultura, pulseira } from '$lib/currentUser.svelte';
 	import { titlesfem, titles, totalConquistas } from '$lib/state.svelte';
 	import movesports from '$lib/assets/sports.png';
+	import nomovesports from '$lib/assets/nosports.png';
 	// @ts-ignore
 	import Info from 'virtual:icons/mdi/information-slab-circle-outline';
 	// @ts-ignore
@@ -20,8 +21,10 @@
 	});
 </script>
 
-<div class="flex flex-row items-start justify-center gap-5 px-8 md:px-0">
-	<div class="relative flex w-[300px] flex-col items-center justify-center gap-4 md:w-1/3">
+<div class="flex flex-col items-start justify-center gap-5 px-8 md:flex-row md:px-0">
+	<div
+		class="relative flex w-[300px] min-w-[230px] grow-0 flex-col items-center justify-center gap-4 md:w-1/3"
+	>
 		{#if imgsrc}
 			<img src={imgsrc} alt="Arte do Personagem" class="rounded-3xl" />
 		{/if}
@@ -153,32 +156,50 @@
 				</button>
 			</h3>
 			<div class="flex w-full flex-col items-center gap-2">
-				<div class="bg-secondary relative h-4 w-full rounded-md">
+				<div
+					class="bg-secondary relative h-4 w-full rounded-md"
+					title={user.cultura.presenca.treinamento}
+				>
 					<div
 						class="absolute top-0 left-0 flex h-full w-full items-center justify-end rounded-md bg-[slateblue] drop-shadow-[0_0_10px] drop-shadow-[slateblue]/70 transition-all content-['']"
-						style={`width: 50%;`}
+						style={`width: ${user.cultura.presenca.treinamento}%;`}
 					>
-						<span class="pr-2 text-xs text-black opacity-50">Treinamentos</span>
+						<span
+							class="pr-2 text-xs font-bold text-black opacity-50 {user.cultura.presenca
+								.treinamento < 20
+								? 'hidden'
+								: ''}">Treinamentos</span
+						>
 					</div>
 				</div>
-				<div class="bg-secondary relative h-4 w-full rounded-md">
+				<div
+					class="bg-secondary relative h-4 w-full rounded-md"
+					title={user.cultura.presenca.cumbuca}
+				>
 					<div
 						class="absolute top-0 left-0 flex h-full w-full items-center justify-end rounded-md bg-[slateblue] drop-shadow-[0_0_10px] drop-shadow-[slateblue]/70 transition-all content-['']"
-						style={`width: 50%;`}
+						style={`width: ${user.cultura.presenca.cumbuca}%;`}
 					>
-						<span class="pr-2 text-xs text-black opacity-50">Cumbuca</span>
+						<span
+							class="pr-2 text-xs font-bold text-black opacity-50 {user.cultura.presenca.cumbuca <
+							20
+								? 'hidden'
+								: ''}">Cumbuca</span
+						>
 					</div>
 				</div>
 			</div>
 			<div class="flex w-full items-center justify-between">
-				<div
-					class="drop-shadow-accent flex w-full flex-col items-center gap-1 drop-shadow-[0_0_20px]"
-				>
-					<p class="text-accent my-1 text-3xl font-bold drop-shadow-sm drop-shadow-black">
-						{user.cultura.media}
-					</p>
-					<p class="text-sm font-bold">Média 360º</p>
-				</div>
+				{#if user.cultura.media !== 0}
+					<div
+						class="drop-shadow-accent flex w-full flex-col items-center gap-1 drop-shadow-[0_0_20px]"
+					>
+						<p class="text-accent my-1 text-3xl font-bold drop-shadow-sm drop-shadow-black">
+							{user.cultura.media}
+						</p>
+						<p class="text-sm font-bold">Média 360º</p>
+					</div>
+				{/if}
 				<div class="group relative flex w-full flex-col items-center transition-all">
 					<div
 						class="drop-shadow-accent/50 pointer-events-none absolute -translate-y-10 opacity-0 drop-shadow-[0_0_20px] transition-all group-hover:translate-y-0 group-hover:opacity-100"
@@ -198,24 +219,16 @@
 					</div>
 				</div>
 				<div
-					class="group flex w-full flex-col items-center justify-between gap-3.5 drop-shadow-[0_0_20px] drop-shadow-red-600"
+					class="flex w-full flex-col items-center justify-between gap-3.5 drop-shadow-[0_0_20px] drop-shadow-red-600"
 				>
-					<div
-						class="absolute -translate-y-10 opacity-0 transition-all group-hover:translate-y-1 group-hover:opacity-100"
-					>
-						<div class="flex flex-col items-center justify-between gap-3.5">
-							<div class="flex text-xl drop-shadow-[0_0_12px] drop-shadow-[slateblue]">
-								<div class="drop-shadow-md drop-shadow-black">🎙️</div>
-								<div class="drop-shadow-md drop-shadow-black">💎</div>
-							</div>
-							<div>Conquistas</div>
-						</div>
-					</div>
-					<div
-						class="flex flex-col items-center justify-between gap-3.5 transition-all group-hover:translate-y-10 group-hover:opacity-0"
-					>
-						<img src={movesports} class="w-[50%]" alt="" />
-						<p class="text-sm font-bold">Participando</p>
+					<div class="flex flex-col items-center justify-between gap-3.5">
+						{#if user.cultura.sports.presente}
+							<img src={movesports} class="w-[50%]" alt="" />
+							<p class="text-sm font-bold">Ativo</p>
+						{:else}
+							<img src={nomovesports} class="w-[50%]" alt="" />
+							<p class="text-sm font-bold">Inativo</p>
+						{/if}
 					</div>
 				</div>
 				<div

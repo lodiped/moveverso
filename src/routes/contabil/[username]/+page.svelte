@@ -1,11 +1,13 @@
 <script lang="ts">
+	import type { UserType } from '$lib/types.svelte';
 	import { page } from '$app/state';
 	import { runTransaction, set, getDatabase, push } from 'firebase/database';
 	import { db, ref, get } from '$lib/firebase';
+	import { bpoList, contabilList, getCulturaContabil } from '$lib/currentUser.svelte';
 	import {
-		userArray,
-		check,
-		sumConquistasCalc,
+		contabilArray,
+		checkContabil,
+		sumConquistasContabil,
 		isAdmin,
 		checkLog,
 		logText,
@@ -14,14 +16,11 @@
 		hasMore,
 		homepage
 	} from '$lib/state.svelte';
-	import type { UserType } from '$lib/types.svelte';
 	import Userheader from '$lib/Components/Userheader.svelte';
-	import Leaderboard from '$lib/Components/Leaderboard.svelte';
 	import Adminpanel from '$lib/Components/Adminpanel.svelte';
 	import Log from '$lib/Components/Log.svelte';
 	// @ts-ignore
 	import Star from 'virtual:icons/mdi/star-four-points';
-	import { getCultura } from '$lib/currentUser.svelte';
 
 	let username = $derived(page.params.username);
 	let message = $state('loading');
@@ -33,7 +32,7 @@
 
 	async function updateUI() {
 		console.log('updatingUI');
-		u = userArray.value[userId!];
+		u = contabilArray.value[userId!];
 		user.id = u.id;
 		user.ingress = u.ingress;
 		user.name = u.name;
@@ -47,9 +46,10 @@
 		user.arrayId = u.arrayId;
 		user.cultura = u.cultura;
 		imgsrc = `/assets/${user.gender}/${user.fase}${user.nivel}.png`;
-		sumConquistasCalc(userId!);
+		sumConquistasContabil(userId!);
 	}
 
+	// TODO: add Move Sports conquista
 	async function addConquista(conqUid: string, uid: string) {
 		loading = true;
 		logPage.value = 1;
@@ -61,7 +61,7 @@
 				conquista++;
 				return conquista;
 			});
-			await check();
+			await checkContabil();
 			await checkLog(uid);
 			await updateUI();
 		} catch (error) {
@@ -83,7 +83,7 @@
 			);
 
 			await set(ref(db, `users/${uid}/conquistas`), resetMap);
-			await check();
+			await checkContabil();
 			await updateUI();
 		} catch (error) {
 			console.error(error);
@@ -125,7 +125,7 @@
 				}
 			});
 			await checkLog(uid);
-			await check();
+			await checkContabil();
 			await updateUI();
 		} catch (error) {
 			console.error(error);
@@ -143,27 +143,27 @@
 	async function load() {
 		console.log('Loading data');
 		try {
-			if (userArray.value.length === 0) {
+			if (contabilArray.value.length === 0) {
 				console.log('userArray is empty');
-				await check();
+				await checkContabil();
 			} else {
 				console.log('userArray is not empty');
 			}
 			await checkLog(username);
 
-			const idx = userArray.value.findIndex((u) => u.id === username);
+			const idx = contabilArray.value.findIndex((u) => u.id === username);
 			if (idx < 0) {
 				message = 'User not found';
 				return;
 			}
 
 			userId = idx;
-			person = userArray.value[idx];
+			person = contabilArray.value[idx];
 			userData = {
 				name: person.name,
 				total: person.total
 			};
-			await getCultura(person.id);
+			await getCulturaContabil(person.id);
 			updateUI();
 		} catch (err) {
 			message = 'User not found';
@@ -181,7 +181,7 @@
 			await clearConquistas(uid);
 			await set(ref(db, `logs/${uid}`), '');
 			await checkLog(uid);
-			await check();
+			await checkContabil();
 			await updateUI();
 		} catch (error) {
 			console.error(error);
@@ -208,7 +208,7 @@
 			}
 			await set(ref(db, `logs/${uid}/${pushkey}`), null);
 			await checkLog(uid);
-			await check();
+			await checkContabil();
 			await updateUI();
 		} catch (error) {
 			console.error(error);
@@ -262,7 +262,66 @@
 				/>
 			{/if}
 		</div>
-		<Leaderboard />
+		<div class="flex w-full flex-col items-center px-2 lg:px-0">
+			<h2 class="-z-10 text-center">Contábil</h2>
+			<div class="flex w-full max-w-[750px] flex-col items-center gap-2 backdrop-blur-xs">
+				<div class="flex w-full items-center justify-center">
+					<span class="w-[7%] text-end text-sm">Nº.</span>
+					<span class="w-[57%] px-2 text-sm">Nome</span>
+					<span class="w-[11%] text-end text-sm">Nível</span>
+					<span class="w-[11%] text-end text-sm">Fase</span>
+					<span class="w-[13%] text-end text-sm">Total</span>
+				</div>
+				{#each contabilList.value as user, i}
+					<div
+						class="nth-2:bg-accent/30 nth-2:drop-shadow-accent/50 nth-3:bg-primary/25 nth-4:bg-accent/8 flex w-full items-center justify-center rounded-lg px-1 nth-2:drop-shadow-[0_0_15px]"
+					>
+						<span class="w-[7%] pr-0.5 text-end opacity-50">{i + 1}.</span>
+						<a
+							onclick={() => {
+								logPage.value = 1;
+							}}
+							href={`/contabil/${user.id}`}
+							class="bg-primary/30 hover:bg-primary/50 w-[57%] rounded-lg p-1 px-2 text-left transition-all"
+							>{user.name}</a
+						>
+						<span class="w-[11%] text-end">{user.nivel}</span>
+						<span class="w-[11%] text-end">{user.fase}</span>
+						<span class="w-[13%] text-end">{user.total}</span>
+					</div>
+				{/each}
+			</div>
+		</div>
+		<div class="flex w-full flex-col items-center px-2 lg:px-0">
+			<h2 class="-z-10 text-center">BPO</h2>
+			<div class="flex w-full max-w-[750px] flex-col items-center gap-2 backdrop-blur-xs">
+				<div class="flex w-full items-center justify-center">
+					<span class="w-[7%] text-end text-sm">Nº.</span>
+					<span class="w-[57%] px-2 text-sm">Nome</span>
+					<span class="w-[11%] text-end text-sm">Nível</span>
+					<span class="w-[11%] text-end text-sm">Fase</span>
+					<span class="w-[13%] text-end text-sm">Total</span>
+				</div>
+				{#each bpoList.value as user, i}
+					<div
+						class="nth-2:bg-accent/30 nth-2:drop-shadow-accent/50 nth-3:bg-primary/25 nth-4:bg-accent/8 flex w-full items-center justify-center rounded-lg px-1 nth-2:drop-shadow-[0_0_15px]"
+					>
+						<span class="w-[7%] pr-0.5 text-end opacity-50">{i + 1}.</span>
+						<a
+							onclick={() => {
+								logPage.value = 1;
+							}}
+							href={`/financeiro/${user.id}`}
+							class="bg-primary/30 hover:bg-primary/50 w-[57%] rounded-lg p-1 px-2 text-left transition-all"
+							>{user.name}</a
+						>
+						<span class="w-[11%] text-end">{user.nivel}</span>
+						<span class="w-[11%] text-end">{user.fase}</span>
+						<span class="w-[13%] text-end">{user.total}</span>
+					</div>
+				{/each}
+			</div>
+		</div>
 	{:else}
 		<div class="relative flex w-full justify-center text-center">
 			<Star class="text-accent drop-shadow-accent animate-spin text-xl drop-shadow-[0_0_10px]" />

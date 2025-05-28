@@ -18,11 +18,23 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 async function listUserEntries() {
-	const snapshot = await get(child(ref(db), 'users'));
-	if (!snapshot.exists()) {
+	const rootSnap = await get(ref(db));
+	if (!rootSnap.exists()) {
 		return [];
 	}
-	return Object.keys(snapshot.val()).map((uid) => `/${uid}`);
+
+	const rootVal = rootSnap.val();
+	const entries = [];
+
+	for (const [category, users] of Object.entries(rootVal)) {
+		if (category === 'contabil' || category === 'bpo') {
+			for (const uid of Object.keys(users)) {
+				entries.push(`/${category}/${uid}`);
+			}
+		}
+	}
+
+	return entries;
 }
 
 const userEntries = await listUserEntries();

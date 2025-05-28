@@ -104,7 +104,7 @@
 				});
 			}
 			let newTotal = 0;
-			await runTransaction(ref(db, `users/${uid}/total`), (total) => {
+			await runTransaction(ref(db, `bpo/${uid}/total`), (total) => {
 				if (total + n < 0) {
 					total = 0;
 					return total;
@@ -113,7 +113,7 @@
 
 				return total + n;
 			});
-			await runTransaction(ref(db, `totals/${uid}`), (total) => {
+			await runTransaction(ref(db, `totals/${uid}/value`), (total) => {
 				if (total + n < 0) {
 					total = 0;
 					return total;
@@ -195,15 +195,28 @@
 		logPage.value = 1;
 		try {
 			if (type === 'conq') {
-				await runTransaction(ref(db, `users/${uid}/conquistas/${actionId}/number`), (conquista) => {
+				await runTransaction(ref(db, `bpo/${uid}/conquistas/${actionId}/number`), (conquista) => {
 					conquista--;
 					return conquista;
 				});
 			} else if (type === 'point') {
 				let points = logText[actionId]?.points ?? 0;
-				await runTransaction(ref(db, `users/${uid}/total`), (total) => {
+				let newPoints: number;
+				await runTransaction(ref(db, `bpo/${uid}/total`), (total) => {
 					total -= points;
+					newPoints = total;
 					return total;
+				});
+				await runTransaction(ref(db, `totals/${uid}/total`), (total) => {
+					if (total < 0) {
+						total = 0;
+						return total;
+					} else if (total !== newPoints) {
+						total = newPoints;
+						return total;
+					} else {
+						return total;
+					}
 				});
 			}
 			await set(ref(db, `logs/${uid}/${pushkey}`), null);
@@ -281,7 +294,7 @@
 							onclick={() => {
 								logPage.value = 1;
 							}}
-							href={`/financeiro/${user.id}`}
+							href={`/bpo/${user.id}`}
 							class="bg-primary/30 hover:bg-primary/50 w-[57%] rounded-lg p-1 px-2 text-left transition-all"
 							>{user.name}</a
 						>

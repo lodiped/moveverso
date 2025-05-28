@@ -35,7 +35,7 @@
 			{lastname}
 		</h2>
 		<div class="text-primary absolute top-77 flex w-full justify-center gap-1 text-xs">
-			<span>
+			<span class="drop-shadow-[0_0_2px] drop-shadow-black">
 				ingresso: {user.ingress}
 			</span>
 			<span> <Pulseira class="-rotate-45" style={`color: ${pulseira.cincoAnos.color};`} /></span>

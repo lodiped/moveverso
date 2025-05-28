@@ -340,6 +340,7 @@
 		</div>
 	{:else}
 		<div class="relative flex w-full justify-center text-center">
+			loading
 			<Star class="text-accent drop-shadow-accent animate-spin text-xl drop-shadow-[0_0_10px]" />
 		</div>
 	{/if}

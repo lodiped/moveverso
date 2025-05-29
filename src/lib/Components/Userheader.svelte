@@ -22,9 +22,11 @@
 	});
 </script>
 
-<div class="flex flex-col items-start justify-center gap-5 px-8 md:flex-row md:px-0">
+<div
+	class="flex flex-col items-center justify-center gap-5 px-8 md:flex-row md:items-start md:px-0"
+>
 	<div
-		class="relative flex w-[300px] min-w-[230px] grow-0 flex-col items-center justify-center gap-4 md:w-1/3"
+		class="relative flex w-[230px] grow-0 flex-col items-center justify-center gap-4 md:w-1/3 md:min-w-[230px]"
 	>
 		{#if imgsrc}
 			<img src={imgsrc} alt="Arte do Personagem" class="rounded-3xl" />
@@ -78,7 +80,7 @@
 		</div>
 	</div>
 	<div class="flex w-full flex-col items-start justify-start gap-8 md:w-2/3">
-		<h3 class="w-full text-center">PROGRESSO</h3>
+		<h3 class="hidden w-full text-center md:block">PROGRESSO</h3>
 		<div class="flex w-full items-center justify-start gap-3">
 			<div
 				class="bg-primary/20 flex w-15 flex-col items-center justify-between rounded-lg backdrop-blur-xs"

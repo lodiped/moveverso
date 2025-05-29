@@ -121,6 +121,7 @@ export async function checkBpo() {
 		const data = snapshot.exists() ? snapshot.val() : null;
 		bpoArray.value = Object.entries(data).map(([uid, userData]: any) => {
 			const total = userData.total;
+			const ingressMs = userData.ingress;
 			const ingress = msToString(userData.ingress);
 			const fase = faseCalc(total);
 			const current = currentCalc(total, fase);
@@ -139,6 +140,7 @@ export async function checkBpo() {
 			return {
 				id: uid,
 				...userData,
+				ingressMs,
 				ingress,
 				current,
 				fase,
@@ -167,6 +169,7 @@ export async function checkContabil() {
 		const data = snapshot.exists() ? snapshot.val() : null;
 		contabilArray.value = Object.entries(data).map(([uid, userData]: any) => {
 			const total = userData.total;
+			const ingressMs = userData.ingress;
 			const ingress = msToString(userData.ingress);
 			const fase = faseCalc(total);
 			const current = currentCalc(total, fase);
@@ -185,6 +188,7 @@ export async function checkContabil() {
 			return {
 				id: uid,
 				...userData,
+				ingressMs,
 				ingress,
 				current,
 				fase,

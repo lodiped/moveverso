@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getCultura, pulseira } from '$lib/currentUser.svelte';
+	import { getCultura, pulseira, getBandColor, getBandName } from '$lib/currentUser.svelte';
 	import { titlesfem, titles, totalConquistas } from '$lib/state.svelte';
 	import movesports from '$lib/assets/sports.png';
 	import nomovesports from '$lib/assets/nosports.png';
@@ -7,6 +7,7 @@
 	import Info from 'virtual:icons/mdi/information-slab-circle-outline';
 	// @ts-ignore
 	import Pulseira from 'virtual:icons/fa-solid/ring';
+	import { get } from 'svelte/store';
 	let { user, imgsrc } = $props();
 
 	let cultureInfo = $state(false);
@@ -38,7 +39,11 @@
 			<span class="drop-shadow-[0_0_2px] drop-shadow-black">
 				ingresso: {user.ingress}
 			</span>
-			<span> <Pulseira class="-rotate-45" style={`color: ${pulseira.cincoAnos.color};`} /></span>
+			{#if getBandColor(user.ingressMs)}
+				<span>
+					<Pulseira class="-rotate-45" style={`color: ${getBandColor(user.ingressMs)};`} /></span
+				>
+			{/if}
 		</div>
 		<div class="absolute top-90 flex w-full flex-col items-center pt-5">
 			<div class="relative h-2.5 w-4/5 rounded-md bg-black">
@@ -200,24 +205,32 @@
 						<p class="text-sm font-bold">Média 360º</p>
 					</div>
 				{/if}
-				<div class="group relative flex w-full flex-col items-center transition-all">
-					<div
-						class="drop-shadow-accent/50 pointer-events-none absolute -translate-y-10 opacity-0 drop-shadow-[0_0_20px] transition-all group-hover:translate-y-0 group-hover:opacity-100"
-					>
-						<div class="flex flex-col items-center gap-1 drop-shadow-md drop-shadow-black">
-							<Pulseira style={`color: ${pulseira.seisAnos.color};`} class="-rotate-45 text-4xl" />
-							<div class="text-sm font-bold">Próxima</div>
+				{#if getBandColor(user.ingressMs)}
+					<div class="group relative flex w-full flex-col items-center transition-all">
+						<div
+							class="drop-shadow-accent/50 pointer-events-none absolute -translate-y-10 opacity-0 drop-shadow-[0_0_20px] transition-all group-hover:translate-y-0 group-hover:opacity-100"
+						>
+							<div class="flex flex-col items-center gap-1 drop-shadow-md drop-shadow-black">
+								<Pulseira
+									style={`color: ${getBandColor(user.ingressMs)};`}
+									class="-rotate-45 text-4xl"
+								/>
+								<div class="text-sm font-bold">Próxima</div>
+							</div>
+						</div>
+						<div
+							class="drop-shadow-accent/50 pointer-events-none drop-shadow-[0_0_20px] transition-all group-hover:translate-y-10 group-hover:opacity-0"
+						>
+							<div class="flex flex-col items-center gap-1 drop-shadow-md drop-shadow-black">
+								<Pulseira
+									style={`color: ${getBandColor(user.ingressMs)};`}
+									class="-rotate-45 text-4xl"
+								/>
+								<div class="text-sm font-bold">{getBandName(user.ingressMs)}</div>
+							</div>
 						</div>
 					</div>
-					<div
-						class="drop-shadow-accent/50 pointer-events-none drop-shadow-[0_0_20px] transition-all group-hover:translate-y-10 group-hover:opacity-0"
-					>
-						<div class="flex flex-col items-center gap-1 drop-shadow-md drop-shadow-black">
-							<Pulseira style={`color: ${pulseira.cincoAnos.color};`} class="-rotate-45 text-4xl" />
-							<div class="text-sm font-bold">{pulseira.cincoAnos.text}</div>
-						</div>
-					</div>
-				</div>
+				{/if}
 				<div
 					class="flex w-full flex-col items-center justify-between gap-3.5 drop-shadow-[0_0_20px] drop-shadow-red-600"
 				>

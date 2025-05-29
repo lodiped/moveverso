@@ -34,6 +34,7 @@ type Cultura = {
 
 export type UserType = {
 	id: string;
+	ingressMs: number;
 	ingress: string;
 	name: string;
 	fase: number;

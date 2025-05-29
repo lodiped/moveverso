@@ -34,6 +34,7 @@
 		console.log('updatingUI');
 		u = bpoArray.value[userId!];
 		user.id = u.id;
+		user.ingressMs = u.ingressMs;
 		user.ingress = u.ingress;
 		user.name = u.name;
 		user.fase = u.fase;

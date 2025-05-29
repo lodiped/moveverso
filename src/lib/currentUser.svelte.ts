@@ -195,3 +195,40 @@ export async function getCulturaContabil(uid: string) {
 		console.error(error);
 	}
 }
+
+export function getBandColor(timestamp: number) {
+	const difference = Date.now() - timestamp * 1000;
+	const differenceInMonths = Math.floor(difference / (1000 * 60 * 60 * 24 * 30));
+
+	if (differenceInMonths >= 3 && differenceInMonths < 12) return pulseira.tresMeses.color;
+	if (differenceInMonths >= 12 && differenceInMonths < 24) return pulseira.umAno.color;
+	if (differenceInMonths >= 24 && differenceInMonths < 36) return pulseira.doisAnos.color;
+	if (differenceInMonths >= 36 && differenceInMonths < 48) return pulseira.tresAnos.color;
+	if (differenceInMonths >= 48 && differenceInMonths < 60) return pulseira.quatroAnos.color;
+	if (differenceInMonths >= 60 && differenceInMonths < 72) return pulseira.cincoAnos.color;
+	if (differenceInMonths >= 72 && differenceInMonths < 84) return pulseira.seisAnos.color;
+	if (differenceInMonths >= 84 && differenceInMonths < 96) return pulseira.seteAnos.color;
+	if (differenceInMonths >= 96 && differenceInMonths < 108) return pulseira.oitoAnos.color;
+	if (differenceInMonths >= 108 && differenceInMonths < 120) return pulseira.noveAnos.color;
+	if (differenceInMonths >= 120 && differenceInMonths < 132) return pulseira.dezAnos.color;
+	if (differenceInMonths >= 132 && differenceInMonths < 144) return pulseira.onzeAnos.color;
+	return;
+}
+
+export function getBandName(timestamp: number) {
+	const difference = Date.now() - timestamp * 1000;
+	const differenceInMonths = Math.floor(difference / 2629746000);
+
+	if (differenceInMonths >= 3 && differenceInMonths < 12) return pulseira.tresMeses.text;
+	if (differenceInMonths >= 12 && differenceInMonths < 24) return pulseira.umAno.text;
+	if (differenceInMonths >= 24 && differenceInMonths < 36) return pulseira.doisAnos.text;
+	if (differenceInMonths >= 36 && differenceInMonths < 48) return pulseira.tresAnos.text;
+	if (differenceInMonths >= 48 && differenceInMonths < 60) return pulseira.quatroAnos.text;
+	if (differenceInMonths >= 60 && differenceInMonths < 72) return pulseira.cincoAnos.text;
+	if (differenceInMonths >= 72 && differenceInMonths < 84) return pulseira.seisAnos.text;
+	if (differenceInMonths >= 84 && differenceInMonths < 96) return pulseira.seteAnos.text;
+	if (differenceInMonths >= 96 && differenceInMonths < 108) return pulseira.oitoAnos.text;
+	if (differenceInMonths >= 108 && differenceInMonths < 120) return pulseira.noveAnos.text;
+	if (differenceInMonths >= 120 && differenceInMonths < 132) return pulseira.dezAnos.text;
+	if (differenceInMonths >= 132 && differenceInMonths < 144) return pulseira.onzeAnos.text;
+}

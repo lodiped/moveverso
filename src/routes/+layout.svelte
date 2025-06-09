@@ -2,7 +2,7 @@
 	import { signOut } from 'firebase/auth';
 	import { auth } from '$lib/firebase';
 	import '../app.css';
-	import { isAdmin, homepage, loading } from '$lib/state.svelte';
+	import { isAdmin, homepage, loading, homeLoading } from '$lib/state.svelte';
 	import moveverso from '$lib/assets/moveverso.png';
 	let loadingLocal = $state(false);
 	async function handleLogout() {
@@ -41,7 +41,8 @@
 	{@render children()}
 	<div
 		class="static bottom-0 h-[150px] w-full bg-gradient-to-t from-black to-black/0 {loading.value ||
-		loadingLocal
+		loadingLocal ||
+		homeLoading.value
 			? 'hidden'
 			: ''}"
 	></div>

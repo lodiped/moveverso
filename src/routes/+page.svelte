@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { check, userArray, homepage, logPage } from '$lib/state.svelte';
+	import { check, userArray, homepage, logPage, homeLoading } from '$lib/state.svelte';
 	import Leaderboard from '$lib/Components/Leaderboard.svelte';
 	import { listenTotals, currentUser, list, bpoList, contabilList } from '$lib/currentUser.svelte';
 	import { onValue, ref, getDatabase, get } from 'firebase/database';
-	let loading = $state(true);
 	let error = $state(false);
 	// @ts-ignore
 	import Star from 'virtual:icons/mdi/star-four-points';
@@ -26,7 +25,7 @@
 		homepage.value = true;
 		listenTotals().then((fn) => {
 			unsubscribe = fn;
-			loading = false;
+			homeLoading.value = false;
 		});
 		return () => {
 			unsubscribe?.();
@@ -35,7 +34,7 @@
 </script>
 
 <div class="mt-10 flex w-full max-w-[1000px] flex-col items-center gap-15 2xl:flex-row 2xl:gap-5">
-	{#if loading}
+	{#if homeLoading.value}
 		<div class="relative flex w-full justify-center text-center">
 			<Star class="text-accent drop-shadow-accent animate-spin text-xl drop-shadow-[0_0_10px]" />
 		</div>
@@ -59,6 +58,7 @@
 						<a
 							onclick={() => {
 								logPage.value = 1;
+								homeLoading.value = true;
 							}}
 							href={`/contabil/${user.id}`}
 							class="bg-primary/30 hover:bg-primary/50 w-[57%] rounded-lg p-1 px-2 text-left transition-all"
@@ -89,6 +89,7 @@
 						<a
 							onclick={() => {
 								logPage.value = 1;
+								homeLoading.value = true;
 							}}
 							href={`/bpo/${user.id}`}
 							class="bg-primary/30 hover:bg-primary/50 w-[57%] rounded-lg p-1 px-2 text-left transition-all"

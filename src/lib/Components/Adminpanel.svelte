@@ -88,6 +88,7 @@
 				>Formação Superior concluída</button
 			>
 			<button onclick={() => addConquista('conqmesideia', user.id)}>Mês com melhor ideia</button>
+			<button onclick={() => addConquista('conqsports', user.id)}>Move Sports completo</button>
 		</div>
 		<h3 class="mt-4 w-full text-center text-red-500">Danger Zone</h3>
 		<p class="mb-2 w-full text-center text-sm opacity-50">Esta ação exige confirmação:</p>

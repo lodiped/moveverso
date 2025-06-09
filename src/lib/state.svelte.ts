@@ -1,5 +1,5 @@
 import { get, ref, getDatabase, child, auth } from '$lib/firebase';
-import { date, decodePushKeyTime, msToString } from '$lib/time.svelte';
+import { msToString } from '$lib/time.svelte';
 import {
 	query,
 	startAfter,
@@ -10,23 +10,54 @@ import {
 } from 'firebase/database';
 import { onAuthStateChanged } from 'firebase/auth';
 
-export const homepage = $state({ value: true });
-// Checa se o usuário está logado persistentemente
+// TESTESTESTESTETSETSETSETSETSETEts
+export let role = $state({ value: 'guest' });
 if (typeof window !== 'undefined') {
-	onAuthStateChanged(auth, (user) => {
-		if (user) {
+	onAuthStateChanged(auth, async (user) => {
+		if (!user) {
+			role.value = 'guest';
+			return;
+		}
+
+		const uid = user.uid;
+		const [globalSnap, cultSnap] = await Promise.all([
+			get(child(dbRef, `/admins/${uid}`)),
+			get(child(dbRef, `/admCultura/${uid}`))
+		]);
+
+		if (globalSnap.exists()) {
+			role.value = 'admin';
+			isAdmin.value = true;
+		} else if (cultSnap.exists()) {
+			role.value = 'cultura';
 			isAdmin.value = true;
 		} else {
+			role.value = 'guest';
 			isAdmin.value = false;
 		}
+		console.log(role.value);
 	});
 }
+
+//TESTESTESTETESTSETSETSETSETEST
+
+export const homepage = $state({ value: true });
+// Checa se o usuário está logado persistentemente
+// if (typeof window !== 'undefined') {
+// 	onAuthStateChanged(auth, (user) => {
+// 		if (user) {
+// 			isAdmin.value = true;
+// 		} else {
+// 			isAdmin.value = false;
+// 		}
+// 	});
+// }
 
 export const isAdmin = $state({ value: false });
 
 const dbRef = ref(getDatabase());
 export const loading = $state({ value: false });
-let data: any = $state();
+export const homeLoading = $state({ value: true });
 export const userArray = $state({ value: [] as any[] });
 export const contabilArray = $state({ value: [] as any[] });
 export const bpoArray = $state({ value: [] as any[] });

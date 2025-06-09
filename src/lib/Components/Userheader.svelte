@@ -11,6 +11,7 @@
 	let { user, imgsrc } = $props();
 
 	let cultureInfo = $state(false);
+	let progressoInfo = $state(false);
 
 	let firstname = $state('');
 	let lastname = $state('');
@@ -80,15 +81,27 @@
 		</div>
 	</div>
 	<div class="flex w-full flex-col items-start justify-start gap-8 md:w-2/3">
-		<h3 class="hidden w-full text-center md:block">PROGRESSO</h3>
+		<div class="-mb-4 flex w-full justify-center">
+			<h3 class="relative">
+				PROGRESSO
+				<button
+					onclick={() => {
+						progressoInfo = !progressoInfo;
+					}}
+					class="absolute right-0 bottom-0 translate-x-5.75 -translate-y-2 cursor-pointer text-white opacity-50 transition-opacity hover:opacity-100"
+				>
+					<Info class="text-base" />
+				</button>
+			</h3>
+		</div>
 		<div class="flex w-full items-center justify-start gap-3">
 			<div
-				class="bg-primary/20 flex w-15 flex-col items-center justify-between rounded-lg backdrop-blur-xs"
+				class="bg-primary/20 flex w-20 flex-col items-center justify-between rounded-lg backdrop-blur-xs"
 			>
-				<p
-					class="text-accent drop-shadow-accent/70 flex items-center py-1.5 text-3xl font-bold drop-shadow-[0_0_5px]"
-				>
-					{user.fase}
+				<p class="flex items-end py-1.5 font-bold">
+					<span class="drop-shadow-accent/70 text-accent text-3xl drop-shadow-[0_0_5px]"
+						>{user.fase}</span
+					><span class="text-primary">/5</span>
 				</p>
 				<p
 					class="bg-accent/40 drop-shadow-accent/70 w-full rounded-b-lg py-0.5 text-center text-xs text-black drop-shadow-[0_0_5px]"
@@ -118,11 +131,11 @@
 			</div>
 		</div>
 		<div class="flex w-full items-center justify-start gap-3">
-			<div class="bg-primary/20 flex w-15 flex-col items-center rounded-lg backdrop-blur-xs">
-				<p
-					class="text-accent drop-shadow-accent/70 py-1.5 text-3xl font-bold drop-shadow-[0_0_5px]"
-				>
-					{user.nivel}
+			<div class="bg-primary/20 flex w-20 flex-col items-center rounded-lg backdrop-blur-xs">
+				<p class="py-1.5 font-bold">
+					<span class="text-accent drop-shadow-accent/70 text-3xl drop-shadow-[0_0_5px]"
+						>{user.nivel}</span
+					><span class="text-primary">/10</span>
 				</p>
 				<p
 					class="bg-accent/40 drop-shadow-accent/70 w-full rounded-b-lg py-0.5 text-center text-xs text-black drop-shadow-[0_0_5px]"
@@ -293,6 +306,59 @@
 			</div>
 			<button
 				onclick={() => (cultureInfo = false)}
+				class="bg-primary text-secondary w-fit rounded-lg p-3"
+			>
+				Fechar
+			</button>
+		</div>
+	</div>
+{/if}
+
+{#if progressoInfo}
+	<div
+		class="fixed inset-0 z-50 flex w-full items-center justify-center bg-black/30 px-5 text-sm lg:px-20"
+	>
+		<div
+			class="bg-secondary/30 flex flex-col items-center gap-10 rounded-xl p-5 backdrop-blur lg:p-10"
+		>
+			<h2 class="text-center">pontuação</h2>
+			<div class="flex flex-col items-center gap-5">
+				<div class="flex flex-col items-center gap-1">
+					<div class="flex flex-col items-center gap-5">
+						<div class="flex flex-col items-center">
+							<p>
+								Bem-vindo(a) ao Moveverso! Aqui você vai acompanhar o seu progresso no jogo. O jogo
+								consiste em acumular pontos. Para completar o jogo, você vai acumular <span
+									class="text-accent">7500</span
+								>
+								pontos no total. Durante o jogo, você vai passar por diversas
+								<span class="text-accent">fases</span>
+								e <span class="text-accent">níveis</span>.
+							</p>
+						</div>
+						<div class="flex flex-col items-center">
+							<h3>Fases</h3>
+							<p>
+								O jogo completo consiste de <span class="text-accent">5 fases</span>. Para passar
+								cada fase, você precisa acumular <span class="text-accent">1500 pontos</span>.
+								Durante o acúmulo desses pontos na fase, você vai passar por
+								<span class="text-accent">10 níveis</span>. Ou seja,
+								<span class="text-accent font-bold">a cada 10 níveis, você passa de fase.</span>
+							</p>
+						</div>
+						<div class="flex flex-col items-center">
+							<h3>Níveis</h3>
+							<p>
+								Como cada fase possui 10 níveis, para subir de nível você precisa acumular <span
+									class="text-accent">150 pontos</span
+								>. Ao chegar no nível 10, você passa de fase.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<button
+				onclick={() => (progressoInfo = false)}
 				class="bg-primary text-secondary w-fit rounded-lg p-3"
 			>
 				Fechar

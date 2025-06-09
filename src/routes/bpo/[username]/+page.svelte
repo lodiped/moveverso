@@ -14,7 +14,8 @@
 		logPage,
 		pageDirection,
 		hasMore,
-		homepage
+		homepage,
+		homeLoading
 	} from '$lib/state.svelte';
 	import Userheader from '$lib/Components/Userheader.svelte';
 	import Adminpanel from '$lib/Components/Adminpanel.svelte';
@@ -58,7 +59,7 @@
 			await set(push(ref(getDatabase(), `logs/${uid}`)), {
 				action: conqUid
 			});
-			await runTransaction(ref(db, `users/${uid}/conquistas/${conqUid}/number`), (conquista) => {
+			await runTransaction(ref(db, `bpo/${uid}/conquistas/${conqUid}/number`), (conquista) => {
 				conquista++;
 				return conquista;
 			});
@@ -76,14 +77,14 @@
 		loading = true;
 		logPage.value = 1;
 		try {
-			const snap = await get(ref(db, `users/${uid}/conquistas`));
+			const snap = await get(ref(db, `bpo/${uid}/conquistas`));
 			const raw = snap.exists() ? snap.val() : {};
 
 			const resetMap: Record<string, { number: number }> = Object.fromEntries(
 				Object.entries(raw).map(([key, val]: [string, any]) => [key, { ...val, number: 0 }])
 			);
 
-			await set(ref(db, `users/${uid}/conquistas`), resetMap);
+			await set(ref(db, `bpo/${uid}/conquistas`), resetMap);
 			await checkBpo();
 			await updateUI();
 		} catch (error) {
@@ -237,6 +238,7 @@
 		loading = true;
 		(async () => {
 			await load();
+			homeLoading.value = false;
 		})();
 	});
 	async function nextPage() {
@@ -260,7 +262,7 @@
 	class="my-2 flex w-full flex-col gap-5 md:w-[44rem] 2xl:w-full 2xl:max-w-[1500px] 2xl:flex-row 2xl:gap-20"
 >
 	{#if userData && user && user.cultura}
-		<div class="flex flex-col gap-5">
+		<div class="flex flex-col gap-5 lg:w-full">
 			<Userheader {user} {imgsrc} />
 			<Log {user} {remove} {prevPage} {nextPage} />
 			{#if isAdmin.value}
@@ -276,64 +278,66 @@
 				/>
 			{/if}
 		</div>
-		<div class="flex w-full flex-col items-center px-2 lg:px-0">
-			<h2 class="-z-10 text-center">BPO</h2>
-			<div class="flex w-full max-w-[750px] flex-col items-center gap-2 backdrop-blur-xs">
-				<div class="flex w-full items-center justify-center">
-					<span class="w-[7%] text-end text-sm">Nº.</span>
-					<span class="w-[57%] px-2 text-sm">Nome</span>
-					<span class="w-[11%] text-end text-sm">Nível</span>
-					<span class="w-[11%] text-end text-sm">Fase</span>
-					<span class="w-[13%] text-end text-sm">Total</span>
-				</div>
-				{#each bpoList.value as user, i}
-					<div
-						class="nth-2:bg-accent/30 nth-2:drop-shadow-accent/50 nth-3:bg-primary/25 nth-4:bg-accent/8 flex w-full items-center justify-center rounded-lg px-1 nth-2:drop-shadow-[0_0_15px]"
-					>
-						<span class="w-[7%] pr-0.5 text-end opacity-50">{i + 1}.</span>
-						<a
-							onclick={() => {
-								logPage.value = 1;
-							}}
-							href={`/bpo/${user.id}`}
-							class="bg-primary/30 hover:bg-primary/50 w-[57%] rounded-lg p-1 px-2 text-left transition-all"
-							>{user.name}</a
-						>
-						<span class="w-[11%] text-end">{user.nivel}</span>
-						<span class="w-[11%] text-end">{user.fase}</span>
-						<span class="w-[13%] text-end">{user.total}</span>
+		<div class="flex w-full flex-col gap-5">
+			<div class="flex w-full flex-col items-center px-2 lg:px-0">
+				<h2 class="text-center">BPO</h2>
+				<div class="flex w-full max-w-[750px] flex-col items-center gap-2 backdrop-blur-xs">
+					<div class="flex w-full items-center justify-center">
+						<span class="w-[7%] text-end text-sm">Nº.</span>
+						<span class="w-[57%] px-2 text-sm">Nome</span>
+						<span class="w-[11%] text-end text-sm">Nível</span>
+						<span class="w-[11%] text-end text-sm">Fase</span>
+						<span class="w-[13%] text-end text-sm">Total</span>
 					</div>
-				{/each}
+					{#each bpoList.value as user, i}
+						<div
+							class="nth-2:bg-accent/30 nth-2:drop-shadow-accent/50 nth-3:bg-primary/25 nth-4:bg-accent/8 flex w-full items-center justify-center rounded-lg px-1 nth-2:drop-shadow-[0_0_15px]"
+						>
+							<span class="w-[7%] pr-0.5 text-end opacity-50">{i + 1}.</span>
+							<a
+								onclick={() => {
+									logPage.value = 1;
+								}}
+								href={`/bpo/${user.id}`}
+								class="bg-primary/30 hover:bg-primary/50 w-[57%] rounded-lg p-1 px-2 text-left transition-all"
+								>{user.name}</a
+							>
+							<span class="w-[11%] text-end">{user.nivel}</span>
+							<span class="w-[11%] text-end">{user.fase}</span>
+							<span class="w-[13%] text-end">{user.total}</span>
+						</div>
+					{/each}
+				</div>
 			</div>
-		</div>
-		<div class="flex w-full flex-col items-center px-2 lg:px-0">
-			<h2 class="-z-10 text-center">Contábil</h2>
-			<div class="flex w-full max-w-[750px] flex-col items-center gap-2 backdrop-blur-xs">
-				<div class="flex w-full items-center justify-center">
-					<span class="w-[7%] text-end text-sm">Nº.</span>
-					<span class="w-[57%] px-2 text-sm">Nome</span>
-					<span class="w-[11%] text-end text-sm">Nível</span>
-					<span class="w-[11%] text-end text-sm">Fase</span>
-					<span class="w-[13%] text-end text-sm">Total</span>
-				</div>
-				{#each contabilList.value as user, i}
-					<div
-						class="nth-2:bg-accent/30 nth-2:drop-shadow-accent/50 nth-3:bg-primary/25 nth-4:bg-accent/8 flex w-full items-center justify-center rounded-lg px-1 nth-2:drop-shadow-[0_0_15px]"
-					>
-						<span class="w-[7%] pr-0.5 text-end opacity-50">{i + 1}.</span>
-						<a
-							onclick={() => {
-								logPage.value = 1;
-							}}
-							href={`/contabil/${user.id}`}
-							class="bg-primary/30 hover:bg-primary/50 w-[57%] rounded-lg p-1 px-2 text-left transition-all"
-							>{user.name}</a
-						>
-						<span class="w-[11%] text-end">{user.nivel}</span>
-						<span class="w-[11%] text-end">{user.fase}</span>
-						<span class="w-[13%] text-end">{user.total}</span>
+			<div class="flex w-full flex-col items-center px-2 lg:px-0">
+				<h2 class="-z-10 text-center">Contábil</h2>
+				<div class="flex w-full max-w-[750px] flex-col items-center gap-2 backdrop-blur-xs">
+					<div class="flex w-full items-center justify-center">
+						<span class="w-[7%] text-end text-sm">Nº.</span>
+						<span class="w-[57%] px-2 text-sm">Nome</span>
+						<span class="w-[11%] text-end text-sm">Nível</span>
+						<span class="w-[11%] text-end text-sm">Fase</span>
+						<span class="w-[13%] text-end text-sm">Total</span>
 					</div>
-				{/each}
+					{#each contabilList.value as user, i}
+						<div
+							class="nth-2:bg-accent/30 nth-2:drop-shadow-accent/50 nth-3:bg-primary/25 nth-4:bg-accent/8 flex w-full items-center justify-center rounded-lg px-1 nth-2:drop-shadow-[0_0_15px]"
+						>
+							<span class="w-[7%] pr-0.5 text-end opacity-50">{i + 1}.</span>
+							<a
+								onclick={() => {
+									logPage.value = 1;
+								}}
+								href={`/contabil/${user.id}`}
+								class="bg-primary/30 hover:bg-primary/50 w-[57%] rounded-lg p-1 px-2 text-left transition-all"
+								>{user.name}</a
+							>
+							<span class="w-[11%] text-end">{user.nivel}</span>
+							<span class="w-[11%] text-end">{user.fase}</span>
+							<span class="w-[13%] text-end">{user.total}</span>
+						</div>
+					{/each}
+				</div>
 			</div>
 		</div>
 	{:else}

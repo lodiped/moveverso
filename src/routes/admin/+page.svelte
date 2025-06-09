@@ -32,9 +32,6 @@
 
 	onMount(() => {
 		homepage.value = false;
-		check().then(() => {
-			sortedUsers = [...userArray.value].sort((a, b) => b.total - a.total);
-		});
 	});
 </script>
 

@@ -131,6 +131,10 @@ export const pulseira = $state({
 	}
 });
 
+const testing = Object.entries(pulseira).map(([key, val]) => ({
+	name: key,
+	...val
+}));
 // TODO: login para cada usuário ver o seu histórico
 
 export async function getCultura(uid: string) {
@@ -138,8 +142,6 @@ export async function getCultura(uid: string) {
 	try {
 		const snapshot = await get(ref(getDatabase(), `cultura/${uid}`));
 		const data = snapshot.exists() ? snapshot.val() : null;
-		console.log(data);
-		console.log(userArray.value);
 		const idx = userArray.value.findIndex((u) => u.id === uid);
 		if (idx < 0) {
 			return;
@@ -147,9 +149,7 @@ export async function getCultura(uid: string) {
 		if (data) {
 			userArray.value[idx].cultura = data;
 		}
-		console.log(userArray.value);
 	} catch (error) {
-		console.log('error getting cultura try/catch');
 		console.error(error);
 	}
 }
@@ -159,8 +159,6 @@ export async function getCulturaBpo(uid: string) {
 	try {
 		const snapshot = await get(ref(getDatabase(), `cultura/${uid}`));
 		const data = snapshot.exists() ? snapshot.val() : null;
-		console.log(data);
-		console.log(bpoArray.value);
 		const idx = bpoArray.value.findIndex((u) => u.id === uid);
 		if (idx < 0) {
 			return;
@@ -168,9 +166,7 @@ export async function getCulturaBpo(uid: string) {
 		if (data) {
 			bpoArray.value[idx].cultura = data;
 		}
-		console.log(bpoArray.value);
 	} catch (error) {
-		console.log('error getting culturaBpo try/catch');
 		console.error(error);
 	}
 }
@@ -180,8 +176,6 @@ export async function getCulturaContabil(uid: string) {
 	try {
 		const snapshot = await get(ref(getDatabase(), `cultura/${uid}`));
 		const data = snapshot.exists() ? snapshot.val() : null;
-		console.log(data);
-		console.log(contabilArray.value);
 		const idx = contabilArray.value.findIndex((u) => u.id === uid);
 		if (idx < 0) {
 			return;
@@ -189,9 +183,7 @@ export async function getCulturaContabil(uid: string) {
 		if (data) {
 			contabilArray.value[idx].cultura = data;
 		}
-		console.log(contabilArray.value);
 	} catch (error) {
-		console.log('error getting culturaBpo try/catch');
 		console.error(error);
 	}
 }

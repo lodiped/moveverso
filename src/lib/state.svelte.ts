@@ -10,7 +10,7 @@ import {
 } from 'firebase/database';
 import { onAuthStateChanged } from 'firebase/auth';
 
-// TESTESTESTESTETSETSETSETSETSETEts
+// Checa se o usuário é admin ou cultura
 export let role = $state({ value: 'guest' });
 if (typeof window !== 'undefined') {
 	onAuthStateChanged(auth, async (user) => {
@@ -27,33 +27,16 @@ if (typeof window !== 'undefined') {
 
 		if (globalSnap.exists()) {
 			role.value = 'admin';
-			isAdmin.value = true;
 		} else if (cultSnap.exists()) {
 			role.value = 'cultura';
-			isAdmin.value = true;
 		} else {
 			role.value = 'guest';
-			isAdmin.value = false;
 		}
 		console.log(role.value);
 	});
 }
 
-//TESTESTESTETESTSETSETSETSETEST
-
 export const homepage = $state({ value: true });
-// Checa se o usuário está logado persistentemente
-// if (typeof window !== 'undefined') {
-// 	onAuthStateChanged(auth, (user) => {
-// 		if (user) {
-// 			isAdmin.value = true;
-// 		} else {
-// 			isAdmin.value = false;
-// 		}
-// 	});
-// }
-
-export const isAdmin = $state({ value: false });
 
 const dbRef = ref(getDatabase());
 export const loading = $state({ value: false });

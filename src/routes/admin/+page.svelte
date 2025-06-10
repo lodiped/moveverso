@@ -1,44 +1,41 @@
 <script lang="ts">
 	import { auth } from '$lib/firebase';
 	import { signInWithEmailAndPassword } from 'firebase/auth';
-	import { userArray, check, isAdmin, homepage } from '$lib/state.svelte';
+	import { role, homepage } from '$lib/state.svelte';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 
 	let email = $state('');
 	let password = $state('');
-	let loading = $state(false);
+	let localLoading = $state(false);
 	let errorMsg = $state(false);
 
 	async function handleLogin() {
-		loading = true;
+		localLoading = true;
 		errorMsg = false;
 		try {
 			await signInWithEmailAndPassword(auth, email, password);
-			isAdmin.value = true;
-			loading = false;
+			localLoading = false;
 		} catch (error) {
 			console.error('Login failed:', error);
-			loading = false;
+			localLoading = false;
 			errorMsg = true;
 			return;
 		} finally {
-			loading = false;
+			localLoading = false;
 			goto('/');
 		}
 	}
-
-	let sortedUsers = $state([] as any[]);
 
 	onMount(() => {
 		homepage.value = false;
 	});
 </script>
 
-{#if isAdmin.value}
+{#if role.value !== 'guest'}
 	<div class="flex flex-col gap-2">
 		Redirecionando... ou volte manualmente <a href="/">clicando aqui</a>
-		{#if loading}
+		{#if localLoading}
 			<div>Loading...</div>
 		{/if}
 	</div>
@@ -67,7 +64,7 @@
 		{#if errorMsg}
 			<div class="text-red-500">Erro no login</div>
 		{/if}
-		{#if loading}
+		{#if localLoading}
 			<div>Loading...</div>
 		{/if}
 	</div>

@@ -8,7 +8,7 @@
 		contabilArray,
 		checkContabil,
 		sumConquistasContabil,
-		isAdmin,
+		role,
 		checkLog,
 		logText,
 		logPage,
@@ -65,6 +65,115 @@
 			});
 			await checkContabil();
 			await checkLog(uid);
+			await updateUI();
+		} catch (error) {
+			console.error(error);
+		} finally {
+			loading = false;
+		}
+	}
+
+	async function setMedia(uid: string, input: number) {
+		loading = true;
+		logPage.value = 1;
+		try {
+			if (input > 10 || input < 0) {
+				throw new Error('Média não pode ser maior que dez 10 ou menor que 0');
+			}
+			input.toFixed(1);
+			await set(ref(db, `cultura/${uid}/media`), input);
+			await checkContabil();
+			await checkLog(uid);
+			await updateUI();
+		} catch (error) {
+			console.error(error);
+			alert(error);
+		} finally {
+			loading = false;
+		}
+	}
+
+	async function setTreinamento(uid: string, input: number) {
+		loading = true;
+		logPage.value = 1;
+		try {
+			if (input > 100 || input < 0) {
+				throw new Error('Porcentagem não pode ser maior que dez 100 ou menor que 0');
+			}
+			input.toFixed(2);
+			await set(ref(db, `cultura/${uid}/presenca/treinamento`), input);
+			await checkContabil();
+			await checkLog(uid);
+			await updateUI();
+		} catch (error) {
+			console.error(error);
+			alert(error);
+		} finally {
+			loading = false;
+		}
+	}
+
+	async function setCumbuca(uid: string, input: number) {
+		loading = true;
+		logPage.value = 1;
+		try {
+			if (input > 100 || input < 0) {
+				throw new Error('Porcentagem não pode ser maior que dez 100 ou menor que 0');
+			}
+			input.toFixed(2);
+			await set(ref(db, `cultura/${uid}/presenca/cumbuca`), input);
+			await checkContabil();
+			await checkLog(uid);
+			await updateUI();
+		} catch (error) {
+			console.error(error);
+			alert(error);
+		} finally {
+			loading = false;
+		}
+	}
+
+	async function toggleSports(uid: string) {
+		loading = true;
+		logPage.value = 1;
+		try {
+			await set(ref(db, `cultura/${uid}/sports/presente`), !user.cultura.sports.presente);
+			await checkContabil();
+			await checkLog(uid);
+			await updateUI();
+		} catch (error) {
+			console.error(error);
+		} finally {
+			loading = false;
+		}
+	}
+
+	async function receiveCoin(uid: string) {
+		loading = true;
+		logPage.value = 1;
+		try {
+			await runTransaction(ref(db, `cultura/${uid}/coins/recebidas`), (coin) => {
+				coin++;
+				return coin;
+			});
+			await checkContabil();
+			await updateUI();
+		} catch (error) {
+			console.error(error);
+		} finally {
+			loading = false;
+		}
+	}
+
+	async function giveCoin(uid: string) {
+		loading = true;
+		logPage.value = 1;
+		try {
+			await runTransaction(ref(db, `cultura/${uid}/coins/entregues`), (coin) => {
+				coin++;
+				return coin;
+			});
+			await checkContabil();
 			await updateUI();
 		} catch (error) {
 			console.error(error);
@@ -266,9 +375,18 @@
 >
 	{#if userData && user && user.cultura}
 		<div class="flex flex-col gap-5 lg:w-full">
-			<Userheader {user} {imgsrc} />
+			<Userheader
+				{user}
+				{imgsrc}
+				{toggleSports}
+				{giveCoin}
+				{receiveCoin}
+				{setTreinamento}
+				{setCumbuca}
+				{setMedia}
+			/>
 			<Log {user} {remove} {prevPage} {nextPage} />
-			{#if isAdmin.value}
+			{#if role.value === 'admin'}
 				<Adminpanel
 					{loading}
 					{clearLog}

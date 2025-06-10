@@ -1,14 +1,15 @@
 <script lang="ts">
 	import { getCultura, pulseira, getBandColor, getBandName } from '$lib/currentUser.svelte';
-	import { titlesfem, titles, totalConquistas } from '$lib/state.svelte';
+	import { titlesfem, titles, totalConquistas, role } from '$lib/state.svelte';
 	import movesports from '$lib/assets/sports.png';
 	import nomovesports from '$lib/assets/nosports.png';
 	// @ts-ignore
 	import Info from 'virtual:icons/mdi/information-slab-circle-outline';
 	// @ts-ignore
 	import Pulseira from 'virtual:icons/fa-solid/ring';
-	import { get } from 'svelte/store';
-	let { user, imgsrc } = $props();
+	import CulturaPanel from './CulturaPanel.svelte';
+	let { user, imgsrc, toggleSports, setMedia, giveCoin, receiveCoin, setTreinamento, setCumbuca } =
+		$props();
 
 	let cultureInfo = $state(false);
 	let progressoInfo = $state(false);
@@ -287,6 +288,17 @@
 				</div>
 			</div>
 		</div>
+		{#if role.value === 'cultura'}
+			<CulturaPanel
+				bind:user
+				{toggleSports}
+				{giveCoin}
+				{receiveCoin}
+				{setMedia}
+				{setTreinamento}
+				{setCumbuca}
+			/>
+		{/if}
 	</div>
 </div>
 

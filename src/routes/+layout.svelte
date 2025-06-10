@@ -2,7 +2,7 @@
 	import { signOut } from 'firebase/auth';
 	import { auth } from '$lib/firebase';
 	import '../app.css';
-	import { isAdmin, homepage, loading, homeLoading } from '$lib/state.svelte';
+	import { role, homepage, loading, homeLoading } from '$lib/state.svelte';
 	import moveverso from '$lib/assets/moveverso.png';
 	let loadingLocal = $state(false);
 	async function handleLogout() {
@@ -13,7 +13,7 @@
 			console.error(err);
 			return;
 		} finally {
-			isAdmin.value = false;
+			role.value = 'guest';
 			loadingLocal = false;
 			return;
 		}
@@ -48,7 +48,7 @@
 	></div>
 </div>
 
-{#if isAdmin.value}
+{#if role.value !== 'guest'}
 	<div class="fixed right-2 bottom-2">
 		<button
 			onclick={() => handleLogout()}

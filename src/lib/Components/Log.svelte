@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { userLog, isAdmin, logPage, hasMore } from '$lib/state.svelte';
+	import { userLog, role, logPage, hasMore } from '$lib/state.svelte';
 	import { date } from '$lib/time.svelte';
 	let { user, remove, prevPage, nextPage } = $props();
 </script>
@@ -28,7 +28,7 @@
 					</p>
 					<p class="text-xs opacity-50">{date(log.id)}</p>
 				</div>
-				{#if isAdmin.value}
+				{#if role.value === 'admin'}
 					<button
 						onclick={() => {
 							remove(log.id, user.id, log.action, log.type);

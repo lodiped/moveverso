@@ -57,6 +57,17 @@
 	}
 }
 
+@layer utilities {
+	input[type='number']::-webkit-inner-spin-button,
+	input[type='number']::-webkit-outer-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+
+	input[type='number'] {
+		-moz-appearance: textfield;
+	}
+}
 /* 
 Tema de cores:
 https://www.realtimecolors.com/?colors=edece5-13120d-c6c3ad-40495b-fff200&fonts=Inter-JetBrains%20Mono

@@ -246,7 +246,6 @@
 	}
 
 	let erroModal = $state(false);
-	let cost = $state();
 
 	let person: any = $state();
 	let userId: number | undefined | null = $state();
@@ -392,7 +391,6 @@
 					{addConquista}
 					{erroModal}
 					{user}
-					{cost}
 				/>
 			{/if}
 		</div>

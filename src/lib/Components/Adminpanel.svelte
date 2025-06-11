@@ -6,10 +6,10 @@
 		clearConquistas = $bindable(),
 		erroModal = $bindable(),
 		clearLog,
-		user,
-		cost = $bindable()
+		user
 	} = $props();
 
+	let cost: number = $state(0);
 	let horas = $state(0);
 	let dangerZoneAll = $state(false);
 	let estudoModal = $state(false);

@@ -70,6 +70,7 @@ let names: Record<string, string> = {
 	fernandafrandoloso: 'Fernanda Frandoloso',
 	francielyoliveira: 'Franciely Oliveira',
 	larissamartins: 'Larissa Martins',
+	leonardosilva: 'Leonardo Silva',
 	lucaseyng: 'Lucas Eyng',
 	luizfaquim: 'Luiz Faquim',
 	philipemendes: 'Philipe Mendes',

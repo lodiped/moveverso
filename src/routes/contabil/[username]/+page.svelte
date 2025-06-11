@@ -24,12 +24,12 @@
 	import Star from 'virtual:icons/mdi/star-four-points';
 
 	let username = $derived(page.params.username);
-	let message = $state('loading');
 	let loading = $state(true);
 	let userData = $state<{ name: string; total: number } | null>(null);
 	let imgsrc: string = $state('');
 	let u: any = $state();
 	let user = $state({} as UserType);
+	let userId: number | undefined | null = $state();
 
 	async function updateUI() {
 		console.log('updatingUI');
@@ -246,10 +246,8 @@
 	}
 
 	let erroModal = $state(false);
-	let cost = $state();
 
 	let person: any = $state();
-	let userId: number | undefined | null = $state();
 
 	async function load() {
 		console.log('Loading data');
@@ -260,11 +258,13 @@
 			} else {
 				console.log('userArray is not empty');
 			}
-			await checkLog(username);
+			if (role.value !== 'guest') {
+				await checkLog(username);
+			}
 
 			const idx = contabilArray.value.findIndex((u) => u.id === username);
 			if (idx < 0) {
-				message = 'User not found';
+				console.error('User not found');
 				return;
 			}
 
@@ -277,7 +277,7 @@
 			await getCulturaContabil(person.id);
 			updateUI();
 		} catch (err) {
-			message = 'User not found';
+			console.error('User not found', err);
 		} finally {
 			loading = false;
 		}
@@ -395,7 +395,6 @@
 					{addConquista}
 					{erroModal}
 					{user}
-					{cost}
 				/>
 			{/if}
 		</div>

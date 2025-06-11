@@ -4,7 +4,7 @@ import {
 	faseCalc,
 	nivelCalc,
 	currentCalc,
-	userArray,
+	usersArray,
 	bpoArray,
 	contabilArray
 } from '$lib/state.svelte';
@@ -19,18 +19,22 @@ export async function listenTotals() {
 	const snap = await get(ref(getDatabase(), 'totals'));
 	if (snap.exists()) {
 		processData(snap.val());
-		console.log(list.value);
+		console.log('list.value @ listenTotal() in currentUser.svelte.ts: ' + list.value);
 	} else {
 		console.warn('no data at initial get()');
 	}
 
-	console.log('initial fetch complete, list.value show be hydrated');
+	console.log(
+		'initial fetch complete, list.value show be hydrated @ listenTotals() in currentUser.svelte.ts'
+	);
 
 	const unsubscribe = onValue(ref(getDatabase(), 'totals'), (snapshot) => {
 		if (!snapshot.exists()) return;
 		processData(snapshot.val());
-		console.log(list.value);
-		console.log('onValue updated, list.value should re-hydrated');
+		console.log('list.value @ onValue() in currentUser.svelte.ts: ' + list.value);
+		console.log(
+			'onValue updated, list.value should be re-hydrated @ listenTotals()->onValue() in currentUser.svelte.ts'
+		);
 	});
 	return unsubscribe;
 }
@@ -139,16 +143,16 @@ const testing = Object.entries(pulseira).map(([key, val]) => ({
 // TODO: login para cada usuário ver o seu histórico
 
 export async function getCultura(uid: string) {
-	console.log('getting Cultura');
+	console.log('getting Cultura @ getCultura() in currentUser.svelte.ts');
 	try {
 		const snapshot = await get(ref(getDatabase(), `cultura/${uid}`));
 		const data = snapshot.exists() ? snapshot.val() : null;
-		const idx = userArray.value.findIndex((u) => u.id === uid);
+		const idx = usersArray.value.findIndex((u) => u.id === uid);
 		if (idx < 0) {
 			return;
 		}
 		if (data) {
-			userArray.value[idx].cultura = data;
+			usersArray.value[idx].cultura = data;
 		}
 	} catch (error) {
 		console.error(error);
@@ -156,7 +160,7 @@ export async function getCultura(uid: string) {
 }
 
 export async function getCulturaBpo(uid: string) {
-	console.log('getting CulturaBpo');
+	console.log('getting CulturaBpo @ getCulturaBpo() in currentUser.svelte.ts');
 	try {
 		const snapshot = await get(ref(getDatabase(), `cultura/${uid}`));
 		const data = snapshot.exists() ? snapshot.val() : null;
@@ -173,7 +177,7 @@ export async function getCulturaBpo(uid: string) {
 }
 
 export async function getCulturaContabil(uid: string) {
-	console.log('getting CulturaBpo');
+	console.log('getting CulturaContabil @ getCulturaContabil() in currentUser.svelte.ts');
 	try {
 		const snapshot = await get(ref(getDatabase(), `cultura/${uid}`));
 		const data = snapshot.exists() ? snapshot.val() : null;

@@ -32,7 +32,9 @@ if (typeof window !== 'undefined') {
 		} else {
 			role.value = 'guest';
 		}
-		console.log(role.value);
+		console.log(
+			'getting role.value @ onAuthStateChanged(auth, ()) in state.svelte.ts: ' + role.value
+		);
 	});
 }
 
@@ -41,7 +43,7 @@ export const homepage = $state({ value: true });
 const dbRef = ref(getDatabase());
 export const loading = $state({ value: false });
 export const homeLoading = $state({ value: true });
-export const userArray = $state({ value: [] as any[] });
+export const usersArray = $state({ value: [] as any[] });
 export const contabilArray = $state({ value: [] as any[] });
 export const bpoArray = $state({ value: [] as any[] });
 export const userLog = $state({ value: [] as any[] });
@@ -51,9 +53,9 @@ export const totalConquistas = $state({ value: 0 });
 
 export function sumConquistasCalc(i: number) {
 	totalConquistas.value = 0;
-	for (let y = 0; y < userArray.value?.[i].conquistas.length; y++) {
-		if (userArray.value?.[i].conquistas[y].number > 0) {
-			totalConquistas.value += userArray.value?.[i].conquistas[y].number;
+	for (let y = 0; y < usersArray.value?.[i].conquistas.length; y++) {
+		if (usersArray.value?.[i].conquistas[y].number > 0) {
+			totalConquistas.value += usersArray.value?.[i].conquistas[y].number;
 		}
 	}
 }
@@ -84,7 +86,7 @@ export const hasMore = $state({ value: false });
 
 export async function checkLog(uid: string) {
 	const logsRef = ref(getDatabase(), `/logs/${uid}`);
-	console.log('checking log');
+	console.log('checking log @ checkLog(uid) in state.svelte.ts');
 	try {
 		loading.value = true;
 		let q;
@@ -128,7 +130,7 @@ export async function checkLog(uid: string) {
 }
 
 export async function checkBpo() {
-	console.log('checking CheckBpo');
+	console.log('checking CheckBpo @ checkBpo() in state.svelte.ts');
 	try {
 		loading.value = true;
 		const snapshot = await get(child(dbRef, '/bpo'));
@@ -176,7 +178,7 @@ export async function checkBpo() {
 }
 
 export async function checkContabil() {
-	console.log('checking CheckContabil');
+	console.log('checking CheckContabil @ checkContabil() in state.svelte.ts');
 	try {
 		loading.value = true;
 		const snapshot = await get(child(dbRef, '/contabil'));
@@ -224,12 +226,12 @@ export async function checkContabil() {
 }
 
 export async function check() {
-	console.log('checking Check');
+	console.log('checking Check @ check() in state.svelte.ts');
 	try {
 		loading.value = true;
 		const snapshot = await get(child(dbRef, '/users'));
 		const data = snapshot.exists() ? snapshot.val() : null;
-		userArray.value = Object.entries(data).map(([uid, userData]: any) => {
+		usersArray.value = Object.entries(data).map(([uid, userData]: any) => {
 			const total = userData.total;
 			const ingress = msToString(userData.ingress);
 			const fase = faseCalc(total);
@@ -258,7 +260,7 @@ export async function check() {
 			};
 		});
 
-		userArray.value = userArray.value.map((user, idx) => ({
+		usersArray.value = usersArray.value.map((user, idx) => ({
 			...user,
 			arrayId: idx
 		}));

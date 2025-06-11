@@ -22,6 +22,7 @@
 	import Log from '$lib/Components/Log.svelte';
 	// @ts-ignore
 	import Star from 'virtual:icons/mdi/star-four-points';
+	import { untrack } from 'svelte';
 
 	let username = $derived(page.params.username);
 	let loading = $state(true);
@@ -32,7 +33,7 @@
 	let userId: number | undefined | null = $state();
 
 	async function updateUI() {
-		console.log('updatingUI');
+		console.log('updatingUI @ updateUI() in contabil/[username]/+page.svelte');
 		u = contabilArray.value[userId!];
 		user.id = u.id;
 		user.ingressMs = u.ingressMs;
@@ -250,13 +251,13 @@
 	let person: any = $state();
 
 	async function load() {
-		console.log('Loading data');
+		console.log('Loading data @ load() in contabil/[username]/+page.svelte');
 		try {
 			if (contabilArray.value.length === 0) {
-				console.log('userArray is empty');
+				console.log('usersArray is empty @ load() in contabil/[username]/+page.svelte');
 				await checkContabil();
 			} else {
-				console.log('userArray is not empty');
+				console.log('usersArray is not empty @ load() in contabil/[username]/+page.svelte');
 			}
 			if (role.value !== 'guest') {
 				await checkLog(username);
@@ -284,7 +285,7 @@
 	}
 
 	async function clearLog(uid: string) {
-		console.log('Clearing Log');
+		console.log('Clearing Log @ clearLog() in contabil/[username]/+page.svelte');
 		loading = true;
 		try {
 			logPage.value = 1;
@@ -345,12 +346,12 @@
 	}
 
 	$effect(() => {
-		homepage.value = false;
-		if (!username) return;
-		loading = true;
+		untrack(() => (homepage.value = false));
+		if (untrack(() => !username)) return;
+		untrack(() => (loading = true));
 		(async () => {
 			await load();
-			homeLoading.value = false;
+			untrack(() => (homeLoading.value = false));
 		})();
 	});
 	async function nextPage() {

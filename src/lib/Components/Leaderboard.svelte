@@ -1,9 +1,9 @@
 <script lang="ts">
-	import { userArray, logPage } from '$lib/state.svelte';
+	import { usersArray, logPage } from '$lib/state.svelte';
 	let sortedUsers = $state([] as any[]);
 
 	$effect(() => {
-		sortedUsers = [...userArray.value].sort((a, b) => b.total - a.total);
+		sortedUsers = [...usersArray.value].sort((a, b) => b.total - a.total);
 	});
 </script>
 

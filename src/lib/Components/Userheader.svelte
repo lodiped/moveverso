@@ -8,6 +8,7 @@
 	// @ts-ignore
 	import Pulseira from 'virtual:icons/fa-solid/ring';
 	import CulturaPanel from './CulturaPanel.svelte';
+	import { untrack } from 'svelte';
 	let { user, imgsrc, toggleSports, setMedia, giveCoin, receiveCoin, setTreinamento, setCumbuca } =
 		$props();
 
@@ -19,8 +20,12 @@
 
 	$effect(() => {
 		[firstname, lastname] = user.name.split(' ');
-		console.log(user.name);
-		console.log(user.cultura);
+		console.log(
+			'$effect in Userheader.svelte component getting user.name: ' + untrack(() => user.name)
+		);
+		console.log(
+			'$effect in Userheader.svelte component getting user.name ' + untrack(() => user.cultura)
+		);
 	});
 </script>
 

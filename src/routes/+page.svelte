@@ -1,8 +1,6 @@
 <script lang="ts">
-	import { check, userArray, homepage, logPage, homeLoading } from '$lib/state.svelte';
-	import Leaderboard from '$lib/Components/Leaderboard.svelte';
-	import { listenTotals, currentUser, list, bpoList, contabilList } from '$lib/currentUser.svelte';
-	import { onValue, ref, getDatabase, get } from 'firebase/database';
+	import { homepage, logPage, homeLoading } from '$lib/state.svelte';
+	import { listenTotals, bpoList, contabilList } from '$lib/currentUser.svelte';
 	let error = $state(false);
 	// @ts-ignore
 	import Star from 'virtual:icons/mdi/star-four-points';

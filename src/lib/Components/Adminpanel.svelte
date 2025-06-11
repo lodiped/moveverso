@@ -1,4 +1,6 @@
 <script lang="ts">
+	// @ts-ignore
+	import Save from 'virtual:icons/mdi/floppy';
 	let {
 		loading,
 		addPoints = $bindable(),
@@ -104,6 +106,102 @@
 				Zerar Tudo!
 			</button>
 		</div>
+	</div>
+</div>
+
+<div class="flex w-full flex-col items-center gap-5">
+	<h3>BPO TESTE</h3>
+	<button class="bg-primary/30 w-full cursor-pointer rounded p-2">Tempo Gasto</button>
+	<div class="flex w-full flex-col items-center gap-2">
+		<p>Fechamento mensal:</p>
+		<div class="*:bg-primary/30 flex w-full gap-2 *:w-full *:cursor-pointer *:rounded *:p-2">
+			<button>Dia 01</button>
+			<button>Dia 02</button>
+			<button>Dia 03</button>
+			<button>Dia 04</button>
+			<button>Dia 05</button>
+			<button>Dia 06</button>
+			<button>Dia 07</button>
+			<button>Dia 08</button>
+			<button>Dia 09</button>
+		</div>
+	</div>
+	<button class="bg-primary/30 w-full cursor-pointer rounded p-2">Redução do tempo gasto</button>
+	<button class="bg-primary/30 w-full cursor-pointer rounded p-2"
+		>Emissão de boleto CA (indicação) <span class="text-green-600">+20</span></button
+	>
+	<button class="bg-primary/30 w-full cursor-pointer rounded p-2">Pontos por honorário</button>
+	<div class="flex w-full flex-col items-center gap-2">
+		<p>Capanhas mensais</p>
+		<div class="flex w-full gap-2 *:cursor-pointer">
+			<button class="bg-primary/30 w-full rounded p-2"
+				>Primeiro <span class="text-green-600">+30</span></button
+			>
+			<button class="bg-primary/30 w-full rounded p-2"
+				>Segundo <span class="text-green-600">+15</span></button
+			>
+		</div>
+	</div>
+	<div class="flex w-full flex-col items-center gap-2">
+		<p>Idéias</p>
+		<div class="flex w-full gap-2 *:cursor-pointer">
+			<button class="bg-primary/30 w-full rounded p-2"
+				>Idéia aplicada <span class="text-green-600">+5</span></button
+			>
+			<button class="bg-primary/30 w-full rounded p-2"
+				>Maior número de idéias <span class="text-green-600">+50</span></button
+			>
+			<button class="bg-primary/30 w-full rounded p-2"
+				>Melhor idéia <span class="text-green-600">+50</span></button
+			>
+		</div>
+	</div>
+	<div class="flex w-full flex-col items-center gap-2">
+		<p>Elogio/Reclamação de Cliente</p>
+		<div class="flex w-full gap-2 *:cursor-pointer">
+			<button class="bg-primary/30 w-full rounded p-2"
+				>Reclamação <span class="text-red-600">-10</span></button
+			>
+			<button class="bg-primary/30 w-full rounded p-2"
+				>Elogio <span class="text-green-600">+10</span></button
+			>
+		</div>
+	</div>
+	<div class="flex w-full flex-col items-center gap-2">
+		<p>Utilização da plataforma PlayBPO</p>
+		<div class="flex w-full gap-2 *:cursor-pointer">
+			<button class="bg-primary/30 w-full rounded p-2"
+				>Incompleta <span class="text-red-600">-30</span></button
+			>
+			<button class="bg-primary/30 w-full rounded p-2"
+				>Em dia <span class="text-green-600">+30</span></button
+			>
+		</div>
+	</div>
+	<div class="flex w-full flex-col items-center gap-2">
+		<p>Fechamento mensal:</p>
+		<div class="*:bg-primary/30 flex w-full gap-2 *:w-full *:cursor-pointer *:rounded *:p-2">
+			<button>Dia 11 <span class="text-red-600">-2</span></button>
+			<button>Dia 12 <span class="text-red-600">-3</span></button>
+			<button>Dia 13 <span class="text-red-600">-4</span></button>
+			<button>Dia 14 <span class="text-red-600">-5</span></button>
+			<button>Dia 15 <span class="text-red-600">-6</span></button>
+		</div>
+	</div>
+	<button class="bg-primary/30 w-full cursor-pointer rounded p-2">Aumento do tempo gasto</button>
+	<button class="bg-primary/30 w-full cursor-pointer rounded p-2"
+		>Não envio de vencimentos e pagamentos <span class="text-red-600">-5</span></button
+	>
+	<button class="bg-primary/30 w-full cursor-pointer rounded p-2">Prejuízo financeiro</button>
+	<div class="bg-primary/20 flex w-full gap-2 rounded-lg border border-white/20">
+		<input
+			type="number"
+			class=" w-full appearance-none rounded-lg border-0 bg-transparent"
+			placeholder="Prejuízo (em R$)"
+		/>
+		<button class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2"
+			><Save /><span>Salvar</span></button
+		>
 	</div>
 </div>
 

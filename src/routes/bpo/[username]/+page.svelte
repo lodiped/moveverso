@@ -1,9 +1,10 @@
 <script lang="ts">
+	import { untrack } from 'svelte';
 	import type { UserType } from '$lib/types.svelte';
 	import { page } from '$app/state';
 	import { runTransaction, set, getDatabase, push } from 'firebase/database';
 	import { db, ref, get } from '$lib/firebase';
-	import { contabilList, bpoList, getCulturaBpo } from '$lib/currentUser.svelte';
+	import { listenTotals, contabilList, bpoList, getCulturaBpo } from '$lib/currentUser.svelte';
 	import {
 		bpoArray,
 		checkBpo,
@@ -341,6 +342,7 @@
 	}
 
 	$effect(() => {
+		if (untrack(() => contabilList.value.length === 0)) untrack(() => listenTotals());
 		homepage.value = false;
 		if (!username) return;
 		loading = true;

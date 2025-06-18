@@ -1,6 +1,12 @@
 <script lang="ts">
 	// @ts-ignore
 	import Save from 'virtual:icons/mdi/floppy';
+	// @ts-ignore
+	import ThumbsUp from 'virtual:icons/mdi/thumbs-up';
+	// @ts-ignore
+	import ThumbsDn from 'virtual:icons/mdi/thumbs-down';
+	// @ts-ignore
+	import Info from 'virtual:icons/mdi/information-slab-circle-outline';
 	let {
 		loading,
 		addPoints = $bindable(),
@@ -18,6 +24,7 @@
 </script>
 
 <h2 class="w-full text-center">Gerenciar:</h2>
+<h3 class="w-full text-center">Contábil</h3>
 <div class="flex w-full flex-col gap-5 px-2 lg:flex-row lg:px-0">
 	<div class="w-full lg:w-1/2">
 		<h3 class="w-full text-center">Pontuações</h3>
@@ -58,10 +65,10 @@
 			</button>
 			<button onclick={() => (estudoModal = true)}> Atualização profissional </button>
 			<button onclick={() => addPoints(-10, user.id, 'reclamacao', 'point')}>
-				Reclamação de cliente <span class="text-red-600">-10</span>
+				Reclamação de cliente <span class="text-red-500">-10</span>
 			</button>
 			<button onclick={() => addPoints(-10, user.id, 'erro', 'point')}>
-				Erro cometido <span class="text-red-600">-10</span>
+				Erro cometido <span class="text-red-500">-10</span>
 			</button>
 			<button onclick={() => (erroModal = true)}> Prejuízo financeiro por erro</button>
 		</div>
@@ -109,96 +116,165 @@
 	</div>
 </div>
 
-<div class="flex w-full flex-col items-center gap-5">
-	<h3>BPO TESTE</h3>
-	<button class="bg-primary/30 w-full cursor-pointer rounded p-2">Tempo Gasto</button>
+<div class="flex w-full flex-col items-center gap-5 px-2">
+	<h3>BPO</h3>
+	<p class="flex items-center gap-2">
+		<span>Gerenciamento de Tempo</span>
+	</p>
 	<div class="flex w-full flex-col items-center gap-2">
-		<p>Fechamento mensal:</p>
-		<div class="*:bg-primary/30 flex w-full gap-2 *:w-full *:cursor-pointer *:rounded *:p-2">
-			<button>Dia 01</button>
-			<button>Dia 02</button>
-			<button>Dia 03</button>
-			<button>Dia 04</button>
-			<button>Dia 05</button>
-			<button>Dia 06</button>
-			<button>Dia 07</button>
-			<button>Dia 08</button>
-			<button>Dia 09</button>
+		<div class="flex w-full items-center gap-2">
+			<div class="bg-primary/20 flex w-full gap-2 rounded-xl border border-white/20">
+				<input
+					type="number"
+					class=" w-full appearance-none rounded-lg border-0 bg-transparent"
+					placeholder="Dia do Fechamento"
+				/>
+				<button
+					class="cursor-pointer justify-center text-xl opacity-50 transition-opacity hover:opacity-100"
+					><Info /></button
+				>
+				<button class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2"
+					><Save /><span>Salvar</span></button
+				>
+			</div>
 		</div>
 	</div>
-	<button class="bg-primary/30 w-full cursor-pointer rounded p-2">Redução do tempo gasto</button>
-	<button class="bg-primary/30 w-full cursor-pointer rounded p-2"
+	<div class="bg-primary/20 flex w-full gap-2 rounded-xl border border-white/20">
+		<input
+			type="number"
+			class=" w-full appearance-none rounded-lg border-0 bg-transparent"
+			placeholder="Tempo Gasto"
+		/>
+		<button
+			class="cursor-pointer justify-center text-xl opacity-50 transition-opacity hover:opacity-100"
+			><Info /></button
+		>
+		<button class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2"
+			><Save /><span>Salvar</span></button
+		>
+	</div>
+	<div class="flex w-full gap-2">
+		<div class="bg-primary/20 flex w-full gap-2 rounded-xl border border-white/20">
+			<input
+				type="number"
+				class=" w-full appearance-none rounded-lg border-0 bg-transparent"
+				placeholder="Redução de Tempo (%)"
+			/>
+			<button class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2"
+				><ThumbsUp class="text-green-600 md:text-white" /><span class="hidden md:block">Salvar</span
+				></button
+			>
+		</div>
+		<button
+			class="cursor-pointer justify-center text-xl opacity-50 transition-opacity hover:opacity-100"
+			><Info /></button
+		>
+		<div class="bg-primary/20 flex w-full gap-2 rounded-xl border border-white/20">
+			<input
+				type="number"
+				class=" w-full appearance-none rounded-lg border-0 bg-transparent"
+				placeholder="Aumento do Tempo (%)"
+			/>
+			<button class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2"
+				><ThumbsDn class="text-red-600 md:text-white" /><span class="hidden md:block">Salvar</span
+				></button
+			>
+		</div>
+	</div>
+	<p class="flex items-center gap-2">
+		<span>Processos</span>
+	</p>
+	<div class="bg-primary/20 flex w-full gap-2 rounded-xl border border-white/20">
+		<input
+			type="number"
+			class=" w-full appearance-none rounded-lg border-0 bg-transparent"
+			placeholder="Pontos por Honorário"
+		/>
+		<button
+			class="cursor-pointer justify-center text-xl opacity-50 transition-opacity hover:opacity-100"
+			><Info /></button
+		>
+		<button class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2"
+			><Save /><span>Salvar</span></button
+		>
+	</div>
+	<button class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
 		>Emissão de boleto CA (indicação) <span class="text-green-600">+20</span></button
 	>
-	<button class="bg-primary/30 w-full cursor-pointer rounded p-2">Pontos por honorário</button>
 	<div class="flex w-full flex-col items-center gap-2">
-		<p>Capanhas mensais</p>
 		<div class="flex w-full gap-2 *:cursor-pointer">
-			<button class="bg-primary/30 w-full rounded p-2"
-				>Primeiro <span class="text-green-600">+30</span></button
+			<button class="bg-primary/30 w-full rounded-xl p-3"
+				>PlayBPO incorreto <span class="text-red-500">-30</span></button
 			>
-			<button class="bg-primary/30 w-full rounded p-2"
-				>Segundo <span class="text-green-600">+15</span></button
+			<button
+				class="cursor-pointer justify-center text-xl opacity-50 transition-opacity hover:opacity-100"
+				><Info /></button
+			>
+			<button class="bg-primary/30 w-full rounded-xl p-3"
+				>PlayBPO em dia <span class="text-green-600">+30</span></button
 			>
 		</div>
 	</div>
 	<div class="flex w-full flex-col items-center gap-2">
-		<p>Idéias</p>
 		<div class="flex w-full gap-2 *:cursor-pointer">
-			<button class="bg-primary/30 w-full rounded p-2"
+			<button class="bg-primary/30 w-full rounded-xl p-3"
+				>Reclamação de Cliente <span class="text-red-500">-10</span></button
+			>
+			<button
+				class="cursor-pointer justify-center text-xl opacity-50 transition-opacity hover:opacity-100"
+				><Info /></button
+			>
+			<button class="bg-primary/30 w-full rounded-xl p-3"
+				>Elogio de Cliente <span class="text-green-600">+10</span></button
+			>
+		</div>
+	</div>
+	<p class="flex items-center gap-2">
+		<span>Dinâmicas Internas</span>
+	</p>
+	<div class="flex w-full flex-col items-center gap-2">
+		<div class="flex w-full gap-2 *:cursor-pointer">
+			<button class="bg-primary/30 w-full rounded-xl py-3"
+				>Primeiro Lugar <span class="text-green-600">+30</span></button
+			>
+			<button
+				class="cursor-pointer justify-center text-xl opacity-50 transition-opacity hover:opacity-100"
+				><Info /></button
+			>
+			<button class="bg-primary/30 w-full rounded-xl py-3"
+				>Segundo Lugar <span class="text-green-600">+15</span></button
+			>
+		</div>
+	</div>
+	<div class="flex w-full flex-col items-center gap-2">
+		<div class="flex w-full gap-2 *:cursor-pointer">
+			<button class="bg-primary/30 w-full rounded-xl p-3"
 				>Idéia aplicada <span class="text-green-600">+5</span></button
 			>
-			<button class="bg-primary/30 w-full rounded p-2"
+			<button class="bg-primary/30 w-full rounded-xl p-3"
 				>Maior número de idéias <span class="text-green-600">+50</span></button
 			>
-			<button class="bg-primary/30 w-full rounded p-2"
+			<button class="bg-primary/30 w-full rounded-xl p-3"
 				>Melhor idéia <span class="text-green-600">+50</span></button
 			>
 		</div>
 	</div>
-	<div class="flex w-full flex-col items-center gap-2">
-		<p>Elogio/Reclamação de Cliente</p>
-		<div class="flex w-full gap-2 *:cursor-pointer">
-			<button class="bg-primary/30 w-full rounded p-2"
-				>Reclamação <span class="text-red-600">-10</span></button
-			>
-			<button class="bg-primary/30 w-full rounded p-2"
-				>Elogio <span class="text-green-600">+10</span></button
-			>
-		</div>
-	</div>
-	<div class="flex w-full flex-col items-center gap-2">
-		<p>Utilização da plataforma PlayBPO</p>
-		<div class="flex w-full gap-2 *:cursor-pointer">
-			<button class="bg-primary/30 w-full rounded p-2"
-				>Incompleta <span class="text-red-600">-30</span></button
-			>
-			<button class="bg-primary/30 w-full rounded p-2"
-				>Em dia <span class="text-green-600">+30</span></button
-			>
-		</div>
-	</div>
-	<div class="flex w-full flex-col items-center gap-2">
-		<p>Fechamento mensal:</p>
-		<div class="*:bg-primary/30 flex w-full gap-2 *:w-full *:cursor-pointer *:rounded *:p-2">
-			<button>Dia 11 <span class="text-red-600">-2</span></button>
-			<button>Dia 12 <span class="text-red-600">-3</span></button>
-			<button>Dia 13 <span class="text-red-600">-4</span></button>
-			<button>Dia 14 <span class="text-red-600">-5</span></button>
-			<button>Dia 15 <span class="text-red-600">-6</span></button>
-		</div>
-	</div>
-	<button class="bg-primary/30 w-full cursor-pointer rounded p-2">Aumento do tempo gasto</button>
-	<button class="bg-primary/30 w-full cursor-pointer rounded p-2"
-		>Não envio de vencimentos e pagamentos <span class="text-red-600">-5</span></button
+	<p class="flex items-center gap-2">
+		<span>Falhas</span>
+	</p>
+	<button class="bg-primary/30 w-full cursor-pointer rounded-xl p-3"
+		>Não envio de vencimentos ou pagamentos <span class="text-red-500">-5</span></button
 	>
-	<button class="bg-primary/30 w-full cursor-pointer rounded p-2">Prejuízo financeiro</button>
-	<div class="bg-primary/20 flex w-full gap-2 rounded-lg border border-white/20">
+	<div class="bg-primary/20 flex w-full gap-2 rounded-xl border border-white/20">
 		<input
 			type="number"
 			class=" w-full appearance-none rounded-lg border-0 bg-transparent"
 			placeholder="Prejuízo (em R$)"
 		/>
+		<button
+			class="cursor-pointer justify-center text-xl opacity-50 transition-opacity hover:opacity-100"
+			><Info /></button
+		>
 		<button class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2"
 			><Save /><span>Salvar</span></button
 		>
@@ -231,7 +307,7 @@
 					}}
 					class="bg-primary w-fit cursor-pointer rounded-lg p-2 text-black hover:font-bold hover:opacity-50 disabled:pointer-events-none disabled:cursor-default disabled:opacity-50"
 				>
-					Prejuízo financeiro por erro <span class="text-red-600">{Math.ceil(-cost * 0.1)}</span>
+					Prejuízo financeiro por erro <span class="text-red-500">{Math.ceil(-cost * 0.1)}</span>
 				</button>
 				<button
 					class="bg-primary/30 border-primary w-fit cursor-pointer rounded-lg border p-2 hover:font-bold hover:opacity-50"

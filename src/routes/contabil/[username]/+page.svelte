@@ -3,7 +3,7 @@
 	import { page } from '$app/state';
 	import { runTransaction, set, getDatabase, push } from 'firebase/database';
 	import { db, ref, get } from '$lib/firebase';
-	import { bpoList, contabilList, getCulturaContabil } from '$lib/currentUser.svelte';
+	import { bpoList, contabilList, getCulturaContabil, listenTotals } from '$lib/currentUser.svelte';
 	import {
 		contabilArray,
 		checkContabil,
@@ -346,6 +346,7 @@
 	}
 
 	$effect(() => {
+		if (untrack(() => contabilList.value.length === 0)) untrack(() => listenTotals());
 		untrack(() => (homepage.value = false));
 		if (untrack(() => !username)) return;
 		untrack(() => (loading = true));

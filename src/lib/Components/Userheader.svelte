@@ -127,11 +127,11 @@
 				</div>
 				<div class="flex w-full justify-between text-xs">
 					<p>
-						<span class="opacity-50">Pontos <span class="hidden md:inline">nesta fase</span>:</span>
+						<span class="opacity-50">Pontos na fase:</span>
 						<span>{user.current}</span>
 					</p>
 					<p>
-						<span class="opacity-50">p/ próxima fase:</span> <span>{1500 - user.current}</span>
+						<span class="opacity-50">p/ próxima:</span> <span>{1500 - user.current}</span>
 					</p>
 				</div>
 			</div>
@@ -162,9 +162,9 @@
 					></div>
 				</div>
 				<div class="flex w-full justify-between text-xs">
-					<p><span class="opacity-50">Pontos neste nível:</span> <span>{user.xp}</span></p>
+					<p><span class="opacity-50">Pontos no nível:</span> <span>{user.xp}</span></p>
 					<p>
-						<span class="opacity-50">p/ próximo nível:</span> <span>{150 - user.xp}</span>
+						<span class="opacity-50">p/ próximo:</span> <span>{150 - user.xp}</span>
 					</p>
 				</div>
 			</div>

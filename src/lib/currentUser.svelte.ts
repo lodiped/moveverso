@@ -89,7 +89,7 @@ let names: Record<string, string> = {
 	lauanysantos: 'Lauany Santos',
 	thiagolopes: 'Thiago Lopes',
 	carolinebarros: 'Caroline Barros',
-	mariawienin: 'Maria Wienin',
+	mariawienen: 'Maria Wienen',
 	leonardopereira: 'Leonardo Pereira',
 	eduardoditrich: 'Eduardo Ditrich',
 	asaphtavares: 'Asaph Tavares',

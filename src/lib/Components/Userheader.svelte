@@ -336,7 +336,7 @@
 		class="fixed inset-0 z-50 flex w-full items-center justify-center bg-black/30 px-5 text-sm lg:px-20"
 	>
 		<div
-			class="bg-secondary/30 flex flex-col items-center gap-10 rounded-xl p-5 backdrop-blur lg:p-10"
+			class=" bg-secondary/30 flex flex-col items-center gap-10 rounded-xl p-5 backdrop-blur lg:p-10"
 		>
 			<h2 class="text-center">pontuação</h2>
 			<div class="flex flex-col items-center gap-5">
@@ -368,7 +368,7 @@
 							<p>
 								Como cada fase possui 10 níveis, para subir de nível você precisa acumular <span
 									class="text-accent">150 pontos</span
-								>. Ao chegar no nível 10, você passa de fase.
+								>. Ao completar o nível 10, você passa de fase.
 							</p>
 						</div>
 					</div>

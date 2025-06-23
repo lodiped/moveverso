@@ -25,12 +25,12 @@
 	import Star from 'virtual:icons/mdi/star-four-points';
 
 	let username = $derived(page.params.username);
-	let message = $state('loading');
 	let loading = $state(true);
 	let userData = $state<{ name: string; total: number } | null>(null);
 	let imgsrc: string = $state('');
 	let u: any = $state();
 	let user = $state({} as UserType);
+	let userId: number | undefined | null = $state();
 
 	async function updateUI() {
 		console.log('updatingUI');
@@ -249,7 +249,6 @@
 	let erroModal = $state(false);
 
 	let person: any = $state();
-	let userId: number | undefined | null = $state();
 
 	async function load() {
 		console.log('Loading data');
@@ -260,11 +259,13 @@
 			} else {
 				console.log('userArray is not empty');
 			}
-			await checkLog(username);
+			if (role.value !== 'guest') {
+				await checkLog(username);
+			}
 
 			const idx = bpoArray.value.findIndex((u) => u.id === username);
 			if (idx < 0) {
-				message = 'User not found';
+				console.error('User not found');
 				return;
 			}
 
@@ -277,7 +278,7 @@
 			await getCulturaBpo(person.id);
 			updateUI();
 		} catch (err) {
-			message = 'User not found';
+			console.error('User not found', err);
 		} finally {
 			loading = false;
 		}
@@ -342,7 +343,7 @@
 	}
 
 	$effect(() => {
-		if (untrack(() => contabilList.value.length === 0)) untrack(() => listenTotals());
+		if (untrack(() => bpoList.value.length === 0)) untrack(() => listenTotals());
 		homepage.value = false;
 		if (!username) return;
 		loading = true;
@@ -379,9 +380,9 @@
 				{toggleSports}
 				{giveCoin}
 				{receiveCoin}
-				{setMedia}
 				{setTreinamento}
 				{setCumbuca}
+				{setMedia}
 			/>
 			<Log {user} {remove} {prevPage} {nextPage} />
 			{#if role.value === 'admin'}

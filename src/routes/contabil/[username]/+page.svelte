@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { untrack } from 'svelte';
 	import type { UserType } from '$lib/types.svelte';
 	import { page } from '$app/state';
 	import { runTransaction, set, getDatabase, push } from 'firebase/database';
@@ -22,14 +23,33 @@
 	import Log from '$lib/Components/Log.svelte';
 	// @ts-ignore
 	import Star from 'virtual:icons/mdi/star-four-points';
-	import { untrack } from 'svelte';
 
 	let username = $derived(page.params.username);
 	let loading = $state(true);
 	let userData = $state<{ name: string; total: number } | null>(null);
 	let imgsrc: string = $state('');
 	let u: any = $state();
-	let user = $state({} as UserType);
+	let user = $state<UserType>({
+		id: '',
+		ingressMs: 0,
+		ingress: '',
+		name: '',
+		fase: 0,
+		nivel: 0,
+		xp: 0,
+		total: 0,
+		current: 0,
+		gender: '',
+		arrayId: 0,
+		cultura: {
+			media: '',
+			coins: { entregues: 0, recebidas: 0 },
+			presenca: { cumbuca: 0, treinamento: 0 },
+			sports: { conq: false, presente: false }
+		},
+		log: [],
+		conquistas: []
+	});
 	let userId: number | undefined | null = $state();
 
 	async function updateUI() {
@@ -345,6 +365,8 @@
 		}
 	}
 
+	let ready = $state(false);
+
 	$effect(() => {
 		if (untrack(() => contabilList.value.length === 0)) untrack(() => listenTotals());
 		untrack(() => (homepage.value = false));
@@ -352,6 +374,7 @@
 		untrack(() => (loading = true));
 		(async () => {
 			await load();
+			untrack(() => (ready = true));
 			untrack(() => (homeLoading.value = false));
 		})();
 	});
@@ -375,7 +398,7 @@
 <div
 	class="my-2 flex w-full flex-col gap-5 md:w-[44rem] 2xl:w-full 2xl:max-w-[1500px] 2xl:flex-row 2xl:gap-20"
 >
-	{#if userData && user && user.cultura}
+	{#if ready}
 		<div class="flex flex-col gap-5 lg:w-full">
 			<Userheader
 				{user}

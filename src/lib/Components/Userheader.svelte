@@ -314,6 +314,21 @@
 			<div class="flex flex-col items-center gap-5">
 				<div class="flex flex-col items-center gap-1">
 					<div class="flex flex-col items-center gap-2">
+						<p>Lista das cores das pulseiras:</p>
+						<ul class="flex flex-col gap-1 text-center text-sm *:rounded-full *:px-2">
+							<li class="bg-white text-black">3 meses</li>
+							<li class="bg-[#fff200] text-black">1 ano</li>
+							<li class="bg-gray-500 text-white">2 anos</li>
+							<li class="bg-orange-500">3 anos</li>
+							<li class="bg-lime-700">4 anos</li>
+							<li class="bg-blue-600">5 anos</li>
+							<li class="bg-purple-600">5 anos</li>
+							<li class="bg-yellow-800">5 anos</li>
+							<li class="bg-black text-white">5 anos</li>
+							<li class="bg-red-500 text-white">5 anos</li>
+							<li class="bg-red-500 text-white">5 anos</li>
+							<li class="bg-red-500 text-white">5 anos</li>
+						</ul>
 						<p>
 							Os dados presentes nesta seção não necessariamente fazem parte do cálculo da Média
 							360º.

@@ -31,7 +31,9 @@
 	});
 </script>
 
-<div class="mt-10 flex w-full max-w-[1000px] flex-col items-center gap-15 2xl:flex-row 2xl:gap-5">
+<div
+	class="mt-10 flex w-full max-w-[1000px] flex-col items-center gap-15 2xl:flex-row 2xl:items-start 2xl:gap-5"
+>
 	{#if homeLoading.value}
 		<div class="relative flex w-full justify-center text-center">
 			<Star class="text-accent drop-shadow-accent animate-spin text-xl drop-shadow-[0_0_10px]" />

@@ -216,7 +216,7 @@
 				</div>
 			</div>
 			<div class="flex w-full items-center justify-between">
-				{#if user.cultura.media !== 0}
+				{#if user.cultura.media !== 0 && role.value !== 'guest'}
 					<div
 						class="drop-shadow-accent flex w-full flex-col items-center gap-1 drop-shadow-[0_0_20px]"
 					>
@@ -293,7 +293,7 @@
 				</div>
 			</div>
 		</div>
-		{#if role.value === 'cultura'}
+		{#if role.value === 'cultura' || role.value === 'admin'}
 			<CulturaPanel
 				bind:user
 				{toggleSports}

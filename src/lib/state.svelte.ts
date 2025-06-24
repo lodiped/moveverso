@@ -343,74 +343,74 @@ export let titlesfem: any = $state({
 			nivel: [
 				'Recruta',
 				'Estudante',
-				'Visionária Iniciante',
-				'Treinando as Habilidades',
-				'Exploradora de Dados',
-				'Cidadã Vigilante',
-				'Portadora de Propósito',
-				'Aprendiz de Herói',
-				'Heroína em Formação',
-				'Estagiária de Superpoderes'
+				'Descobrindo Habilidades',
+				'Aprendiz de Herói I',
+				'Aprendiz de Herói II',
+				'Ajudante de Herói I',
+				'Ajudante de Herói II',
+				'Vigilante Local',
+				'Guardiã da Vizinhança',
+				'Heroína do Bairro'
 			]
 		},
 		{
-			title: 'Superação',
+			title: 'Liga Global',
 			nivel: [
-				'Defensora de Prazos',
-				'Veloz das Tarefas',
-				'Comunicadora Ágil',
-				'Sentinela de Rotina',
-				'Domadora de Demandas',
-				'Guardiã do Cliente',
-				'Organizadora Notável',
-				'Corajosa das Planilhas',
-				'Escudo contra Erros',
-				'Protetora da Ordem'
+				'Aspirante à Patrulheira',
+				'Patrulheira Nacional I',
+				'Patrulheira Nacional II',
+				'Heroína Nacional',
+				'Guardiã Global I',
+				'Guardiã Global II',
+				'Sensação da Liga Global',
+				'Ícone Mundial',
+				'Líder da Liga Global',
+				'Lenda Global'
 			]
 		},
 		{
-			title: 'Ascensão',
+			title: 'Liga Galáctica',
 			nivel: [
-				'Heroína Operacional',
-				'Executora Incansável',
-				'Controladora do Caos',
-				'Mestre de Sistemas',
-				'Construtora de Processos',
-				'Inspiradora da Equipe',
-				'Protetora da Qualidade',
-				'Rastreadora de Soluções',
-				'Inteligente Tático',
-				'Comandante de Resultados'
+				'Aspirante à Sentinela Estelar',
+				'Sentinela Estelar I',
+				'Sentinela Estelar II',
+				'Lenda do Sistema Solar',
+				'Aspirante à Guardiã Galáctica',
+				'Guardiã Galáctica I',
+				'Guardiã Galáctica II',
+				'Comandante da Frota Galáctica',
+				'Líder da Liga Galáctica',
+				'Ícone Eterno da Via Láctea'
 			]
 		},
 		{
-			title: 'Elite Heroica',
+			title: 'Liga Intergaláctica',
 			nivel: [
-				'General de Perfomance',
-				'Mente Estratégica',
-				'Líder de Missão',
-				'Caçadora de Melhorias',
-				'Guardiã Supremo da Rotina',
-				'Capitã da Eficiência',
-				'Arquiteta da Cultura',
-				'Comandante de Processos',
-				'Embaixadora da Excelência',
-				'Guerreira da Alta Perfomance'
+				'Viajante Intergaláctica',
+				'Desbravadora Intergaláctica I',
+				'Desbravadora Intergaláctica II',
+				'Guardiã Intergaláctica I',
+				'Guardiã Intergaláctica II',
+				'Heroína de Andromeda',
+				'Comandante Cósmica',
+				'Símbolo Intergaláctico',
+				'Líder da Liga Intergaláctica',
+				'Ícone Eterno da Humanidade'
 			]
 		},
 		{
-			title: 'Lendas Imortais',
+			title: 'Lenda Universal',
 			nivel: [
-				'Mestre Supremo',
-				'Mentora de Novas Gerações',
-				'Campeã de Valores',
-				'Guardiã Universal',
-				'Mito da Rotina',
-				'Heroína dos Heróis',
-				'Consciência Operacional',
-				'Ícone do Time',
-				'Espirito da Excelência',
-				'Lenda Imortal'
+				'Lenda Intergaláctica',
+				'Dobradora do Espaço-tempo',
+				'Desbravadora do Moveverso',
+				'Guardiã do Moveverso',
+				'Líder da Liga Interdimensional',
+				'Sentinela das Realidades',
+				'Eco Cósmico Interdimensional',
+				'Lenda Interdimensional Atemporal',
+				'Oráculo do Infinito',
+				'Lenda Eterna do Moveverso'
 			]
 		}
 	]
@@ -422,90 +422,97 @@ export let titles: any = $state({
 			nivel: [
 				'Recruta',
 				'Estudante',
-				'Visionário Iniciante',
-				'Treinando as Habilidades',
-				'Explorador de Dados',
-				'Cidadão Vigilante',
-				'Portador de Propósito',
-				'Aprendiz de Herói',
-				'Herói em Formação',
-				'Estagiário de Superpoderes'
+				'Descobrindo Habilidades',
+				'Aprendiz de Herói I',
+				'Aprendiz de Herói II',
+				'Ajudante de Herói I',
+				'Ajudante de Herói II',
+				'Vigilante Local',
+				'Guardião da Vizinhança',
+				'Herói do Bairro'
 			]
 		},
 		{
-			title: 'Superação',
+			title: 'Liga Global',
 			nivel: [
-				'Defensor de Prazos',
-				'Veloz das Tarefas',
-				'Comunicador Ágil',
-				'Sentinela de Rotina',
-				'Domador de Demandas',
-				'Guardião do Cliente',
-				'Organizador Notável',
-				'Corajoso das Planilhas',
-				'Escudo contra Erros',
-				'Protetor da Ordem'
+				'Aspirante à Patrulheiro',
+				'Patrulheiro Nacional I',
+				'Patrulheiro Nacional II',
+				'Herói Nacional',
+				'Guardião Global I',
+				'Guardião Global II',
+				'Sensação da Liga Global',
+				'Ícone Mundial',
+				'Líder da Liga Global',
+				'Lenda Global'
 			]
 		},
 		{
-			title: 'Ascensão',
+			title: 'Liga Galáctica',
 			nivel: [
-				'Herói Operacional',
-				'Executor Incansável',
-				'Controlador do Caos',
-				'Mestre de Sistemas',
-				'Construtor de Processos',
-				'Inspirador da Equipe',
-				'Protetor da Qualidade',
-				'Rastreador de Soluções',
-				'Inteligente Tático',
-				'Comandante de Resultados'
+				'Aspirante à Sentinela Estelar',
+				'Sentinela Estelar I',
+				'Sentinela Estelar II',
+				'Lenda do Sistema Solar',
+				'Aspirante à Guardião Galáctica',
+				'Guardião Galáctica I',
+				'Guardião Galáctica II',
+				'Comandante da Frota Galáctica',
+				'Líder da Liga Galáctica',
+				'Ícone Eterno da Via Láctea'
 			]
 		},
 		{
-			title: 'Elite Heroica',
+			title: 'Liga Intergaláctica',
 			nivel: [
-				'General de Perfomance',
-				'Mente Estratégica',
-				'Líder de Missão',
-				'Caçador de Melhorias',
-				'Guardião Supremo da Rotina',
-				'Capitão da Eficiência',
-				'Arquiteto da Cultura',
-				'Comandante de Processos',
-				'Embaixador da Excelência',
-				'Guerreiro da Alta Perfomance'
+				'Viajante Intergaláctico',
+				'Desbravador Intergaláctico I',
+				'Desbravador Intergaláctico II',
+				'Guardião Intergaláctico I',
+				'Guardião Intergaláctico II',
+				'Herói de Andromeda',
+				'Comandante Cósmico',
+				'Símbolo Intergaláctico',
+				'Líder da Liga Intergaláctica',
+				'Ícone Eterno da Humanidade'
 			]
 		},
 		{
-			title: 'Lendas Imortais',
+			title: 'Lenda Universal',
 			nivel: [
-				'Mestre Supremo',
-				'Mentor de Novas Gerações',
-				'Campeão de Valores',
-				'Guardião Universal',
-				'Mito da Rotina',
-				'Herói dos Heróis',
-				'Consciência Operacional',
-				'Ícone do Time',
-				'Espirito da Excelência',
-				'Lenda Imortal'
+				'Lenda Intergaláctica',
+				'Dobrador do Espaço-tempo',
+				'Desbravador do Moveverso',
+				'Guardião do Moveverso',
+				'Líder da Liga Interdimensional',
+				'Sentinela das Realidades',
+				'Eco Cósmico Interdimensional',
+				'Lenda Interdimensional Atemporal',
+				'Oráculo do Infinito',
+				'Lenda Eterna do Moveverso'
 			]
 		}
 	]
 });
 
-export function faseCalc(total: number) {
-	const f = Math.floor(total / 1500);
+export function faseCalc(total: number, sector?: string) {
+	const pointsPerStage = sector === 'bpo' ? 12000 : 1500;
+	// const f = Math.floor(total / 1500);
+	const f = Math.floor(total / pointsPerStage);
 	return f > 4 ? 5 : f + 1;
 }
-export function currentCalc(total: number, fase: number): number {
-	return Math.abs(1500 * fase - total - 1500);
+export function currentCalc(total: number, fase: number, sector?: string): number {
+	const pointsPerStage = sector === 'bpo' ? 12000 : 1500;
+	// return Math.abs(1500 * fase - total - 1500);
+	return Math.floor(total - (fase - 1) * pointsPerStage);
 }
-export function currentXP(current: number, nivel: number): number {
-	return Math.abs(150 * nivel - current - 150);
+export function currentXP(current: number, nivel: number, sector?: string): number {
+	const pointsPerLevel = sector === 'bpo' ? 1200 : 150;
+	// return Math.abs(150 * nivel - current - 150);
+	return Math.abs(current - (nivel - 1) * pointsPerLevel);
 }
-export function nivelCalc(current: number): number {
-	const lvl = Math.floor(current / 150);
+export function nivelCalc(current: number, sector?: string): number {
+	const pointsPerLevel = sector === 'bpo' ? 1200 : 150;
+	const lvl = Math.floor(current / pointsPerLevel);
 	return lvl > 9 ? 10 : lvl + 1;
 }

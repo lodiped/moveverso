@@ -24,6 +24,7 @@
 	// @ts-ignore
 	import Star from 'virtual:icons/mdi/star-four-points';
 
+	let sector = $derived(page.url.pathname.split('/')[1]);
 	let username = $derived(page.params.username);
 	let loading = $state(true);
 	let userData = $state<{ name: string; total: number } | null>(null);
@@ -383,6 +384,7 @@
 				{setTreinamento}
 				{setCumbuca}
 				{setMedia}
+				{sector}
 			/>
 			<Log {user} {remove} {prevPage} {nextPage} />
 			{#if role.value === 'admin'}

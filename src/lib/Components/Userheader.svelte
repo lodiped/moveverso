@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { getCultura, pulseira, getBandColor, getBandName } from '$lib/currentUser.svelte';
-	import { titlesfem, titles, totalConquistas, role } from '$lib/state.svelte';
+	import { getBandColor, getBandName } from '$lib/currentUser.svelte';
+	import { titlesfem, titles, role } from '$lib/state.svelte';
 	import movesports from '$lib/assets/sports.png';
 	import nomovesports from '$lib/assets/nosports.png';
 	// @ts-ignore
@@ -9,14 +9,25 @@
 	import Pulseira from 'virtual:icons/fa-solid/ring';
 	import CulturaPanel from './CulturaPanel.svelte';
 	import { untrack } from 'svelte';
-	let { user, imgsrc, toggleSports, setMedia, giveCoin, receiveCoin, setTreinamento, setCumbuca } =
-		$props();
+	let {
+		user,
+		sector,
+		imgsrc,
+		toggleSports,
+		setMedia,
+		giveCoin,
+		receiveCoin,
+		setTreinamento,
+		setCumbuca
+	} = $props();
 
 	let cultureInfo = $state(false);
 	let progressoInfo = $state(false);
 
 	let firstname = $state('');
 	let lastname = $state('');
+
+	let bandList = $state(false);
 
 	$effect(() => {
 		[firstname, lastname] = user.name.split(' ');
@@ -131,7 +142,8 @@
 						<span>{user.current}</span>
 					</p>
 					<p>
-						<span class="opacity-50">p/ próxima:</span> <span>{1500 - user.current}</span>
+						<span class="opacity-50">p/ próxima:</span>
+						<span>{(sector === 'bpo' ? 12000 : 1500) - user.current}</span>
 					</p>
 				</div>
 			</div>
@@ -164,7 +176,8 @@
 				<div class="flex w-full justify-between text-xs">
 					<p><span class="opacity-50">Pontos no nível:</span> <span>{user.xp}</span></p>
 					<p>
-						<span class="opacity-50">p/ próximo:</span> <span>{150 - user.xp}</span>
+						<span class="opacity-50">p/ próximo:</span>
+						<span>{(sector === 'bpo' ? 1200 : 150) - user.xp}</span>
 					</p>
 				</div>
 			</div>
@@ -314,25 +327,40 @@
 			<div class="flex flex-col items-center gap-5">
 				<div class="flex flex-col items-center gap-1">
 					<div class="flex flex-col items-center gap-2">
-						<p>Lista das cores das pulseiras:</p>
-						<ul class="flex flex-col gap-1 text-center text-sm *:rounded-full *:px-2">
-							<li class="bg-white text-black">3 meses</li>
-							<li class="bg-[#fff200] text-black">1 ano</li>
-							<li class="bg-gray-500 text-white">2 anos</li>
-							<li class="bg-orange-500">3 anos</li>
-							<li class="bg-lime-700">4 anos</li>
-							<li class="bg-blue-600">5 anos</li>
-							<li class="bg-purple-600">5 anos</li>
-							<li class="bg-yellow-800">5 anos</li>
-							<li class="bg-black text-white">5 anos</li>
-							<li class="bg-red-500 text-white">5 anos</li>
-							<li class="bg-red-500 text-white">5 anos</li>
-							<li class="bg-red-500 text-white">5 anos</li>
-						</ul>
+						<button class="bg-secondary rounded-xl p-2 px-4" onclick={() => (bandList = !bandList)}>
+							Lista das Cores das Pulseiras
+						</button>
+						<div class="transition-all {bandList ? 'max-h-100' : 'max-h-0 opacity-0'}">
+							<ul
+								class="pointer-events-none flex flex-col gap-1 text-center text-sm *:rounded-full *:px-4"
+							>
+								<li class="bg-white text-black">3 meses</li>
+								<li class="bg-[#fff200] text-black">1 ano</li>
+								<li class="bg-gray-400 text-black">2 anos</li>
+								<li class="bg-orange-500 text-black">3 anos</li>
+								<li class="bg-emerald-600 text-black">4 anos</li>
+								<li class="bg-blue-600 text-white">5 anos</li>
+								<li class="bg-purple-600 text-white">6 anos</li>
+								<li class="bg-yellow-800 text-white">7 anos</li>
+								<li class="bg-black text-[#fff200]">8 anos</li>
+								<li class="bg-red-500 text-black">9 anos</li>
+								<li class="bg-red-500 text-white">10 anos</li>
+								<li class="bg-red-500 text-[#fff200]">10 anos</li>
+							</ul>
+						</div>
 						<p>
 							Os dados presentes nesta seção não necessariamente fazem parte do cálculo da Média
 							360º.
 						</p>
+						<h3>Presença</h3>
+						<p>
+							Parágrafo explicando como a presença na cumbuca e nos treinamentos contam para a
+							empresa
+						</p>
+						<h3>Move Sports</h3>
+						<p>Frase explicando como o Move Sports funciona</p>
+						<h3>Move Coin</h3>
+						<p>Frase explicando a Move Coin e os detalhes de receber e entregar</p>
 					</div>
 				</div>
 			</div>

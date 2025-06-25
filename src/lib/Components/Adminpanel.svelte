@@ -8,6 +8,7 @@
 	// @ts-ignore
 	import Info from 'virtual:icons/mdi/information-slab-circle-outline';
 	import { page } from '$app/state';
+	import { derived } from 'svelte/store';
 	let {
 		loading,
 		addPoints = $bindable(),
@@ -17,6 +18,51 @@
 		clearLog,
 		user
 	} = $props();
+
+	let preju: number | undefined = $state();
+	let prejuFinal = $derived(preju! / 10);
+
+	let honorario: number | undefined = $state();
+	let honorarioFinal = $derived(honorario! / 100);
+
+	let diaFechamento: number | undefined = $state();
+	function diaFechamentoPoints(n: number) {
+		if (typeof diaFechamento !== 'number') {
+			return;
+		}
+		if (n === 1) return 10;
+		if (n === 2) return 9;
+		if (n === 3) return 8;
+		if (n === 4) return 7;
+		if (n === 5) return 6;
+		if (n === 6) return 5;
+		if (n === 7) return 4;
+		if (n === 8) return 3;
+		if (n === 9) return 2;
+		if (n === 10) return 1;
+		if (n === 11) return 0;
+		if (n === 12) return -1;
+		if (n === 13) return -2;
+		if (n === 14) return -3;
+		if (n === 15) return -4;
+		if (n > 15) return -5;
+	}
+
+	let tempoGasto: number | undefined = $state();
+	let tempoGastoPoints = $derived(tempoGasto! / 30);
+
+	let deltaTempo: number | undefined = $state();
+	function deltaTempoFn(n: number) {
+		if (typeof n !== 'number') return;
+		if (n < -30) return -20;
+		if (n < -20 && n >= -30) return -10;
+		if (n < -10 && n >= -20) return -5;
+		if (n >= -10 && n <= 0) return 0;
+		if (n > 0 && n <= 10) return 5;
+		if (n > 10 && n <= 20) return 10;
+		if (n > 20 && n <= 30) return 20;
+		if (n > 30) return 30;
+	}
 
 	let cost: number = $state(0);
 	let horas = $state(0);
@@ -127,35 +173,41 @@
 		<p class="flex items-center gap-2">
 			<span>Gerenciamento de Tempo</span>
 		</p>
-		<div class="flex w-full flex-col items-center gap-2">
-			<div class="flex w-full items-center gap-2">
-				<div class="bg-primary/20 flex w-full gap-2 rounded-xl border border-white/20">
-					<input
-						type="number"
-						class=" w-full appearance-none rounded-lg border-0 bg-transparent"
-						placeholder="Dia do Fechamento"
-					/>
-					<button
-						class="cursor-pointer justify-center text-xl opacity-50 transition-opacity hover:opacity-100"
-						><Info /></button
-					>
-					<button class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2"
-						><Save /><span>Salvar</span></button
-					>
-				</div>
-			</div>
+		<div class="bg-primary/20 flex w-full gap-2 rounded-xl border border-white/20">
+			<input
+				type="number"
+				class=" w-full appearance-none rounded-lg border-0 bg-transparent"
+				placeholder="Dia do Fechamento"
+				bind:value={diaFechamento}
+			/>
+			<button
+				class="cursor-pointer justify-center text-xl opacity-50 transition-opacity hover:opacity-100"
+				><Info /></button
+			>
+			<button
+				class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {diaFechamento
+					? ''
+					: 'pointer-events-none opacity-50'}"
+				onclick={() => addPoints(diaFechamentoPoints(diaFechamento!), user.id, 'diafechamento')}
+				><Save /><span>Salvar</span></button
+			>
 		</div>
 		<div class="bg-primary/20 flex w-full gap-2 rounded-xl border border-white/20">
 			<input
 				type="number"
 				class=" w-full appearance-none rounded-lg border-0 bg-transparent"
 				placeholder="Tempo Gasto"
+				bind:value={tempoGasto}
 			/>
 			<button
 				class="cursor-pointer justify-center text-xl opacity-50 transition-opacity hover:opacity-100"
 				><Info /></button
 			>
-			<button class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2"
+			<button
+				class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {tempoGasto
+					? ''
+					: 'pointer-events-none opacity-50'}"
+				onclick={() => addPoints(tempoGastoPoints, user.id, 'tempogasto')}
 				><Save /><span>Salvar</span></button
 			>
 		</div>
@@ -165,8 +217,13 @@
 					type="number"
 					class=" w-full appearance-none rounded-lg border-0 bg-transparent"
 					placeholder="Redução de Tempo (%)"
+					bind:value={deltaTempo}
 				/>
-				<button class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2"
+				<button
+					onclick={() => addPoints(deltaTempoFn(deltaTempo!), user.id, 'deltaup', 'point')}
+					class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {deltaTempo
+						? ''
+						: 'pointer-events-none opacity-50'}"
 					><ThumbsUp class="text-green-600 md:text-white" /><span class="hidden md:block"
 						>Salvar</span
 					></button
@@ -181,8 +238,13 @@
 					type="number"
 					class=" w-full appearance-none rounded-lg border-0 bg-transparent"
 					placeholder="Aumento do Tempo (%)"
+					bind:value={deltaTempo}
 				/>
-				<button class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2"
+				<button
+					onclick={() => addPoints(deltaTempoFn(deltaTempo!), user.id, 'deltadown', 'point')}
+					class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {deltaTempo
+						? ''
+						: 'pointer-events-none opacity-50'}"
 					><ThumbsDn class="text-red-600 md:text-white" /><span class="hidden md:block">Salvar</span
 					></button
 				>
@@ -195,43 +257,57 @@
 			<input
 				type="number"
 				class=" w-full appearance-none rounded-lg border-0 bg-transparent"
-				placeholder="Pontos por Honorário"
+				placeholder="Valor do Honorário"
+				bind:value={honorario}
 			/>
 			<button
 				class="cursor-pointer justify-center text-xl opacity-50 transition-opacity hover:opacity-100"
 				><Info /></button
 			>
-			<button class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2"
-				><Save /><span>Salvar</span></button
+			<button
+				onclick={() => addPoints(honorarioFinal, user.id, 'honorario')}
+				class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {honorario
+					? ''
+					: 'pointer-events-none opacity-50'}"><Save /><span>Salvar</span></button
 			>
 		</div>
-		<button class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
+		<button
+			onclick={() => addPoints(20, user.id, 'indicacaoboleto')}
+			class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
 			>Emissão de boleto CA (indicação) <span class="text-green-600">+20</span></button
 		>
 		<div class="flex w-full flex-col items-center gap-2">
 			<div class="flex w-full gap-2 *:cursor-pointer">
-				<button class="bg-primary/30 w-full rounded-xl p-3"
+				<button
+					onclick={() => addPoints(-30, user.id, 'playbpodown')}
+					class="bg-primary/30 w-full rounded-xl p-3"
 					>PlayBPO incorreto <span class="text-red-500">-30</span></button
 				>
 				<button
 					class="cursor-pointer justify-center text-xl opacity-50 transition-opacity hover:opacity-100"
 					><Info /></button
 				>
-				<button class="bg-primary/30 w-full rounded-xl p-3"
+				<button
+					onclick={() => addPoints(30, user.id, 'playbpoup')}
+					class="bg-primary/30 w-full rounded-xl p-3"
 					>PlayBPO em dia <span class="text-green-600">+30</span></button
 				>
 			</div>
 		</div>
 		<div class="flex w-full flex-col items-center gap-2">
 			<div class="flex w-full gap-2 *:cursor-pointer">
-				<button class="bg-primary/30 w-full rounded-xl p-3"
+				<button
+					onclick={() => addPoints(-10, user.id, 'reclamacao')}
+					class="bg-primary/30 w-full rounded-xl p-3"
 					>Reclamação de Cliente <span class="text-red-500">-10</span></button
 				>
 				<button
 					class="cursor-pointer justify-center text-xl opacity-50 transition-opacity hover:opacity-100"
 					><Info /></button
 				>
-				<button class="bg-primary/30 w-full rounded-xl p-3"
+				<button
+					onclick={() => addPoints(10, user.id, 'elogio')}
+					class="bg-primary/30 w-full rounded-xl p-3"
 					>Elogio de Cliente <span class="text-green-600">+10</span></button
 				>
 			</div>
@@ -241,27 +317,37 @@
 		</p>
 		<div class="flex w-full flex-col items-center gap-2">
 			<div class="flex w-full gap-2 *:cursor-pointer">
-				<button class="bg-primary/30 w-full rounded-xl py-3"
+				<button
+					onclick={() => addPoints(30, user.id, 'primeirolugar')}
+					class="bg-primary/30 w-full rounded-xl py-3"
 					>Primeiro Lugar <span class="text-green-600">+30</span></button
 				>
 				<button
 					class="cursor-pointer justify-center text-xl opacity-50 transition-opacity hover:opacity-100"
 					><Info /></button
 				>
-				<button class="bg-primary/30 w-full rounded-xl py-3"
+				<button
+					onclick={() => addPoints(15, user.id, 'segundolugar')}
+					class="bg-primary/30 w-full rounded-xl py-3"
 					>Segundo Lugar <span class="text-green-600">+15</span></button
 				>
 			</div>
 		</div>
 		<div class="flex w-full flex-col items-center gap-2">
 			<div class="flex w-full gap-2 *:cursor-pointer">
-				<button class="bg-primary/30 w-full rounded-xl p-3"
+				<button
+					onclick={() => addPoints(5, user.id, 'ideiaaplicada')}
+					class="bg-primary/30 w-full rounded-xl p-3"
 					>Idéia aplicada <span class="text-green-600">+5</span></button
 				>
-				<button class="bg-primary/30 w-full rounded-xl p-3"
-					>Maior número de idéias <span class="text-green-600">+50</span></button
+				<button
+					onclick={() => addPoints(50, user.id, 'numeroideias')}
+					class="bg-primary/30 w-full rounded-xl p-3"
+					>Número de idéias <span class="text-green-600">+50</span></button
 				>
-				<button class="bg-primary/30 w-full rounded-xl p-3"
+				<button
+					onclick={() => addPoints(50, user.id, 'melhorideia')}
+					class="bg-primary/30 w-full rounded-xl p-3"
 					>Melhor idéia <span class="text-green-600">+50</span></button
 				>
 			</div>
@@ -269,21 +355,27 @@
 		<p class="flex items-center gap-2">
 			<span>Falhas</span>
 		</p>
-		<button class="bg-primary/30 w-full cursor-pointer rounded-xl p-3"
+		<button
+			onclick={() => addPoints(-5, user.id, 'falhaenvio')}
+			class="bg-primary/30 w-full cursor-pointer rounded-xl p-3"
 			>Não envio de vencimentos ou pagamentos <span class="text-red-500">-5</span></button
 		>
 		<div class="bg-primary/20 flex w-full gap-2 rounded-xl border border-white/20">
 			<input
 				type="number"
-				class=" w-full appearance-none rounded-lg border-0 bg-transparent"
+				class="w-full appearance-none rounded-lg border-0 bg-transparent"
 				placeholder="Prejuízo (em R$)"
+				bind:value={preju}
 			/>
 			<button
 				class="cursor-pointer justify-center text-xl opacity-50 transition-opacity hover:opacity-100"
 				><Info /></button
 			>
-			<button class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2"
-				><Save /><span>Salvar</span></button
+			<button
+				onclick={() => addPoints(-prejuFinal, user.id, 'prejuizo')}
+				class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {preju
+					? ''
+					: 'pointer-events-none opacity-50'}"><Save /><span>Salvar</span></button
 			>
 		</div>
 	</div>

@@ -333,7 +333,10 @@ export let logText: any = $state({
 	indicacao: { desc: 'Indicação de cliente', points: 100, type: 'point' },
 	erro: { desc: 'Erro cometido', points: -10, type: 'point' },
 	horacurso: { desc: 'Atualização profissional', type: 'point' },
-	errovalor: { desc: 'Prejuízo financeiro por erro', type: 'point' }
+	errovalor: { desc: 'Prejuízo financeiro por erro', type: 'point' },
+	// BPO
+	diafechamento: { desc: 'Dia do Fechamento', type: 'point' },
+	tempogasto: { desc: 'Tempo Gasto', type: 'point' }
 });
 
 export let titlesfem: any = $state({

@@ -213,7 +213,7 @@
 			if (actionId) {
 				await set(push(ref(getDatabase(), `logs/${uid}`)), {
 					action: actionId,
-					value: actionId === 'errovalor' || actionId === 'horacurso' ? n : null
+					value: actionId === 'diafechamento' ? n : null
 				});
 			}
 			let newTotal = 0;

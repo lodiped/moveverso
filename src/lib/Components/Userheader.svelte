@@ -7,19 +7,8 @@
 	import Info from 'virtual:icons/mdi/information-slab-circle-outline';
 	// @ts-ignore
 	import Pulseira from 'virtual:icons/fa-solid/ring';
-	import CulturaPanel from './CulturaPanel.svelte';
 	import { untrack } from 'svelte';
-	let {
-		user,
-		sector,
-		imgsrc,
-		toggleSports,
-		setMedia,
-		giveCoin,
-		receiveCoin,
-		setTreinamento,
-		setCumbuca
-	} = $props();
+	let { user, sector, imgsrc } = $props();
 
 	let cultureInfo = $state(false);
 	let progressoInfo = $state(false);
@@ -153,7 +142,7 @@
 				<p class="py-1.5 font-bold">
 					<span class="text-accent drop-shadow-accent/70 text-3xl drop-shadow-[0_0_5px]"
 						>{user.nivel}</span
-					><span class="text-primary">/10</span>
+					>
 				</p>
 				<p
 					class="bg-accent/40 drop-shadow-accent/70 w-full rounded-b-lg py-0.5 text-center text-xs text-black drop-shadow-[0_0_5px]"
@@ -229,7 +218,7 @@
 				</div>
 			</div>
 			<div class="flex w-full items-center justify-between">
-				{#if user.cultura.media !== 0 && role.value !== 'guest'}
+				{#if user.cultura.media !== 0 && (role.value === 'admin' || role.value === 'cultura')}
 					<div
 						class="drop-shadow-accent flex w-full flex-col items-center gap-1 drop-shadow-[0_0_20px]"
 					>
@@ -240,28 +229,20 @@
 					</div>
 				{/if}
 				{#if getBandColor(user.ingressMs)}
-					<div class="group relative flex w-full flex-col items-center transition-all">
-						<div
-							class="drop-shadow-accent/50 pointer-events-none absolute -translate-y-10 opacity-0 drop-shadow-[0_0_20px] transition-all group-hover:translate-y-0 group-hover:opacity-100"
-						>
-							<div class="flex flex-col items-center gap-1 drop-shadow-md drop-shadow-black">
-								<Pulseira
-									style={`color: ${getBandColor(user.ingressMs)};`}
-									class="-rotate-45 text-4xl"
-								/>
-								<div class="text-sm font-bold">Próxima</div>
-							</div>
-						</div>
-						<div
-							class="drop-shadow-accent/50 pointer-events-none drop-shadow-[0_0_20px] transition-all group-hover:translate-y-10 group-hover:opacity-0"
-						>
-							<div class="flex flex-col items-center gap-1 drop-shadow-md drop-shadow-black">
+					<div class="group flex w-full flex-col items-center">
+						<div class="drop-shadow-accent/50 drop-shadow-[0_0_20px]">
+							<button
+								onclick={() => {
+									console.log('show pulseiras');
+								}}
+								class="flex cursor-pointer flex-col items-center gap-1 drop-shadow-md drop-shadow-black"
+							>
 								<Pulseira
 									style={`color: ${getBandColor(user.ingressMs)};`}
 									class="-rotate-45 text-4xl"
 								/>
 								<div class="text-sm font-bold">{getBandName(user.ingressMs)}</div>
-							</div>
+							</button>
 						</div>
 					</div>
 				{/if}
@@ -306,17 +287,6 @@
 				</div>
 			</div>
 		</div>
-		{#if role.value === 'cultura' || role.value === 'admin'}
-			<CulturaPanel
-				bind:user
-				{toggleSports}
-				{giveCoin}
-				{receiveCoin}
-				{setMedia}
-				{setTreinamento}
-				{setCumbuca}
-			/>
-		{/if}
 	</div>
 </div>
 

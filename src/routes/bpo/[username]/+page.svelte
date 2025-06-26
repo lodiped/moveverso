@@ -20,11 +20,12 @@
 	} from '$lib/state.svelte';
 	import Userheader from '$lib/Components/Userheader.svelte';
 	import Adminpanel from '$lib/Components/Adminpanel.svelte';
+	import CulturaPanel from '$lib/Components/CulturaPanel.svelte';
 	import Log from '$lib/Components/Log.svelte';
 	// @ts-ignore
 	import Star from 'virtual:icons/mdi/star-four-points';
 
-	let sector = $derived(page.url.pathname.split('/')[1]);
+	let sector = 'bpo';
 	let username = $derived(page.params.username);
 	let loading = $state(true);
 	let userData = $state<{ name: string; total: number } | null>(null);
@@ -49,7 +50,7 @@
 		user.conquistas = u.conquistas;
 		user.arrayId = u.arrayId;
 		user.cultura = u.cultura;
-		imgsrc = `/assets/${user.gender}/${user.fase}${user.nivel}.png`;
+		imgsrc = `/assets/${user.gender}/${user.fase}${user.nivel}.webp`;
 		sumConquistasBpo(userId!);
 	}
 
@@ -366,8 +367,6 @@
 			await checkLog(user.id);
 		}
 	}
-
-	// FIXME: ajuste do card do personagem quando em widescreen
 </script>
 
 <div
@@ -375,19 +374,20 @@
 >
 	{#if userData && user && user.cultura}
 		<div class="flex flex-col gap-5 lg:w-full">
-			<Userheader
-				{user}
-				{imgsrc}
-				{toggleSports}
-				{giveCoin}
-				{receiveCoin}
-				{setTreinamento}
-				{setCumbuca}
-				{setMedia}
-				{sector}
-			/>
+			<Userheader {user} {imgsrc} {sector} />
+			{#if role.value === 'cultura' || role.value === 'admin'}
+				<CulturaPanel
+					bind:user
+					{toggleSports}
+					{giveCoin}
+					{receiveCoin}
+					{setMedia}
+					{setTreinamento}
+					{setCumbuca}
+				/>
+			{/if}
 			<Log {user} {remove} {prevPage} {nextPage} />
-			{#if role.value === 'admin'}
+			{#if role.value === 'admin' || role.value === 'bpo'}
 				<Adminpanel
 					{loading}
 					{clearLog}

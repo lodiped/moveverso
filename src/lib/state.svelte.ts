@@ -20,13 +20,19 @@ if (typeof window !== 'undefined') {
 		}
 
 		const uid = user.uid;
-		const [globalSnap, cultSnap] = await Promise.all([
+		const [globalSnap, bpoSnap, contabilSnap, cultSnap] = await Promise.all([
 			get(child(dbRef, `/admins/${uid}`)),
+			get(child(dbRef, `/admBpo/${uid}`)),
+			get(child(dbRef, `/admContabil/${uid}`)),
 			get(child(dbRef, `/admCultura/${uid}`))
 		]);
 
 		if (globalSnap.exists()) {
 			role.value = 'admin';
+		} else if (bpoSnap.exists()) {
+			role.value = 'bpo';
+		} else if (contabilSnap.exists()) {
+			role.value = 'contabil';
 		} else if (cultSnap.exists()) {
 			role.value = 'cultura';
 		} else {
@@ -142,7 +148,7 @@ export async function checkBpo() {
 			const fase = faseCalc(total);
 			const current = currentCalc(total, fase);
 			const nivel = nivelCalc(current);
-			const xp = currentXP(current, nivel);
+			const xp = currentXP(total, 'bpo');
 			const conquistas = userData.conquistas
 				? Object.entries(userData.conquistas).map(([conqId, conqData]: any) => ({
 						id: conqId,
@@ -190,7 +196,7 @@ export async function checkContabil() {
 			const fase = faseCalc(total);
 			const current = currentCalc(total, fase);
 			const nivel = nivelCalc(current);
-			const xp = currentXP(current, nivel);
+			const xp = currentXP(total);
 			const conquistas = userData.conquistas
 				? Object.entries(userData.conquistas).map(([conqId, conqData]: any) => ({
 						id: conqId,
@@ -237,7 +243,7 @@ export async function check() {
 			const fase = faseCalc(total);
 			const current = currentCalc(total, fase);
 			const nivel = nivelCalc(current);
-			const xp = currentXP(current, nivel);
+			const xp = currentXP(total);
 			const conquistas = userData.conquistas
 				? Object.entries(userData.conquistas).map(([conqId, conqData]: any) => ({
 						id: conqId,
@@ -499,23 +505,23 @@ export let titles: any = $state({
 });
 
 export function faseCalc(total: number, sector?: string) {
-	const pointsPerStage = sector === 'bpo' ? 12000 : 1500;
+	const pointsPerStage = sector === 'bpo' ? 12_000 : 1_500;
 	// const f = Math.floor(total / 1500);
 	const f = Math.floor(total / pointsPerStage);
 	return f > 4 ? 5 : f + 1;
 }
 export function currentCalc(total: number, fase: number, sector?: string): number {
-	const pointsPerStage = sector === 'bpo' ? 12000 : 1500;
+	const pointsPerStage = sector === 'bpo' ? 12_000 : 1_500;
 	// return Math.abs(1500 * fase - total - 1500);
-	return Math.floor(total - (fase - 1) * pointsPerStage);
+	return Math.abs(total - (fase - 1) * pointsPerStage);
 }
-export function currentXP(current: number, nivel: number, sector?: string): number {
-	const pointsPerLevel = sector === 'bpo' ? 1200 : 150;
+export function currentXP(total: number, sector?: string): number {
+	const pointsPerLevel = sector === 'bpo' ? 1_200 : 150;
 	// return Math.abs(150 * nivel - current - 150);
-	return Math.abs(current - (nivel - 1) * pointsPerLevel);
+	return Math.abs(total % pointsPerLevel);
 }
 export function nivelCalc(current: number, sector?: string): number {
-	const pointsPerLevel = sector === 'bpo' ? 1200 : 150;
+	const pointsPerLevel = sector === 'bpo' ? 1_200 : 150;
 	const lvl = Math.floor(current / pointsPerLevel);
-	return lvl > 9 ? 10 : lvl + 1;
+	return lvl > 49 ? 10 : lvl + 1;
 }

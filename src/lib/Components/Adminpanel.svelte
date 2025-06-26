@@ -9,6 +9,7 @@
 	import Info from 'virtual:icons/mdi/information-slab-circle-outline';
 	import { page } from '$app/state';
 	import { derived } from 'svelte/store';
+	import { role } from '$lib/state.svelte';
 	let {
 		loading,
 		addPoints = $bindable(),
@@ -51,7 +52,8 @@
 	let tempoGasto: number | undefined = $state();
 	let tempoGastoPoints = $derived(tempoGasto! / 30);
 
-	let deltaTempo: number | undefined = $state();
+	let deltaTempoUp: number | undefined = $state();
+	let deltaTempoDown: number | undefined = $state();
 	function deltaTempoFn(n: number) {
 		if (typeof n !== 'number') return;
 		if (n < -30) return -20;
@@ -73,7 +75,7 @@
 </script>
 
 <h2 class="w-full text-center">Admin</h2>
-{#if section === 'contabil'}
+{#if section === 'contabil' && (role.value === 'contabil' || role.value === 'admin')}
 	<div class="flex w-full flex-col gap-5 px-2 lg:flex-row lg:px-0">
 		<div class="w-full lg:w-1/2">
 			<h3 class="w-full text-center">Pontuações</h3>
@@ -168,8 +170,8 @@
 		</div>
 	</div>
 {/if}
-{#if section === 'bpo'}
-	<div class="flex w-full flex-col items-center gap-5 px-2">
+{#if section === 'bpo' && (role.value === 'bpo' || role.value === 'admin')}
+	<div class="flex w-full flex-col items-center gap-3 px-2 md:px-0">
 		<p class="flex items-center gap-2">
 			<span>Gerenciamento de Tempo</span>
 		</p>
@@ -217,11 +219,11 @@
 					type="number"
 					class=" w-full appearance-none rounded-lg border-0 bg-transparent"
 					placeholder="Redução de Tempo (%)"
-					bind:value={deltaTempo}
+					bind:value={deltaTempoDown}
 				/>
 				<button
-					onclick={() => addPoints(deltaTempoFn(deltaTempo!), user.id, 'deltaup', 'point')}
-					class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {deltaTempo
+					onclick={() => addPoints(deltaTempoFn(deltaTempoDown!), user.id, 'deltaup', 'point')}
+					class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {deltaTempoDown
 						? ''
 						: 'pointer-events-none opacity-50'}"
 					><ThumbsUp class="text-green-600 md:text-white" /><span class="hidden md:block"
@@ -238,11 +240,11 @@
 					type="number"
 					class=" w-full appearance-none rounded-lg border-0 bg-transparent"
 					placeholder="Aumento do Tempo (%)"
-					bind:value={deltaTempo}
+					bind:value={deltaTempoUp}
 				/>
 				<button
-					onclick={() => addPoints(deltaTempoFn(deltaTempo!), user.id, 'deltadown', 'point')}
-					class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {deltaTempo
+					onclick={() => addPoints(deltaTempoFn(deltaTempoUp!), user.id, 'deltadown', 'point')}
+					class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {deltaTempoUp
 						? ''
 						: 'pointer-events-none opacity-50'}"
 					><ThumbsDn class="text-red-600 md:text-white" /><span class="hidden md:block">Salvar</span
@@ -257,7 +259,7 @@
 			<input
 				type="number"
 				class=" w-full appearance-none rounded-lg border-0 bg-transparent"
-				placeholder="Valor do Honorário"
+				placeholder="Total do Honorário (R$)"
 				bind:value={honorario}
 			/>
 			<button
@@ -333,8 +335,8 @@
 				>
 			</div>
 		</div>
-		<div class="flex w-full flex-col items-center gap-2">
-			<div class="flex w-full gap-2 *:cursor-pointer">
+		<div class="flex w-full flex-col items-center">
+			<div class="flex w-full gap-3 *:cursor-pointer">
 				<button
 					onclick={() => addPoints(5, user.id, 'ideiaaplicada')}
 					class="bg-primary/30 w-full rounded-xl p-3"
@@ -378,6 +380,15 @@
 					: 'pointer-events-none opacity-50'}"><Save /><span>Salvar</span></button
 			>
 		</div>
+		<p class="font-bold text-red-500 uppercase drop-shadow-lg drop-shadow-red-500/50">
+			Danger Zone
+		</p>
+		<button
+			onclick={() => (dangerZoneAll = !dangerZoneAll)}
+			class="w-full cursor-pointer rounded-xl bg-red-500 p-3"
+		>
+			Zerar Tudo
+		</button>
 	</div>
 {/if}
 

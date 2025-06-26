@@ -19,6 +19,7 @@
 		homeLoading
 	} from '$lib/state.svelte';
 	import Userheader from '$lib/Components/Userheader.svelte';
+	import CulturaPanel from '$lib/Components/CulturaPanel.svelte';
 	import Adminpanel from '$lib/Components/Adminpanel.svelte';
 	import Log from '$lib/Components/Log.svelte';
 	// @ts-ignore
@@ -51,6 +52,7 @@
 		conquistas: []
 	});
 	let userId: number | undefined | null = $state();
+	let sector = 'contabil';
 
 	async function updateUI() {
 		console.log('updatingUI @ updateUI() in contabil/[username]/+page.svelte');
@@ -68,7 +70,7 @@
 		user.conquistas = u.conquistas;
 		user.arrayId = u.arrayId;
 		user.cultura = u.cultura;
-		imgsrc = `/assets/${user.gender}/${user.fase}${user.nivel}.png`;
+		imgsrc = `/assets/${user.gender}/${user.fase}${user.nivel}.webp`;
 		sumConquistasContabil(userId!);
 	}
 
@@ -400,18 +402,20 @@
 >
 	{#if ready}
 		<div class="flex flex-col gap-5 lg:w-full">
-			<Userheader
-				{user}
-				{imgsrc}
-				{toggleSports}
-				{giveCoin}
-				{receiveCoin}
-				{setTreinamento}
-				{setCumbuca}
-				{setMedia}
-			/>
+			<Userheader {sector} {user} {imgsrc} />
+			{#if role.value === 'cultura' || role.value === 'admin'}
+				<CulturaPanel
+					bind:user
+					{toggleSports}
+					{giveCoin}
+					{receiveCoin}
+					{setMedia}
+					{setTreinamento}
+					{setCumbuca}
+				/>
+			{/if}
 			<Log {user} {remove} {prevPage} {nextPage} />
-			{#if role.value === 'admin'}
+			{#if role.value === 'admin' || role.value === 'contabil'}
 				<Adminpanel
 					{loading}
 					{clearLog}

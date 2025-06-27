@@ -190,7 +190,8 @@
 				class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {diaFechamento
 					? ''
 					: 'pointer-events-none opacity-50'}"
-				onclick={() => addPoints(diaFechamentoPoints(diaFechamento!), user.id, 'diafechamento')}
+				onclick={() =>
+					addPoints(diaFechamentoPoints(diaFechamento!), user.id, 'diafechamento', 'point')}
 				><Save /><span>Salvar</span></button
 			>
 		</div>
@@ -209,7 +210,7 @@
 				class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {tempoGasto
 					? ''
 					: 'pointer-events-none opacity-50'}"
-				onclick={() => addPoints(tempoGastoPoints, user.id, 'tempogasto')}
+				onclick={() => addPoints(tempoGastoPoints, user.id, 'tempogasto', 'point')}
 				><Save /><span>Salvar</span></button
 			>
 		</div>
@@ -222,7 +223,7 @@
 					bind:value={deltaTempoDown}
 				/>
 				<button
-					onclick={() => addPoints(deltaTempoFn(deltaTempoDown!), user.id, 'deltaup', 'point')}
+					onclick={() => addPoints(deltaTempoFn(deltaTempoDown!), user.id, 'delta', 'point')}
 					class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {deltaTempoDown
 						? ''
 						: 'pointer-events-none opacity-50'}"
@@ -243,7 +244,7 @@
 					bind:value={deltaTempoUp}
 				/>
 				<button
-					onclick={() => addPoints(deltaTempoFn(deltaTempoUp!), user.id, 'deltadown', 'point')}
+					onclick={() => addPoints(deltaTempoFn(-deltaTempoUp!), user.id, 'delta', 'point')}
 					class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {deltaTempoUp
 						? ''
 						: 'pointer-events-none opacity-50'}"
@@ -258,8 +259,8 @@
 		<div class="bg-primary/20 flex w-full gap-2 rounded-xl border border-white/20">
 			<input
 				type="number"
-				class=" w-full appearance-none rounded-lg border-0 bg-transparent"
-				placeholder="Total do Honorário (R$)"
+				class="w-full appearance-none rounded-lg border-0 bg-transparent"
+				placeholder="Total de Honorários (R$)"
 				bind:value={honorario}
 			/>
 			<button
@@ -267,21 +268,21 @@
 				><Info /></button
 			>
 			<button
-				onclick={() => addPoints(honorarioFinal, user.id, 'honorario')}
+				onclick={() => addPoints(honorarioFinal, user.id, 'honorario', 'point')}
 				class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {honorario
 					? ''
 					: 'pointer-events-none opacity-50'}"><Save /><span>Salvar</span></button
 			>
 		</div>
 		<button
-			onclick={() => addPoints(20, user.id, 'indicacaoboleto')}
+			onclick={() => addPoints(20, user.id, 'indicacaoboleto', 'point')}
 			class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
 			>Emissão de boleto CA (indicação) <span class="text-green-600">+20</span></button
 		>
 		<div class="flex w-full flex-col items-center gap-2">
 			<div class="flex w-full gap-2 *:cursor-pointer">
 				<button
-					onclick={() => addPoints(-30, user.id, 'playbpodown')}
+					onclick={() => addPoints(-30, user.id, 'playbpodown', 'point')}
 					class="bg-primary/30 w-full rounded-xl p-3"
 					>PlayBPO incorreto <span class="text-red-500">-30</span></button
 				>
@@ -290,7 +291,7 @@
 					><Info /></button
 				>
 				<button
-					onclick={() => addPoints(30, user.id, 'playbpoup')}
+					onclick={() => addPoints(30, user.id, 'playbpoup', 'point')}
 					class="bg-primary/30 w-full rounded-xl p-3"
 					>PlayBPO em dia <span class="text-green-600">+30</span></button
 				>
@@ -299,7 +300,7 @@
 		<div class="flex w-full flex-col items-center gap-2">
 			<div class="flex w-full gap-2 *:cursor-pointer">
 				<button
-					onclick={() => addPoints(-10, user.id, 'reclamacao')}
+					onclick={() => addPoints(-10, user.id, 'reclamacao', 'point')}
 					class="bg-primary/30 w-full rounded-xl p-3"
 					>Reclamação de Cliente <span class="text-red-500">-10</span></button
 				>
@@ -308,7 +309,7 @@
 					><Info /></button
 				>
 				<button
-					onclick={() => addPoints(10, user.id, 'elogio')}
+					onclick={() => addPoints(10, user.id, 'elogio', 'point')}
 					class="bg-primary/30 w-full rounded-xl p-3"
 					>Elogio de Cliente <span class="text-green-600">+10</span></button
 				>
@@ -320,7 +321,7 @@
 		<div class="flex w-full flex-col items-center gap-2">
 			<div class="flex w-full gap-2 *:cursor-pointer">
 				<button
-					onclick={() => addPoints(30, user.id, 'primeirolugar')}
+					onclick={() => addPoints(30, user.id, 'primeirolugar', 'point')}
 					class="bg-primary/30 w-full rounded-xl py-3"
 					>Primeiro Lugar <span class="text-green-600">+30</span></button
 				>
@@ -329,7 +330,7 @@
 					><Info /></button
 				>
 				<button
-					onclick={() => addPoints(15, user.id, 'segundolugar')}
+					onclick={() => addPoints(15, user.id, 'segundolugar', 'point')}
 					class="bg-primary/30 w-full rounded-xl py-3"
 					>Segundo Lugar <span class="text-green-600">+15</span></button
 				>
@@ -338,17 +339,17 @@
 		<div class="flex w-full flex-col items-center">
 			<div class="flex w-full gap-3 *:cursor-pointer">
 				<button
-					onclick={() => addPoints(5, user.id, 'ideiaaplicada')}
+					onclick={() => addPoints(5, user.id, 'ideiaaplicadabpo', 'point')}
 					class="bg-primary/30 w-full rounded-xl p-3"
 					>Idéia aplicada <span class="text-green-600">+5</span></button
 				>
 				<button
-					onclick={() => addPoints(50, user.id, 'numeroideias')}
+					onclick={() => addPoints(50, user.id, 'numeroideiasbpo', 'point')}
 					class="bg-primary/30 w-full rounded-xl p-3"
 					>Número de idéias <span class="text-green-600">+50</span></button
 				>
 				<button
-					onclick={() => addPoints(50, user.id, 'melhorideia')}
+					onclick={() => addPoints(50, user.id, 'melhorideiabpo', 'point')}
 					class="bg-primary/30 w-full rounded-xl p-3"
 					>Melhor idéia <span class="text-green-600">+50</span></button
 				>
@@ -358,7 +359,7 @@
 			<span>Falhas</span>
 		</p>
 		<button
-			onclick={() => addPoints(-5, user.id, 'falhaenvio')}
+			onclick={() => addPoints(-5, user.id, 'falhaenvio', 'point')}
 			class="bg-primary/30 w-full cursor-pointer rounded-xl p-3"
 			>Não envio de vencimentos ou pagamentos <span class="text-red-500">-5</span></button
 		>
@@ -374,7 +375,7 @@
 				><Info /></button
 			>
 			<button
-				onclick={() => addPoints(-prejuFinal, user.id, 'prejuizo')}
+				onclick={() => addPoints(-prejuFinal, user.id, 'prejuizo', 'point')}
 				class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {preju
 					? ''
 					: 'pointer-events-none opacity-50'}"><Save /><span>Salvar</span></button
@@ -477,7 +478,8 @@
 				<button
 					disabled={horas <= 0 || typeof horas !== 'number'}
 					onclick={() => {
-						addPoints(horas, user.id, 'horacurso', 'point'), (estudoModal = false);
+						console.log('BUTTON CLICKED AAAAAAAAAAAAA');
+						addPoints(horas, user.id, 'horacurso'), (estudoModal = false);
 					}}
 					class="bg-primary w-fit cursor-pointer rounded-lg p-2 text-black hover:font-bold hover:opacity-50 disabled:pointer-events-none disabled:cursor-default disabled:opacity-50"
 				>

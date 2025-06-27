@@ -147,7 +147,7 @@ export async function checkBpo() {
 			const ingress = msToString(userData.ingress);
 			const fase = faseCalc(total);
 			const current = currentCalc(total, fase);
-			const nivel = nivelCalc(current);
+			const nivel = nivelCalc(total);
 			const xp = currentXP(total, 'bpo');
 			const conquistas = userData.conquistas
 				? Object.entries(userData.conquistas).map(([conqId, conqData]: any) => ({
@@ -195,7 +195,7 @@ export async function checkContabil() {
 			const ingress = msToString(userData.ingress);
 			const fase = faseCalc(total);
 			const current = currentCalc(total, fase);
-			const nivel = nivelCalc(current);
+			const nivel = nivelCalc(total);
 			const xp = currentXP(total);
 			const conquistas = userData.conquistas
 				? Object.entries(userData.conquistas).map(([conqId, conqData]: any) => ({
@@ -242,7 +242,7 @@ export async function check() {
 			const ingress = msToString(userData.ingress);
 			const fase = faseCalc(total);
 			const current = currentCalc(total, fase);
-			const nivel = nivelCalc(current);
+			const nivel = nivelCalc(total);
 			const xp = currentXP(total);
 			const conquistas = userData.conquistas
 				? Object.entries(userData.conquistas).map(([conqId, conqData]: any) => ({
@@ -342,6 +342,22 @@ export let logText: any = $state({
 	errovalor: { desc: 'Prejuízo financeiro por erro', type: 'point' },
 	// BPO
 	diafechamento: { desc: 'Dia do Fechamento', type: 'point' },
+	delta: { desc: 'Redução/Aumento de Tempo', type: 'point' },
+	honorario: { desc: 'Total de Honorários', type: 'point' },
+	playbpodown: { desc: 'Plataforma PlayBPO incorreta', points: -30, type: 'point' },
+	playbpoup: { desc: 'Plataforma PlayBPO em dia', points: 30, type: 'point' },
+	indicacaoboleto: {
+		desc: 'Emissão de boletos pelo Conta Azul (indicação)',
+		points: 20,
+		type: 'point'
+	},
+	primeirolugar: { desc: 'Primeiro Lugar na Campanha Mensal', points: 30, type: 'point' },
+	segundolugar: { desc: 'Segundo Lugar na Campanha Mensal', points: 15, type: 'point' },
+	melhorideiabpo: { desc: 'Melhor Ideia do Mês', points: 50, type: 'point' },
+	ideiaaplicadabpo: { desc: 'Ideia Aplicada', points: 5, type: 'point' },
+	numeroideiasbpo: { desc: 'Maior número de idéias no mês', points: 50, type: 'point' },
+	falhaenvios: { desc: 'Falha no envio de vencimento ou pagamentos', points: -5, type: 'point' },
+	prejuizo: { desc: 'Prejuízo', type: 'point' },
 	tempogasto: { desc: 'Tempo Gasto', type: 'point' }
 });
 
@@ -365,6 +381,16 @@ export let titlesfem: any = $state({
 		{
 			title: 'Liga Global',
 			nivel: [
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
 				'Aspirante à Patrulheira',
 				'Patrulheira Nacional I',
 				'Patrulheira Nacional II',
@@ -380,6 +406,26 @@ export let titlesfem: any = $state({
 		{
 			title: 'Liga Galáctica',
 			nivel: [
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
 				'Aspirante à Sentinela Estelar',
 				'Sentinela Estelar I',
 				'Sentinela Estelar II',
@@ -395,6 +441,36 @@ export let titlesfem: any = $state({
 		{
 			title: 'Liga Intergaláctica',
 			nivel: [
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
 				'Viajante Intergaláctica',
 				'Desbravadora Intergaláctica I',
 				'Desbravadora Intergaláctica II',
@@ -410,6 +486,46 @@ export let titlesfem: any = $state({
 		{
 			title: 'Lenda Universal',
 			nivel: [
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
 				'Lenda Intergaláctica',
 				'Dobradora do Espaço-tempo',
 				'Desbravadora do Moveverso',
@@ -444,6 +560,16 @@ export let titles: any = $state({
 		{
 			title: 'Liga Global',
 			nivel: [
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
 				'Aspirante à Patrulheiro',
 				'Patrulheiro Nacional I',
 				'Patrulheiro Nacional II',
@@ -459,6 +585,26 @@ export let titles: any = $state({
 		{
 			title: 'Liga Galáctica',
 			nivel: [
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
 				'Aspirante à Sentinela Estelar',
 				'Sentinela Estelar I',
 				'Sentinela Estelar II',
@@ -474,6 +620,36 @@ export let titles: any = $state({
 		{
 			title: 'Liga Intergaláctica',
 			nivel: [
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
 				'Viajante Intergaláctico',
 				'Desbravador Intergaláctico I',
 				'Desbravador Intergaláctico II',
@@ -489,6 +665,46 @@ export let titles: any = $state({
 		{
 			title: 'Lenda Universal',
 			nivel: [
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
+				'',
 				'Lenda Intergaláctica',
 				'Dobrador do Espaço-tempo',
 				'Desbravador do Moveverso',
@@ -523,5 +739,5 @@ export function currentXP(total: number, sector?: string): number {
 export function nivelCalc(current: number, sector?: string): number {
 	const pointsPerLevel = sector === 'bpo' ? 1_200 : 150;
 	const lvl = Math.floor(current / pointsPerLevel);
-	return lvl > 49 ? 10 : lvl + 1;
+	return lvl > 49 ? 50 : lvl + 1;
 }

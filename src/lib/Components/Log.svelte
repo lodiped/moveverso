@@ -2,11 +2,33 @@
 	import { userLog, role, logPage, hasMore } from '$lib/state.svelte';
 	import { date } from '$lib/time.svelte';
 	let { user, remove, prevPage, nextPage } = $props();
+	// @ts-ignore
+	import Login from 'virtual:icons/mdi/login';
+	// @ts-ignore
+	import Info from 'virtual:icons/mdi/information-slab-circle-outline';
 </script>
 
 <div class="flex flex-col gap-5 px-2 lg:px-0">
 	<h2 class="-mb-4 w-full text-center">Histórico</h2>
-	{#if userLog.value.length === 0}
+	{#if role.value === 'guest'}
+		<div class="flex w-full justify-center">
+			<div
+				class="bg-primary/20 flex w-fit items-center justify-center gap-2 rounded-xl border border-white/20 p-2"
+			>
+				<input
+					type="password"
+					placeholder="Senha"
+					class="appearance-none border-0 bg-transparent"
+				/>
+				<button class="cursor-pointer text-xl opacity-50 transition-opacity hover:opacity-100"
+					><Info /></button
+				>
+				<button class="bg-primary/30 flex items-center justify-center gap-2 rounded-lg p-2"
+					><Login /><span>Entrar</span></button
+				>
+			</div>
+		</div>
+	{:else if userLog.value.length === 0}
 		<div class="flex w-full items-center justify-center gap-8">
 			<span class=" p-1 px-2.5">Sem registros</span>
 		</div>
@@ -40,16 +62,16 @@
 			</div>
 			<hr class={i === userLog.value.length - 1 ? 'hidden' : 'opacity-20'} />
 		{/each}
+		<div class="flex w-full items-center justify-center gap-8">
+			<div>
+				<button class={logPage.value === 1 ? 'opacity-40' : ''} onclick={prevPage}
+					>&lt; Anterior</button
+				>
+			</div>
+			<span class="rounded-lg border border-white/20 p-1 px-2.5">{logPage.value}</span>
+			<div>
+				<button class={hasMore.value ? '' : 'opacity-40'} onclick={nextPage}>Próxima &gt;</button>
+			</div>
+		</div>
 	{/if}
-	<div class="flex w-full items-center justify-center gap-8">
-		<div>
-			<button class={logPage.value === 1 ? 'opacity-40' : ''} onclick={prevPage}
-				>&lt; Anterior</button
-			>
-		</div>
-		<span class="rounded-lg border border-white/20 p-1 px-2.5">{logPage.value}</span>
-		<div>
-			<button class={hasMore.value ? '' : 'opacity-40'} onclick={nextPage}>Próxima &gt;</button>
-		</div>
-	</div>
 </div>

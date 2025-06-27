@@ -122,7 +122,7 @@
 				<div class="bg-secondary relative h-4 w-full rounded-md">
 					<div
 						class="bg-accent drop-shadow-accent/70 absolute top-0 left-0 h-full w-full rounded-md drop-shadow-[0_0_10px] transition-all content-['']"
-						style={`width: ${user.current / 15}%;`}
+						style={`width: ${user.current / (sector === 'bpo' ? 120 : 15)}%;`}
 					></div>
 				</div>
 				<div class="flex w-full justify-between text-xs">
@@ -158,8 +158,8 @@
 				</p>
 				<div class="bg-secondary relative h-4 w-full rounded-md">
 					<div
-						class="bg-accent drop-shadow-accent/70 absolute top-0 left-0 h-full w-full rounded-md drop-shadow-[0_0_10px] transition-all content-['']"
-						style={`width: ${user.xp / 1.5}%;`}
+						class="drop-shadow-accent/70 bg-accent absolute top-0 left-0 h-full w-full rounded-md drop-shadow-[0_0_10px] transition-all content-['']"
+						style={`width: ${user.xp / (sector === 'bpo' ? 12 : 1.5)}%;`}
 					></div>
 				</div>
 				<div class="flex w-full justify-between text-xs">
@@ -218,7 +218,7 @@
 				</div>
 			</div>
 			<div class="flex w-full items-center justify-between">
-				{#if user.cultura.media !== 0 && (role.value === 'admin' || role.value === 'cultura')}
+				{#if user.cultura.media !== 0 && (role.value === 'admin' || role.value === 'cultura' || role.value === 'contabil' || role.value === 'bpo')}
 					<div
 						class="drop-shadow-accent flex w-full flex-col items-center gap-1 drop-shadow-[0_0_20px]"
 					>

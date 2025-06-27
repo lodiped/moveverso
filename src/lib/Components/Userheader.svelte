@@ -291,8 +291,10 @@
 </div>
 
 {#if cultureInfo}
-	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
-		<div class="bg-secondary/30 flex flex-col items-center gap-10 rounded-xl p-10 backdrop-blur">
+	<div class="fixed inset-0 z-50 flex w-full items-center justify-center bg-black/30 px-2">
+		<div
+			class="bg-secondary/30 flex w-full max-w-[1000px] flex-col items-center gap-10 rounded-xl p-10 backdrop-blur"
+		>
 			<h2 class="text-center">pontuação</h2>
 			<div class="flex flex-col items-center gap-5">
 				<div class="flex flex-col items-center gap-1">
@@ -318,19 +320,22 @@
 								<li class="bg-red-500 text-[#fff200]">10 anos</li>
 							</ul>
 						</div>
-						<p>
-							Os dados presentes nesta seção não necessariamente fazem parte do cálculo da Média
-							360º.
-						</p>
 						<h3>Presença</h3>
 						<p>
-							Parágrafo explicando como a presença na cumbuca e nos treinamentos contam para a
-							empresa
+							A melhoria contínua é um dos valores da Move e, sendo assim, a presença nos
+							treinamentos e cumbucas de cada colaborador é notada.
 						</p>
 						<h3>Move Sports</h3>
-						<p>Frase explicando como o Move Sports funciona</p>
+						<p>
+							A atividade física é uma ferramenta fundamental para a saúde mental e física. Com a
+							participação no Move Sports conseguimos assegurar que todos os colaboradores que
+							participem deem esse pontapé inicial na melhoria das suas vidas.
+						</p>
 						<h3>Move Coin</h3>
-						<p>Frase explicando a Move Coin e os detalhes de receber e entregar</p>
+						<p>
+							A Move Coin é um meio de representar fisicamente nossa gratidão pela colaboração dos
+							nossos colegas. O acúmulo de Coins vale premiações variadas.
+						</p>
 					</div>
 				</div>
 			</div>
@@ -349,7 +354,7 @@
 		class="fixed inset-0 z-50 flex w-full items-center justify-center bg-black/30 px-5 text-sm lg:px-20"
 	>
 		<div
-			class=" bg-secondary/30 flex flex-col items-center gap-10 rounded-xl p-5 backdrop-blur lg:p-10"
+			class=" bg-secondary/30 flex max-w-[1000px] flex-col items-center gap-10 rounded-xl p-5 backdrop-blur lg:p-10"
 		>
 			<h2 class="text-center">pontuação</h2>
 			<div class="flex flex-col items-center gap-5">

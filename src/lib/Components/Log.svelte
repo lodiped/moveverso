@@ -8,17 +8,17 @@
 	import Info from 'virtual:icons/mdi/information-slab-circle-outline';
 </script>
 
-<div class="flex flex-col gap-5 px-2 lg:px-0">
-	<h2 class="-mb-4 w-full text-center">Histórico</h2>
+<div class="flex flex-col items-center gap-5 px-2 lg:px-0">
+	<h2 class="-mb-2 text-center">Histórico</h2>
 	{#if role.value === 'guest'}
-		<div class="flex w-full justify-center">
+		<div class="flex justify-center">
 			<div
-				class="bg-primary/20 flex w-fit items-center justify-center gap-2 rounded-xl border border-white/20 p-2"
+				class="bg-primary/20 flex w-full items-center justify-center gap-2 rounded-xl border border-white/20 p-2"
 			>
 				<input
 					type="password"
 					placeholder="Senha"
-					class="appearance-none border-0 bg-transparent"
+					class="w-full appearance-none border-0 bg-transparent"
 				/>
 				<button class="cursor-pointer text-xl opacity-50 transition-opacity hover:opacity-100"
 					><Info /></button

@@ -33,7 +33,7 @@
 	<a
 		href="/"
 		class="relative mt-10 transition-all {homepage.value
-			? 'w-[400px] lg:w-[550px]'
+			? 'w-[320px] lg:w-[550px]'
 			: 'w-[200px] lg:w-[300px]'}"
 	>
 		<img src={moveverso} class="drop-shadow-accent/50 drop-shadow-[0_0_20px]" alt="" />

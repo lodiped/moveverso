@@ -29,6 +29,14 @@
 	});
 </script>
 
+<div class="flex w-full justify-center p-5">
+	<p
+		class="flex w-fit animate-pulse items-center gap-4 rounded-xl border border-red-400/75 bg-red-400/30 p-4 px-4 text-red-400/75"
+	>
+		<Info class="text-2xl text-red-400/75" />
+		<span>Dados iniciais imcompletos. Aguarde atualização em breve.</span>
+	</p>
+</div>
 <div
 	class="flex flex-col items-center justify-center gap-5 px-8 md:flex-row md:items-start md:px-0"
 >
@@ -341,7 +349,7 @@
 			</div>
 			<button
 				onclick={() => (cultureInfo = false)}
-				class="bg-primary text-secondary w-fit rounded-lg p-3"
+				class="bg-primary text-secondary w-fit cursor-pointer rounded-lg p-3"
 			>
 				Fechar
 			</button>
@@ -363,9 +371,9 @@
 						<div class="flex flex-col items-center">
 							<p>
 								Bem-vindo(a) ao Moveverso! Aqui você vai acompanhar o seu progresso no jogo. O jogo
-								consiste em acumular pontos. Para completar o jogo, você vai acumular <span
-									class="text-accent">7500</span
-								>
+								consiste em acumular pontos. Para completar o jogo, você vai acumular {#if sector === 'bpo'}<span
+										class="text-accent">60000</span
+									>{:else}<span class="text-accent">7500</span>{/if}
 								pontos no total. Durante o jogo, você vai passar por diversas
 								<span class="text-accent">fases</span>
 								e <span class="text-accent">níveis</span>.
@@ -375,8 +383,10 @@
 							<h3>Fases</h3>
 							<p>
 								O jogo completo consiste de <span class="text-accent">5 fases</span>. Para passar
-								cada fase, você precisa acumular <span class="text-accent">1500 pontos</span>.
-								Durante o acúmulo desses pontos na fase, você vai passar por
+								cada fase, você precisa acumular {#if sector === 'bpo'}<span class="text-accent"
+										>12000 pontos</span
+									>{:else}<span class="text-accent">1500 pontos</span>{/if}. Durante o acúmulo
+								desses pontos na fase, você vai passar por
 								<span class="text-accent">10 níveis</span>. Ou seja,
 								<span class="text-accent font-bold">a cada 10 níveis, você passa de fase.</span>
 							</p>
@@ -384,9 +394,10 @@
 						<div class="flex flex-col items-center">
 							<h3>Níveis</h3>
 							<p>
-								Como cada fase possui 10 níveis, para subir de nível você precisa acumular <span
-									class="text-accent">150 pontos</span
-								>. Ao completar o nível 10, você passa de fase.
+								Como cada fase possui 10 níveis, para subir de nível você precisa acumular {#if sector === 'bpo'}<span
+										class="text-accent">1200 pontos</span
+									>{:else}<span class="text-accent">150 pontos</span>{/if}. Ao completar o nível 10,
+								você passa de fase.
 							</p>
 						</div>
 					</div>
@@ -394,7 +405,7 @@
 			</div>
 			<button
 				onclick={() => (progressoInfo = false)}
-				class="bg-primary text-secondary w-fit rounded-lg p-3"
+				class="bg-primary text-secondary w-fit cursor-pointer rounded-lg p-3"
 			>
 				Fechar
 			</button>

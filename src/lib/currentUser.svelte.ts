@@ -68,6 +68,8 @@ export function msToString(ms: number): string {
 }
 
 let names: Record<string, string> = {
+	leticiaguidolin: 'Leticia Guidolin',
+	heloisasilva: 'Heloísa Silva',
 	andreussiegrist: 'Andreus Siegrist',
 	arthurrezner: 'Arthur Rezner',
 	cristinameyer: 'Cristina Meyer',

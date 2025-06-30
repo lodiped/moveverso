@@ -26,6 +26,7 @@
 	<title>Moveverso</title>
 	<meta name="google" value="notranslate" />
 	<meta name="google" content="notranslate" />
+	<link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 </svelte:head>
 
 <div class="flex w-full flex-col items-center gap-15">

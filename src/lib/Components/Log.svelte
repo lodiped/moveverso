@@ -6,6 +6,8 @@
 	import Login from 'virtual:icons/mdi/login';
 	// @ts-ignore
 	import Info from 'virtual:icons/mdi/information-slab-circle-outline';
+
+	let loginInfo = $state(false);
 </script>
 
 <div class="flex flex-col items-center gap-5 px-2 lg:px-0">
@@ -20,7 +22,11 @@
 					placeholder="Senha"
 					class="w-full appearance-none border-0 bg-transparent"
 				/>
-				<button class="cursor-pointer text-xl opacity-50 transition-opacity hover:opacity-100"
+				<button
+					onclick={() => {
+						loginInfo = true;
+					}}
+					class="cursor-pointer text-xl opacity-50 transition-opacity hover:opacity-100"
 					><Info /></button
 				>
 				<button class="bg-primary/30 flex items-center justify-center gap-2 rounded-lg p-2"
@@ -75,3 +81,20 @@
 		</div>
 	{/if}
 </div>
+
+{#if loginInfo}
+	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
+		<div class="bg-secondary/30 flex flex-col items-center gap-10 rounded-xl p-10 backdrop-blur">
+			<h2 class="text-center">Login</h2>
+			<div class="flex flex-col items-center gap-5">
+				<div class="flex flex-col items-center gap-1">
+					<p>Para ver o seu histórico insira a sua senha. (Ainda não implementado)</p>
+				</div>
+			</div>
+			<button
+				class="bg-primary text-secondary w-fit cursor-pointer rounded-lg p-2 px-4"
+				onclick={() => (loginInfo = false)}>Fechar</button
+			>
+		</div>
+	</div>
+{/if}

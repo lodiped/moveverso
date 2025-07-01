@@ -34,7 +34,7 @@
 		class="flex w-fit animate-pulse items-center gap-4 rounded-xl border border-red-400/75 bg-red-400/30 p-4 px-4 text-red-400/75"
 	>
 		<Info class="text-2xl text-red-400/75" />
-		<span>Dados iniciais imcompletos. Aguarde atualização em breve.</span>
+		<span>Dados iniciais incompletos. Aguarde atualização em breve.</span>
 	</p>
 </div>
 <div
@@ -66,8 +66,13 @@
 			<div class="relative h-2.5 w-4/5 rounded-md bg-black">
 				<div
 					class="bg-accent drop-shadow-accent/70 absolute top-0 left-0 h-full w-full rounded-md drop-shadow-[0_0_10px] transition-all content-['']"
-					style={`width: ${user.total / 75}%;`}
+					style={`width: ${sector === 'bpo' ? user.total / 1200 : user.total / 75}%;`}
 				></div>
+				<p
+					class="text-primary/50 absolute flex h-full w-full items-center justify-center text-[0.55rem]"
+				>
+					progresso total
+				</p>
 			</div>
 		</div>
 		<div class="flex w-full flex-col items-center justify-center gap-2">
@@ -299,8 +304,14 @@
 </div>
 
 {#if cultureInfo}
-	<div class="fixed inset-0 z-50 flex w-full items-center justify-center bg-black/30 px-2">
+	<!-- svelte-ignore a11y_click_events_have_key_events -->
+	<!-- svelte-ignore a11y_no_static_element_interactions -->
+	<div
+		onclick={() => (cultureInfo = false)}
+		class="fixed inset-0 z-50 flex w-full items-center justify-center bg-black/30 px-2"
+	>
 		<div
+			onclick={(e) => e.stopPropagation()}
 			class="bg-secondary/30 flex w-full max-w-[1000px] flex-col items-center gap-10 rounded-xl p-10 backdrop-blur"
 		>
 			<h2 class="text-center">pontuação</h2>
@@ -358,10 +369,14 @@
 {/if}
 
 {#if progressoInfo}
+	<!-- svelte-ignore a11y_click_events_have_key_events -->
+	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
+		onclick={() => (progressoInfo = false)}
 		class="fixed inset-0 z-50 flex w-full items-center justify-center bg-black/30 px-5 text-sm lg:px-20"
 	>
 		<div
+			onclick={(event) => event.stopPropagation()}
 			class=" bg-secondary/30 flex max-w-[1000px] flex-col items-center gap-10 rounded-xl p-5 backdrop-blur lg:p-10"
 		>
 			<h2 class="text-center">pontuação</h2>

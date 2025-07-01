@@ -29,10 +29,11 @@
 			unsubscribe?.();
 		};
 	});
+	let selected = $state('contabil');
 </script>
 
 <div
-	class="mt-10 flex w-full max-w-[1000px] flex-col items-center gap-15 2xl:flex-row 2xl:items-start 2xl:gap-5"
+	class="mt-4 flex w-full max-w-[1000px] flex-col items-center gap-15 2xl:mt-10 2xl:flex-row 2xl:items-start 2xl:gap-5"
 >
 	{#if homeLoading.value}
 		<div class="relative flex w-full justify-center text-center">
@@ -40,8 +41,28 @@
 		</div>
 	{:else}
 		<!-- <div>{currentUser.value?.name}</div> -->
-		<div class="flex w-full flex-col items-center px-2 lg:px-0">
-			<h2 class="-z-10 text-center">Contábil</h2>
+		<div class="flex w-[20rem] rounded-xl border border-white/20 2xl:hidden">
+			<button
+				onclick={() => (selected = 'contabil')}
+				class="drop-shadow-accent/60 w-1/2 rounded-lg px-5 py-4 text-center font-['Grifter'] text-xl tracking-wider uppercase transition-all {selected ===
+				'contabil'
+					? 'bg-accent scale-110 text-black/60 drop-shadow-[0_0_15px]'
+					: 'text-accent bg-primary/10 cursor-pointer'}">Contábil</button
+			>
+			<button
+				onclick={() => (selected = 'bpo')}
+				class="drop-shadow-accent/60 w-1/2 rounded-lg px-5 py-4 text-center font-['Grifter'] text-xl tracking-wider uppercase transition-all {selected ===
+				'bpo'
+					? 'bg-accent scale-110 text-black/60 drop-shadow-[0_0_15px]'
+					: 'text-accent bg-primary/10 cursor-pointer'}">BPO</button
+			>
+		</div>
+		<div
+			class="w-full flex-col items-center px-2 lg:px-0 {selected === 'contabil'
+				? 'flex'
+				: 'hidden 2xl:flex'}"
+		>
+			<h2 class="-z-10 hidden text-center 2xl:block">Contábil</h2>
 			<div class="flex w-full max-w-[750px] flex-col items-center gap-2 backdrop-blur-xs">
 				<div class="flex w-full items-center justify-center">
 					<span class="w-[7%] text-end text-sm">Nº.</span>
@@ -71,8 +92,12 @@
 				{/each}
 			</div>
 		</div>
-		<div class="flex w-full flex-col items-center px-2 lg:px-0">
-			<h2 class="-z-10 text-center">BPO</h2>
+		<div
+			class="w-full flex-col items-center px-2 lg:px-0 {selected === 'bpo'
+				? 'flex'
+				: 'hidden 2xl:flex'}"
+		>
+			<h2 class="-z-10 hidden text-center 2xl:block">BPO</h2>
 			<div class="flex w-full max-w-[750px] flex-col items-center gap-2 backdrop-blur-xs">
 				<div class="flex w-full items-center justify-center">
 					<span class="w-[7%] text-end text-sm">Nº.</span>

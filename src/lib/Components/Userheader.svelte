@@ -16,6 +16,7 @@
 	let firstname = $state('');
 	let lastname = $state('');
 
+	let pulseirasInfo = $state(false);
 	let bandList = $state(false);
 
 	$effect(() => {
@@ -114,9 +115,7 @@
 			</h3>
 		</div>
 		<div class="flex w-full items-center justify-start gap-3">
-			<div
-				class="bg-primary/20 flex w-20 flex-col items-center justify-between rounded-lg backdrop-blur-xs"
-			>
+			<div class="bg-primary/20 flex w-20 flex-col items-center justify-between rounded-lg">
 				<p class="flex items-end py-1.5 font-bold">
 					<span class="drop-shadow-accent/70 text-accent text-3xl drop-shadow-[0_0_5px]"
 						>{user.fase}</span
@@ -151,7 +150,7 @@
 			</div>
 		</div>
 		<div class="flex w-full items-center justify-start gap-3">
-			<div class="bg-primary/20 flex w-20 flex-col items-center rounded-lg backdrop-blur-xs">
+			<div class="bg-primary/20 flex w-20 flex-col items-center rounded-lg">
 				<p class="py-1.5 font-bold">
 					<span class="text-accent drop-shadow-accent/70 text-3xl drop-shadow-[0_0_5px]"
 						>{user.nivel}</span
@@ -246,7 +245,7 @@
 						<div class="drop-shadow-accent/50 drop-shadow-[0_0_20px]">
 							<button
 								onclick={() => {
-									console.log('show pulseiras');
+									pulseirasInfo = true;
 								}}
 								class="flex cursor-pointer flex-col items-center gap-1 drop-shadow-md drop-shadow-black"
 							>
@@ -279,7 +278,7 @@
 						class="pointer-events-none absolute top-0 right-0 flex h-full w-full -translate-y-10 cursor-default flex-col items-center justify-center opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100"
 					>
 						<p class="text-sm">Recebidas: {user.cultura.coins.recebidas}</p>
-						<p class="text-sm">Entregues: 8</p>
+						<p class="text-sm">Entregues: {user.cultura.coins.entregues}</p>
 					</div>
 					<div
 						class="pointer-events-none drop-shadow-md drop-shadow-black transition-all group-hover:translate-y-10 group-hover:opacity-0"
@@ -318,27 +317,6 @@
 			<div class="flex flex-col items-center gap-5">
 				<div class="flex flex-col items-center gap-1">
 					<div class="flex flex-col items-center gap-2">
-						<button class="bg-secondary rounded-xl p-2 px-4" onclick={() => (bandList = !bandList)}>
-							Lista das Cores das Pulseiras
-						</button>
-						<div class="transition-all {bandList ? 'max-h-100' : 'max-h-0 opacity-0'}">
-							<ul
-								class="pointer-events-none flex flex-col gap-1 text-center text-sm *:rounded-full *:px-4"
-							>
-								<li class="bg-white text-black">3 meses</li>
-								<li class="bg-[#fff200] text-black">1 ano</li>
-								<li class="bg-gray-400 text-black">2 anos</li>
-								<li class="bg-orange-500 text-black">3 anos</li>
-								<li class="bg-emerald-600 text-black">4 anos</li>
-								<li class="bg-blue-600 text-white">5 anos</li>
-								<li class="bg-purple-600 text-white">6 anos</li>
-								<li class="bg-yellow-800 text-white">7 anos</li>
-								<li class="bg-black text-[#fff200]">8 anos</li>
-								<li class="bg-red-500 text-black">9 anos</li>
-								<li class="bg-red-500 text-white">10 anos</li>
-								<li class="bg-red-500 text-[#fff200]">10 anos</li>
-							</ul>
-						</div>
 						<h3>Presença</h3>
 						<p>
 							A melhoria contínua é um dos valores da Move e, sendo assim, a presença nos
@@ -424,6 +402,40 @@
 			>
 				Fechar
 			</button>
+		</div>
+	</div>
+{/if}
+
+{#if pulseirasInfo}
+	<!-- svelte-ignore a11y_click_events_have_key_events -->
+	<!-- svelte-ignore a11y_no_static_element_interactions -->
+	<div
+		onclick={() => (pulseirasInfo = false)}
+		class="fixed top-0 left-0 z-50 flex h-full w-full flex-col items-center justify-center bg-black/30"
+	>
+		<div
+			onclick={(e) => e.stopPropagation()}
+			class="bg-secondary/30 flex flex-col items-center gap-5 rounded-xl p-10 backdrop-blur"
+		>
+			<h3>Pulseiras</h3>
+			<ul class="pointer-events-none flex flex-col gap-1 text-center text-sm *:rounded-full *:px-4">
+				<li class="bg-white text-black">3 meses</li>
+				<li class="bg-[#fff200] text-black">1 ano</li>
+				<li class="bg-gray-400 text-black">2 anos</li>
+				<li class="bg-orange-500 text-black">3 anos</li>
+				<li class="bg-emerald-600 text-black">4 anos</li>
+				<li class="bg-blue-600 text-white">5 anos</li>
+				<li class="bg-purple-600 text-white">6 anos</li>
+				<li class="bg-yellow-800 text-white">7 anos</li>
+				<li class="bg-black text-[#fff200]">8 anos</li>
+				<li class="bg-red-500 text-black">9 anos</li>
+				<li class="bg-red-500 text-white">10 anos</li>
+				<li class="bg-red-500 text-[#fff200]">11 anos</li>
+			</ul>
+			<button
+				class="bg-primary text-secondary w-fit cursor-pointer rounded-lg p-3"
+				onclick={() => (pulseirasInfo = false)}>Fechar</button
+			>
 		</div>
 	</div>
 {/if}

@@ -3,36 +3,36 @@
 	import { date } from '$lib/time.svelte';
 	let { user, remove, prevPage, nextPage } = $props();
 	// @ts-ignore
-	import Login from 'virtual:icons/mdi/login';
-	// @ts-ignore
-	import Info from 'virtual:icons/mdi/information-slab-circle-outline';
+	import Google from 'virtual:icons/mdi/google';
+	import { signInWithPopup } from 'firebase/auth';
+	import { auth, googleProvider } from '$lib/firebase';
+	import { authEmail } from '$lib/state.svelte';
 
 	let loginInfo = $state(false);
+
+	async function handleGoogleSignIn() {
+		try {
+			const result = await signInWithPopup(auth, googleProvider);
+			const user = result.user;
+			console.log('GOOGLE STUFF: ', user);
+		} catch (error) {
+			console.log(error);
+		}
+	}
 </script>
 
 <div class="flex flex-col items-center gap-5 px-2 lg:px-0">
 	<h2 class="-mb-2 text-center">Histórico</h2>
 	{#if role.value === 'guest'}
-		<div class="flex justify-center">
-			<div
-				class="bg-primary/20 flex w-full items-center justify-center gap-2 rounded-xl border border-white/20 p-2"
-			>
-				<input
-					type="password"
-					placeholder="Senha"
-					class="w-full appearance-none border-0 bg-transparent"
-				/>
-				<button
-					onclick={() => {
-						loginInfo = true;
-					}}
-					class="cursor-pointer text-xl opacity-50 transition-opacity hover:opacity-100"
-					><Info /></button
-				>
-				<button class="bg-primary/30 flex items-center justify-center gap-2 rounded-lg p-2"
-					><Login /><span>Entrar</span></button
-				>
-			</div>
+		<p>Para ver o histórico, entre com o seu e-mail @movenegocios.com.br:</p>
+		<button
+			class="bg-primary/30 flex w-fit cursor-pointer items-center justify-center gap-4 rounded-lg p-4 px-6 text-white backdrop-blur-xs"
+			onclick={handleGoogleSignIn}><Google class="text-xl" /><span>Entrar com Google</span></button
+		>
+	{:else if role.value === 'user' && authEmail.value !== user.email}
+		<div>
+			Este e-mail não tem permissão para ver o histórico OU o Pedro errou alguma coisa (fala com
+			ele)
 		</div>
 	{:else if userLog.value.length === 0}
 		<div class="flex w-full items-center justify-center gap-8">

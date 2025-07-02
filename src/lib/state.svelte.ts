@@ -12,6 +12,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 
 // Checa se o usuário é admin ou cultura
 export let role = $state({ value: 'guest' });
+export const authEmail: { value: string | null } = $state({ value: '' });
 if (typeof window !== 'undefined') {
 	onAuthStateChanged(auth, async (user) => {
 		if (!user) {
@@ -27,6 +28,8 @@ if (typeof window !== 'undefined') {
 			get(child(dbRef, `/admCultura/${uid}`))
 		]);
 
+		authEmail.value = user.email ?? null;
+
 		if (globalSnap.exists()) {
 			role.value = 'admin';
 		} else if (bpoSnap.exists()) {
@@ -36,7 +39,7 @@ if (typeof window !== 'undefined') {
 		} else if (cultSnap.exists()) {
 			role.value = 'cultura';
 		} else {
-			role.value = 'guest';
+			role.value = 'user';
 		}
 		console.log(
 			'getting role.value @ onAuthStateChanged(auth, ()) in state.svelte.ts: ' + role.value

@@ -31,7 +31,28 @@
 	let userData = $state<{ name: string; total: number } | null>(null);
 	let imgsrc: string = $state('');
 	let u: any = $state();
-	let user = $state({} as UserType);
+	let user = $state<UserType>({
+		id: '',
+		ingressMs: 0,
+		ingress: '',
+		name: '',
+		fase: 0,
+		nivel: 0,
+		email: '',
+		xp: 0,
+		total: 0,
+		current: 0,
+		gender: '',
+		arrayId: 0,
+		cultura: {
+			media: '',
+			coins: { entregues: 0, recebidas: 0 },
+			presenca: { cumbuca: 0, treinamento: 0 },
+			sports: { conq: false, presente: false }
+		},
+		log: [],
+		conquistas: []
+	});
 	let userId: number | undefined | null = $state();
 
 	async function updateUI() {
@@ -43,6 +64,7 @@
 		user.name = u.name;
 		user.fase = u.fase;
 		user.nivel = u.nivel;
+		user.email = u.email;
 		user.xp = u.xp;
 		user.total = u.total;
 		user.current = u.current;

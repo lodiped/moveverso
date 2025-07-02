@@ -37,6 +37,7 @@
 		name: '',
 		fase: 0,
 		nivel: 0,
+		email: '',
 		xp: 0,
 		total: 0,
 		current: 0,
@@ -70,6 +71,7 @@
 		user.conquistas = u.conquistas;
 		user.arrayId = u.arrayId;
 		user.cultura = u.cultura;
+		user.email = u.email;
 		imgsrc = `/assets/${user.gender}/${user.fase}${user.nivel}.webp`;
 		sumConquistasContabil(userId!);
 	}

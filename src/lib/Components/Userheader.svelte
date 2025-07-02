@@ -197,7 +197,7 @@
 			</h3>
 			<div class="flex w-full flex-col items-center gap-2">
 				<div
-					class="bg-secondary relative h-4 w-full rounded-md"
+					class="bg-secondary group relative h-4 w-full rounded-md"
 					title={user.cultura.presenca.treinamento}
 				>
 					<div
@@ -210,6 +210,11 @@
 								? 'hidden'
 								: ''}">Treinamentos</span
 						>
+					</div>
+					<div
+						class="pointer-events-none absolute -top-1/4 z-50 flex w-full items-center justify-center text-sm opacity-0 transition-opacity group-hover:opacity-100"
+					>
+						<div class="w-fit">{user.cultura.presenca.treinamento}%</div>
 					</div>
 				</div>
 				<div
@@ -261,7 +266,7 @@
 				<div
 					class="flex w-full flex-col items-center justify-between gap-3.5 drop-shadow-[0_0_20px] drop-shadow-red-600"
 				>
-					<div class="flex flex-col items-center justify-between gap-3.5">
+					<div class="flex max-w-35 flex-col items-center justify-between gap-3.5">
 						{#if user.cultura.sports.presente}
 							<img src={movesports} class="w-[50%]" alt="" />
 							<p class="text-sm font-bold">Ativo</p>

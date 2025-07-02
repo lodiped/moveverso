@@ -73,7 +73,6 @@ let names: Record<string, string> = {
 	andreussiegrist: 'Andreus Siegrist',
 	cristinameyer: 'Cristina Meyer',
 	fernandafrandolosobpo: 'Fernanda Frandoloso',
-	fernandafrandolosocontabil: 'Fernanda Frandoloso',
 	francielyoliveira: 'Franciely Oliveira',
 	larissamartins: 'Larissa Martins',
 	leonardosilva: 'Leonardo Silva',
@@ -91,10 +90,8 @@ let names: Record<string, string> = {
 	thiagolopes: 'Thiago Lopes',
 	carolinebarros: 'Caroline Barros',
 	mariawienen: 'Malu Wienen',
-	leonardopereira: 'Leonardo Pereira',
 	eduardoditrich: 'Eduardo Ditrich',
 	asaphtavares: 'Asaph Tavares',
-	pedroaraujo: 'Pedro Araújo',
 	tamirisrosa: 'Tamiris Rosa'
 };
 

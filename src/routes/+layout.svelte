@@ -5,6 +5,8 @@
 	import { role, homepage, loading, homeLoading } from '$lib/state.svelte';
 	import moveverso from '$lib/assets/moveverso.png';
 	import moveversowide from '$lib/assets/moveversowide.png';
+	// @ts-ignore
+	import Sair from 'virtual:icons/mdi/logout';
 	let loadingLocal = $state(false);
 	async function handleLogout() {
 		loadingLocal = true;
@@ -59,11 +61,12 @@
 	<div class="fixed right-2 bottom-2">
 		<button
 			onclick={() => handleLogout()}
-			class="{loadingLocal
+			class="text-secondary flex items-center gap-3 px-6 {loadingLocal
 				? 'pointer-events-none opacity-50'
 				: ''} bg-accent cursor-pointer rounded-full p-3 drop-shadow-lg transition-transform hover:-translate-y-1"
 		>
-			<div class="text-secondary">Admin Log Out</div>
+			<span>Sair</span>
+			<Sair />
 		</button>
 	</div>
 {/if}

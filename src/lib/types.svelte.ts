@@ -43,6 +43,7 @@ export type UserType = {
 	total: number;
 	current: number;
 	gender: string;
+	email: string;
 	arrayId: number;
 	cultura: Cultura;
 	log: Log[];

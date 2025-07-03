@@ -40,15 +40,11 @@
 		</div>
 	{:else}
 		{#each userLog.value as log, i}
-			<div class="flex justify-between gap-5">
+			<div class="flex w-full justify-between gap-5">
 				<div
 					class="flex w-[5rem] items-center justify-center rounded-lg border border-white/20 text-lg backdrop-blur-xs"
 				>
-					{#if log.value}
-						<span class={log.value > 0 ? 'text-green-600' : 'text-red-600'}>{log.value}</span>
-					{:else}
-						<span class={log.points > 0 ? 'text-green-600' : 'text-red-600'}>{log.points}</span>
-					{/if}
+					<span class={log.points >= 0 ? 'text-green-600' : 'text-red-600'}>{log.points}</span>
 				</div>
 				<div class="w-full">
 					<p class="flex gap-5">
@@ -56,7 +52,7 @@
 					</p>
 					<p class="text-xs opacity-50">{date(log.id)}</p>
 				</div>
-				{#if role.value === 'admin'}
+				{#if role.value === 'admin' || role.value === 'contabil' || role.value === 'bpo'}
 					<button
 						onclick={() => {
 							remove(log.id, user.id, log.action, log.type);

@@ -4,7 +4,13 @@
 	import { page } from '$app/state';
 	import { runTransaction, set, getDatabase, push } from 'firebase/database';
 	import { db, ref, get } from '$lib/firebase';
-	import { bpoList, contabilList, getCulturaContabil, listenTotals } from '$lib/currentUser.svelte';
+	import {
+		bpoList,
+		contabilList,
+		getCulturaContabil,
+		listenTotals,
+		getBandColor
+	} from '$lib/currentUser.svelte';
 	import {
 		contabilArray,
 		checkContabil,
@@ -29,6 +35,7 @@
 	let loading = $state(true);
 	let userData = $state<{ name: string; total: number } | null>(null);
 	let imgsrc: string = $state('');
+	let pulseirasrc: string = $state('');
 	let u: any = $state();
 	let user = $state<UserType>({
 		id: '',
@@ -73,6 +80,11 @@
 		user.cultura = u.cultura;
 		user.email = u.email;
 		imgsrc = `/assets/${user.gender}/${user.fase}${user.nivel}.webp`;
+		if (getBandColor(user.ingressMs)) {
+			pulseirasrc = `/assets/${user.fase}${user.gender}${getBandColor(user.ingressMs)}.webp`;
+		} else {
+			pulseirasrc = '';
+		}
 		sumConquistasContabil(userId!);
 	}
 
@@ -86,7 +98,7 @@
 			});
 			await runTransaction(ref(db, `contabil/${uid}/conquistas/${conqUid}/number`), (conquista) => {
 				conquista++;
-				return conquista;
+				return Math.round(conquista);
 			});
 			await checkContabil();
 			await checkLog(uid);
@@ -103,6 +115,7 @@
 		logPage.value = 1;
 		try {
 			if (input > 10 || input < 0) {
+				alert('Média nao pode ser maior que dez 10 ou menor que 0');
 				throw new Error('Média não pode ser maior que dez 10 ou menor que 0');
 			}
 			input.toFixed(1);
@@ -123,6 +136,7 @@
 		logPage.value = 1;
 		try {
 			if (input > 100 || input < 0) {
+				alert('Porcentagem nao pode ser maior que dez 100 ou menor que 0');
 				throw new Error('Porcentagem não pode ser maior que dez 100 ou menor que 0');
 			}
 			input.toFixed(2);
@@ -143,6 +157,7 @@
 		logPage.value = 1;
 		try {
 			if (input > 100 || input < 0) {
+				alert('Porcentagem nao pode ser maior que dez 100 ou menor que 0');
 				throw new Error('Porcentagem não pode ser maior que dez 100 ou menor que 0');
 			}
 			input.toFixed(2);
@@ -179,7 +194,7 @@
 		try {
 			await runTransaction(ref(db, `cultura/${uid}/coins/recebidas`), (coin) => {
 				coin++;
-				return coin;
+				return Math.round(coin);
 			});
 			await checkContabil();
 			await updateUI();
@@ -196,7 +211,7 @@
 		try {
 			await runTransaction(ref(db, `cultura/${uid}/coins/entregues`), (coin) => {
 				coin++;
-				return coin;
+				return Math.round(coin);
 			});
 			await checkContabil();
 			await updateUI();
@@ -241,27 +256,21 @@
 			}
 			let newTotal = 0;
 			await runTransaction(ref(db, `contabil/${uid}/total`), (total) => {
-				if (total + n < 0) {
-					total = 0;
-					return total;
-				}
 				newTotal = total + n;
 
-				return total + n;
+				return Math.round(total + n);
 			});
 			await runTransaction(ref(db, `totals/${uid}/value`), (total) => {
-				if (total + n < 0) {
-					total = 0;
-					return total;
-				} else if (total + n !== newTotal) {
+				if (total + n !== newTotal) {
 					total = newTotal;
-					return total;
+					return Math.round(total);
 				} else {
-					return total + n;
+					return Math.round(total + n);
 				}
 			});
 			await checkLog(uid);
 			await checkContabil();
+			await listenTotals();
 			await updateUI();
 		} catch (error) {
 			console.error(error);
@@ -344,13 +353,10 @@
 				await runTransaction(ref(db, `contabil/${uid}/total`), (total) => {
 					total -= points;
 					newPoints = total;
-					return total;
+					return newPoints;
 				});
-				await runTransaction(ref(db, `totals/${uid}/total`), (total) => {
-					if (total < 0) {
-						total = 0;
-						return total;
-					} else if (total !== newPoints) {
+				await runTransaction(ref(db, `totals/${uid}/value`), (total) => {
+					if (total !== newPoints) {
 						total = newPoints;
 						return total;
 					} else {
@@ -404,7 +410,7 @@
 >
 	{#if ready}
 		<div class="flex flex-col gap-5 lg:w-full">
-			<Userheader {sector} {user} {imgsrc} />
+			<Userheader {sector} {user} {imgsrc} {pulseirasrc} />
 			{#if role.value === 'cultura' || role.value === 'admin'}
 				<CulturaPanel
 					bind:user
@@ -442,7 +448,10 @@
 					</div>
 					{#each contabilList.value as user, i}
 						<div
-							class="nth-2:bg-accent/30 nth-2:drop-shadow-accent/50 nth-3:bg-primary/25 nth-4:bg-accent/8 flex w-full items-center justify-center rounded-lg px-1 nth-2:drop-shadow-[0_0_15px]"
+							class="nth-2:bg-accent/30 nth-2:drop-shadow-accent/50 nth-3:bg-primary/25 nth-4:bg-accent/8 flex w-full items-center justify-center rounded-lg px-1 nth-2:drop-shadow-[0_0_15px] {user.id ===
+							page.params.username
+								? 'bg-primary/30 border-2'
+								: 'nth-4:bg-accent/8'}"
 						>
 							<span class="w-[7%] pr-0.5 text-end opacity-50">{i + 1}.</span>
 							<a
@@ -450,7 +459,7 @@
 									logPage.value = 1;
 								}}
 								href={`/contabil/${user.id}`}
-								class="bg-primary/30 hover:bg-primary/50 w-[57%] rounded-lg p-1 px-2 text-left transition-all"
+								class="bg-primary/30 hover:bg-primary/50 w-[57%] rounded-lg p-1 px-2 text-left"
 								>{user.name}</a
 							>
 							<span class="w-[11%] text-end">{user.nivel}</span>
@@ -472,7 +481,10 @@
 					</div>
 					{#each bpoList.value as user, i}
 						<div
-							class="nth-2:bg-accent/30 nth-2:drop-shadow-accent/50 nth-3:bg-primary/25 nth-4:bg-accent/8 flex w-full items-center justify-center rounded-lg px-1 nth-2:drop-shadow-[0_0_15px]"
+							class="nth-2:bg-accent/30 nth-2:drop-shadow-accent/50 nth-3:bg-primary/25 nth-4:bg-accent/8 flex w-full items-center justify-center rounded-lg px-1 nth-2:drop-shadow-[0_0_15px] {user.id ===
+							page.params.username
+								? 'bg-primary/30 border-2'
+								: 'nth-4:bg-accent/8'}"
 						>
 							<span class="w-[7%] pr-0.5 text-end opacity-50">{i + 1}.</span>
 							<a

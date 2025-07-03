@@ -116,7 +116,9 @@ export async function checkLog(uid: string) {
 					id,
 					text: logText[entry.action]?.desc ?? '--',
 					type: logText[entry.action]?.type ?? '--',
-					points: logText[entry.action]?.points ?? logText[entry.action]?.img,
+					points:
+						logText[entry.action]?.points ??
+						(logText[entry.action].img !== undefined ? logText[entry.action].img : entry.value),
 					...entry
 				};
 			});
@@ -727,20 +729,28 @@ export function faseCalc(total: number, sector?: string) {
 	const pointsPerStage = sector === 'bpo' ? 12_000 : 1_500;
 	// const f = Math.floor(total / 1500);
 	const f = Math.floor(total / pointsPerStage);
-	return f > 4 ? 5 : f + 1;
+	const result = f > 4 ? 5 : f + 1;
+	if (result < 1) return 1;
+	return result;
 }
 export function currentCalc(total: number, fase: number, sector?: string): number {
 	const pointsPerStage = sector === 'bpo' ? 12_000 : 1_500;
 	// return Math.abs(1500 * fase - total - 1500);
-	return Math.abs(total - (fase - 1) * pointsPerStage);
+	const result = Math.round(total - (fase - 1) * pointsPerStage);
+	if (result < 0) return 0;
+	return result;
 }
 export function currentXP(total: number, sector?: string): number {
 	const pointsPerLevel = sector === 'bpo' ? 1_200 : 150;
 	// return Math.abs(150 * nivel - current - 150);
-	return Math.abs(total % pointsPerLevel);
+	const result = Math.round(total % pointsPerLevel);
+	if (result < 0) return 0;
+	return result;
 }
 export function nivelCalc(current: number, sector?: string): number {
 	const pointsPerLevel = sector === 'bpo' ? 1_200 : 150;
 	const lvl = Math.floor(current / pointsPerLevel);
-	return lvl > 49 ? 50 : lvl + 1;
+	const result = lvl > 49 ? 50 : lvl + 1;
+	if (result < 1) return 1;
+	return result;
 }

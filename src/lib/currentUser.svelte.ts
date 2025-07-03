@@ -113,7 +113,7 @@ export const pulseira = $state({
 		text: '3 Anos'
 	},
 	quatroAnos: {
-		color: 'green',
+		color: 'mediumseagreen',
 		text: '4 Anos'
 	},
 	cincoAnos: {

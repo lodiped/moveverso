@@ -24,7 +24,7 @@
 	let prejuFinal = $derived(preju! / 10);
 
 	let honorario: number | undefined = $state();
-	let honorarioFinal = $derived(honorario! / 100);
+	let honorarioFinal: number = $derived(honorario! / 100);
 
 	let diaFechamento: number | undefined = $state();
 	function diaFechamentoPoints(n: number) {
@@ -478,7 +478,6 @@
 				<button
 					disabled={horas <= 0 || typeof horas !== 'number'}
 					onclick={() => {
-						console.log('BUTTON CLICKED AAAAAAAAAAAAA');
 						addPoints(horas, user.id, 'horacurso'), (estudoModal = false);
 					}}
 					class="bg-primary w-fit cursor-pointer rounded-lg p-2 text-black hover:font-bold hover:opacity-50 disabled:pointer-events-none disabled:cursor-default disabled:opacity-50"

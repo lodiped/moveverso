@@ -8,7 +8,7 @@
 	// @ts-ignore
 	import Pulseira from 'virtual:icons/fa-solid/ring';
 	import { untrack } from 'svelte';
-	let { user, sector, imgsrc } = $props();
+	let { user, sector, imgsrc, pulseirasrc } = $props();
 
 	let cultureInfo = $state(false);
 	let progressoInfo = $state(false);
@@ -45,7 +45,10 @@
 		class="relative flex w-[230px] grow-0 flex-col items-center justify-center gap-4 md:w-1/3 md:min-w-[230px]"
 	>
 		{#if imgsrc}
-			<img src={imgsrc} alt="Arte do Personagem" class="rounded-3xl" />
+			<div class="relative w-full">
+				<img src={imgsrc} alt="Arte do Personagem" class="rounded-3xl" />
+				<img src={pulseirasrc} class="absolute top-0 z-50" alt="" />
+			</div>
 		{/if}
 		<h2 class="drop-shadow-accent/70 absolute top-61 text-[1.7rem] drop-shadow-[0_0_10px]">
 			{firstname}
@@ -57,11 +60,6 @@
 			<span class="drop-shadow-[0_0_2px] drop-shadow-black">
 				ingresso: {user.ingress}
 			</span>
-			{#if getBandColor(user.ingressMs)}
-				<span>
-					<Pulseira class="-rotate-45" style={`color: ${getBandColor(user.ingressMs)};`} /></span
-				>
-			{/if}
 		</div>
 		<div class="absolute top-90 flex w-full flex-col items-center pt-5">
 			<div class="relative h-2.5 w-4/5 rounded-md bg-black">
@@ -140,11 +138,11 @@
 				<div class="flex w-full justify-between text-xs">
 					<p>
 						<span class="opacity-50">Pontos na fase:</span>
-						<span>{user.current}</span>
+						<span>{Math.round(user.current)}</span>
 					</p>
 					<p>
 						<span class="opacity-50">p/ próxima:</span>
-						<span>{(sector === 'bpo' ? 12000 : 1500) - user.current}</span>
+						<span>{Math.round((sector === 'bpo' ? 12000 : 1500) - user.current)}</span>
 					</p>
 				</div>
 			</div>
@@ -175,10 +173,10 @@
 					></div>
 				</div>
 				<div class="flex w-full justify-between text-xs">
-					<p><span class="opacity-50">Pontos no nível:</span> <span>{user.xp}</span></p>
+					<p><span class="opacity-50">Pontos no nível:</span> <span>{Math.round(user.xp)}</span></p>
 					<p>
 						<span class="opacity-50">p/ próximo:</span>
-						<span>{(sector === 'bpo' ? 1200 : 150) - user.xp}</span>
+						<span>{Math.round((sector === 'bpo' ? 1200 : 150) - user.xp)}</span>
 					</p>
 				</div>
 			</div>

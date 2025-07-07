@@ -325,7 +325,7 @@
 			class="bg-secondary/30 relative flex max-h-[85vh] w-full max-w-[1000px] flex-col items-center gap-10 rounded-xl p-10 backdrop-blur"
 		>
 			<h2 class="text-center">pontuação</h2>
-			<div class="flex flex-col items-center gap-5 overflow-scroll">
+			<div class="flex flex-col items-center gap-5 overflow-auto">
 				<div class="flex flex-col items-center gap-1">
 					<div class="flex flex-col items-center gap-2">
 						<h3>Presença</h3>
@@ -382,7 +382,7 @@
 						: 'cursor-pointer opacity-30 hover:border-b-2'}">Pontuação</button
 				>
 			</div>
-			<div class="flex flex-col items-center gap-5 overflow-scroll">
+			<div class="flex flex-col items-center gap-5 overflow-auto">
 				<div class="flex flex-col items-center gap-1">
 					<div class="flex flex-col items-center gap-5">
 						{#if progressoTab === 0}
@@ -430,19 +430,23 @@
 						{:else}
 							<p class="font-bold">Tarefas:</p>
 							<ul class="w-full space-y-2">
-								<li>A partir de 70% das tarefas concluídas você pode ganhar de 30 a 100 pontos</li>
-								<li>Controle de atividades devidamente atualizado ao final do mês: 30 pontos</li>
-								<li>Elogio de cliente: 10 pontos</li>
-								<li>Idéia de melhoria: 10 pontos</li>
-								<li>Maior número de idéias no mês: 15 pontos</li>
-								<li>Indicação de cliente que fecha negócio: 100 pontos</li>
-								<li>Atualização profissional: 1 ponto por hora de curso</li>
+								<li>
+									&bull; A partir de 70% das tarefas concluídas você pode ganhar de 30 a 100 pontos
+								</li>
+								<li>
+									&bull; Controle de atividades devidamente atualizado ao final do mês: 30 pontos
+								</li>
+								<li>&bull; Elogio de cliente: 10 pontos</li>
+								<li>&bull; Ideia de melhoria: 10 pontos</li>
+								<li>&bull; Maior número de ideias no mês: 15 pontos</li>
+								<li>&bull; Indicação de cliente que fecha negócio: 100 pontos</li>
+								<li>&bull; Atualização profissional: 1 ponto por hora de curso</li>
 							</ul>
 							<p class="font-bold">Falhas:</p>
 							<ul class="w-full space-y-2">
-								<li>Reclamação de cliente: -10 pontos</li>
-								<li>Erro cometido: -10 pontos</li>
-								<li>Prejuízo financeiro por erro: -1 ponto por R$ custado.</li>
+								<li>&bull; Reclamação de cliente: -10 pontos</li>
+								<li>&bull; Erro cometido: -10 pontos</li>
+								<li>&bull; Prejuízo financeiro por erro: -1 ponto por R$ custado.</li>
 							</ul>
 						{/if}
 					</div>

@@ -7,11 +7,14 @@
 	import Info from 'virtual:icons/mdi/information-slab-circle-outline';
 	// @ts-ignore
 	import Pulseira from 'virtual:icons/fa-solid/ring';
+	// @ts-ignore
+	import Close from 'virtual:icons/mdi/close-circle-outline';
 	import { untrack } from 'svelte';
 	let { user, sector, imgsrc, pulseirasrc } = $props();
 
 	let cultureInfo = $state(false);
 	let progressoInfo = $state(false);
+	let progressoTab = $state(0);
 
 	let firstname = $state('');
 	let lastname = $state('');
@@ -34,7 +37,7 @@
 	<p
 		class="flex w-fit animate-pulse items-center gap-4 rounded-xl border border-red-400/75 bg-red-400/30 p-4 px-4 text-red-400/75"
 	>
-		<Info class="text-2xl text-red-400/75" />
+		<Info class="w-1/5 text-2xl text-red-400/75 md:w-auto" />
 		<span>Dados iniciais incompletos. Aguarde atualização em breve.</span>
 	</p>
 </div>
@@ -210,13 +213,13 @@
 						>
 					</div>
 					<div
-						class="pointer-events-none absolute -top-1/4 z-50 flex w-full items-center justify-center text-sm opacity-0 transition-opacity group-hover:opacity-100"
+						class="pointer-events-none absolute bottom-0 z-50 flex h-[98%] w-full items-center justify-center text-sm opacity-0 transition-opacity group-hover:opacity-100"
 					>
 						<div class="w-fit">{user.cultura.presenca.treinamento}%</div>
 					</div>
 				</div>
 				<div
-					class="bg-secondary relative h-4 w-full rounded-md"
+					class="bg-secondary group relative h-4 w-full rounded-md"
 					title={user.cultura.presenca.cumbuca}
 				>
 					<div
@@ -229,6 +232,11 @@
 								? 'hidden'
 								: ''}">Cumbuca</span
 						>
+					</div>
+					<div
+						class="pointer-events-none absolute bottom-0 z-50 flex h-[98%] w-full items-center justify-center text-sm opacity-0 transition-opacity group-hover:opacity-100"
+					>
+						<div class="w-fit">{user.cultura.presenca.cumbuca}%</div>
 					</div>
 				</div>
 			</div>
@@ -314,10 +322,10 @@
 	>
 		<div
 			onclick={(e) => e.stopPropagation()}
-			class="bg-secondary/30 flex w-full max-w-[1000px] flex-col items-center gap-10 rounded-xl p-10 backdrop-blur"
+			class="bg-secondary/30 relative flex max-h-[85vh] w-full max-w-[1000px] flex-col items-center gap-10 rounded-xl p-10 backdrop-blur"
 		>
 			<h2 class="text-center">pontuação</h2>
-			<div class="flex flex-col items-center gap-5">
+			<div class="flex flex-col items-center gap-5 overflow-scroll">
 				<div class="flex flex-col items-center gap-1">
 					<div class="flex flex-col items-center gap-2">
 						<h3>Presença</h3>
@@ -341,9 +349,9 @@
 			</div>
 			<button
 				onclick={() => (cultureInfo = false)}
-				class="bg-primary text-secondary w-fit cursor-pointer rounded-lg p-3"
+				class="text-primary absolute top-3 right-3 cursor-pointer rounded-full text-2xl"
 			>
-				Fechar
+				<Close />
 			</button>
 		</div>
 	</div>
@@ -354,56 +362,97 @@
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
 		onclick={() => (progressoInfo = false)}
-		class="fixed inset-0 z-50 flex w-full items-center justify-center bg-black/30 px-5 text-sm lg:px-20"
+		class="fixed inset-0 z-50 flex w-full items-center justify-center bg-black/30 p-5 px-5 text-sm lg:px-20"
 	>
 		<div
-			onclick={(event) => event.stopPropagation()}
-			class=" bg-secondary/30 flex max-w-[1000px] flex-col items-center gap-10 rounded-xl p-5 backdrop-blur lg:p-10"
+			onclick={(e) => e.stopPropagation()}
+			class=" bg-secondary/30 relative flex max-h-[85vh] max-w-[1000px] flex-col items-center gap-10 rounded-xl p-5 pt-8 backdrop-blur lg:p-10"
 		>
-			<h2 class="text-center">pontuação</h2>
-			<div class="flex flex-col items-center gap-5">
+			<div class="flex w-full items-center justify-center gap-2 px-4">
+				<button
+					onclick={() => (progressoTab = 0)}
+					class="border-accent w-1/2 pb-2 text-center text-lg font-bold {progressoTab === 0
+						? 'border-b-2'
+						: 'cursor-pointer opacity-30 hover:border-b-2'}">O Jogo</button
+				>
+				<button
+					onclick={() => (progressoTab = 1)}
+					class="border-accent w-1/2 pb-2 text-center text-lg font-bold {progressoTab === 1
+						? 'border-b-2'
+						: 'cursor-pointer opacity-30 hover:border-b-2'}">Pontuação</button
+				>
+			</div>
+			<div class="flex flex-col items-center gap-5 overflow-scroll">
 				<div class="flex flex-col items-center gap-1">
 					<div class="flex flex-col items-center gap-5">
-						<div class="flex flex-col items-center">
-							<p>
-								Bem-vindo(a) ao Moveverso! Aqui você vai acompanhar o seu progresso no jogo. O jogo
-								consiste em acumular pontos. Para completar o jogo, você vai acumular {#if sector === 'bpo'}<span
-										class="text-accent">60000</span
-									>{:else}<span class="text-accent">7500</span>{/if}
-								pontos no total. Durante o jogo, você vai passar por diversas
-								<span class="text-accent">fases</span>
-								e <span class="text-accent">níveis</span>.
-							</p>
-						</div>
-						<div class="flex flex-col items-center">
-							<h3>Fases</h3>
-							<p>
-								O jogo completo consiste de <span class="text-accent">5 fases</span>. Para passar
-								cada fase, você precisa acumular {#if sector === 'bpo'}<span class="text-accent"
-										>12000 pontos</span
-									>{:else}<span class="text-accent">1500 pontos</span>{/if}. Durante o acúmulo
-								desses pontos na fase, você vai passar por
-								<span class="text-accent">10 níveis</span>. Ou seja,
-								<span class="text-accent font-bold">a cada 10 níveis, você passa de fase.</span>
-							</p>
-						</div>
-						<div class="flex flex-col items-center">
-							<h3>Níveis</h3>
-							<p>
-								Como cada fase possui 10 níveis, para subir de nível você precisa acumular {#if sector === 'bpo'}<span
-										class="text-accent">1200 pontos</span
-									>{:else}<span class="text-accent">150 pontos</span>{/if}. Ao completar o nível 10,
-								você passa de fase.
-							</p>
-						</div>
+						{#if progressoTab === 0}
+							<div class="flex flex-col items-center">
+								<p>
+									Bem-vindo(a) ao Moveverso! Aqui você vai acompanhar o seu progresso no jogo. O
+									jogo consiste em acumular pontos. Para completar o jogo, você vai acumular {#if sector === 'bpo'}<span
+											class="text-accent">60000</span
+										>{:else}<span class="text-accent">7500</span>{/if}
+									pontos no total. Durante o jogo, você vai passar por diversas
+									<span class="text-accent">fases</span>
+									e <span class="text-accent">níveis</span>.
+								</p>
+							</div>
+							<div class="flex flex-col items-center">
+								<h3>Fases</h3>
+								<p>
+									O jogo completo consiste de <span class="text-accent">5 fases</span>. Para passar
+									cada fase, você precisa acumular {#if sector === 'bpo'}<span class="text-accent"
+											>12000 pontos</span
+										>{:else}<span class="text-accent">1500 pontos</span>{/if}. Durante o acúmulo
+									desses pontos na fase, você vai passar por
+									<span class="text-accent">10 níveis</span>. Ou seja,
+									<span class="text-accent font-bold">a cada 10 níveis, você passa de fase.</span>
+								</p>
+							</div>
+							<div class="flex flex-col items-center">
+								<h3>Níveis</h3>
+								<p>
+									Como cada fase possui 10 níveis, para subir de nível você precisa acumular {#if sector === 'bpo'}<span
+											class="text-accent">1200 pontos</span
+										>{:else}<span class="text-accent">150 pontos</span>{/if}. Ao completar o nível
+									10, você passa de fase.
+								</p>
+							</div>
+						{:else if sector === 'bpo'}
+							<p class="font-bold">Tarefas:</p>
+							<ul class="w-full space-y-2">
+								<li>Em desenvolvimento</li>
+							</ul>
+							<p class="font-bold">Falhas:</p>
+							<ul class="w-full space-y-2">
+								<li>Em desenvolvimento</li>
+							</ul>
+						{:else}
+							<p class="font-bold">Tarefas:</p>
+							<ul class="w-full space-y-2">
+								<li>A partir de 70% das tarefas concluídas você pode ganhar de 30 a 100 pontos</li>
+								<li>Controle de atividades devidamente atualizado ao final do mês: 30 pontos</li>
+								<li>Elogio de cliente: 10 pontos</li>
+								<li>Idéia de melhoria: 10 pontos</li>
+								<li>Maior número de idéias no mês: 15 pontos</li>
+								<li>Indicação de cliente que fecha negócio: 100 pontos</li>
+								<li>Atualização profissional: 1 ponto por hora de curso</li>
+							</ul>
+							<p class="font-bold">Falhas:</p>
+							<ul class="w-full space-y-2">
+								<li>Reclamação de cliente: -10 pontos</li>
+								<li>Erro cometido: -10 pontos</li>
+								<li>Prejuízo financeiro por erro: -1 ponto por R$ custado.</li>
+							</ul>
+						{/if}
 					</div>
 				</div>
 			</div>
 			<button
 				onclick={() => (progressoInfo = false)}
-				class="bg-primary text-secondary w-fit cursor-pointer rounded-lg p-3"
+				class="text-primary absolute top-3 right-3 cursor-pointer rounded-full text-2xl"
 			>
-				Fechar
+				<Close />
 			</button>
 		</div>
 	</div>
@@ -418,26 +467,26 @@
 	>
 		<div
 			onclick={(e) => e.stopPropagation()}
-			class="bg-secondary/30 flex flex-col items-center gap-5 rounded-xl p-10 backdrop-blur"
+			class="bg-secondary/30 relative flex flex-col items-center gap-5 rounded-xl p-10 backdrop-blur"
 		>
 			<h3>Pulseiras</h3>
 			<ul class="pointer-events-none flex flex-col gap-1 text-center text-sm *:rounded-full *:px-4">
 				<li class="bg-white text-black">3 meses</li>
 				<li class="bg-[#fff200] text-black">1 ano</li>
-				<li class="bg-gray-400 text-black">2 anos</li>
-				<li class="bg-orange-500 text-black">3 anos</li>
-				<li class="bg-emerald-600 text-black">4 anos</li>
-				<li class="bg-blue-600 text-white">5 anos</li>
-				<li class="bg-purple-600 text-white">6 anos</li>
-				<li class="bg-yellow-800 text-white">7 anos</li>
+				<li class="bg-[#99a1af] text-black">2 anos</li>
+				<li class="bg-[#f97316] text-black">3 anos</li>
+				<li class="bg-[#059669] text-black">4 anos</li>
+				<li class="bg-[#155dfc] text-white">5 anos</li>
+				<li class="bg-[#9810fa] text-white">6 anos</li>
+				<li class="bg-[#854d0e] text-white">7 anos</li>
 				<li class="bg-black text-[#fff200]">8 anos</li>
-				<li class="bg-red-500 text-black">9 anos</li>
-				<li class="bg-red-500 text-white">10 anos</li>
-				<li class="bg-red-500 text-[#fff200]">11 anos</li>
+				<li class="bg-[#fb2c36] text-black">9 anos</li>
+				<li class="bg-[#fb2c36] text-white">10 anos</li>
+				<li class="bg-[#fb2c36] text-[#fff200]">11 anos</li>
 			</ul>
 			<button
-				class="bg-primary text-secondary w-fit cursor-pointer rounded-lg p-3"
-				onclick={() => (pulseirasInfo = false)}>Fechar</button
+				class="text-primary absolute top-3 right-3 cursor-pointer rounded-full text-2xl"
+				onclick={() => (pulseirasInfo = false)}><Close /></button
 			>
 		</div>
 	</div>

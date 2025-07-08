@@ -421,11 +421,38 @@
 						{:else if sector === 'bpo'}
 							<p class="font-bold">Tarefas:</p>
 							<ul class="w-full space-y-2">
-								<li>Em desenvolvimento</li>
+								<li>
+									&bull; Fechamento: Se entregue no dia 1: 10 pontos, a cada dia depois a pontuação
+									a ser ganha diminui 1 ponto.
+								</li>
+								<li>
+									&bull; Tempo gasto por empresa: Média dos minutos gastos de cada empresa / 30.
+									Valor mínimo de 330 pontos. Sujeito a feedback caso não seja alcançado
+								</li>
+								<li>
+									&bull; Diminuição do tempo gasto: Performance do mês anterior - mês atual / mês
+									anterior * 100. Pode ganhar até 30 pontos.
+								</li>
+								<li>&bull; Honorários: Valor total dos honorários / 100</li>
+								<li>&bull; Emissão do boleto Conta Azul (indicação): 20 pontos</li>
+								<li>&bull; Plataforma PlayBPO em dia: 30 pontos</li>
+								<li>&bull; Elogio de cliente: 10 pontos</li>
+								<li>&bull; Primeiro lugar: +30 pontos</li>
+								<li>&bull; Segundo lugar: +15 pontos</li>
 							</ul>
 							<p class="font-bold">Falhas:</p>
 							<ul class="w-full space-y-2">
-								<li>Em desenvolvimento</li>
+								<li>&bull; Fechamentos após dia 10: de -2 até -6 pontos</li>
+								<li>
+									&bull; Aumento do tempo gasto: Performance do mês anterior - mês atual / mês
+									anterior * 100. Pode perder até -20 pontos
+								</li>
+								<li>&bull; Plataforma PlayBPO incorreta: -30 pontos</li>
+								<li>&bull; Reclamação de cliente: -10 pontos</li>
+								<li>&bull; Não envio de vencimentos ou pagamentos: -5 pontos</li>
+								<li>
+									&bull; Prejuízo financeiro por erro cometido: -1 ponto por R$10,00 de prejuízo
+								</li>
 							</ul>
 						{:else}
 							<p class="font-bold">Tarefas:</p>

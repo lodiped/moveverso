@@ -1,7 +1,7 @@
 import adapter from '@sveltejs/adapter-static';
 import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 import { initializeApp } from 'firebase/app';
-import { getDatabase, ref, get, child } from 'firebase/database';
+import { getDatabase, ref, get } from 'firebase/database';
 
 const firebaseConfig = {
 	apiKey: 'AIzaSyDvD-NmAzIyKclIao147pQ3zCxPoPNdhW8',

@@ -29,6 +29,8 @@ type Cultura = {
 	sports: {
 		conq: boolean;
 		presente: boolean;
+		hp: number;
+		pontos: number;
 	};
 };
 

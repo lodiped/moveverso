@@ -53,7 +53,7 @@
 			media: '',
 			coins: { entregues: 0, recebidas: 0 },
 			presenca: { cumbuca: 0, treinamento: 0 },
-			sports: { conq: false, presente: false }
+			sports: { conq: false, presente: false, hp: 0, pontos: 0 }
 		},
 		log: [],
 		conquistas: []

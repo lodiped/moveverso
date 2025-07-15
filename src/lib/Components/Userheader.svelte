@@ -9,6 +9,10 @@
 	import Pulseira from 'virtual:icons/fa-solid/ring';
 	// @ts-ignore
 	import Close from 'virtual:icons/mdi/close-circle-outline';
+	// @ts-ignore
+	import Heart from 'virtual:icons/mdi/heart';
+	// @ts-ignore
+	import OutlineHeart from 'virtual:icons/mdi/heart-outline';
 	import { untrack } from 'svelte';
 	let { user, sector, imgsrc, pulseirasrc } = $props();
 
@@ -270,12 +274,27 @@
 					</div>
 				{/if}
 				<div
-					class="flex w-full flex-col items-center justify-between gap-3.5 drop-shadow-[0_0_20px] drop-shadow-red-600"
+					class="group flex w-full flex-col items-center justify-between gap-3.5 drop-shadow-[0_0_20px] drop-shadow-red-600"
 				>
-					<div class="flex max-w-35 flex-col items-center justify-between gap-3.5">
+					<div
+						class="pointer-events-none absolute flex h-full -translate-y-10 items-center justify-center opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100"
+					>
+						Pontos: {user.cultura.sports.pontos}
+					</div>
+					<div
+						class="flex max-w-35 flex-col items-center justify-between gap-3.5 transition-all group-hover:translate-y-10 group-hover:opacity-0"
+					>
 						{#if user.cultura.sports.presente}
 							<img src={movesports} class="w-[50%]" alt="" />
-							<p class="text-sm font-bold">Ativo</p>
+							<div class="flex text-red-500">
+								{#if user.cultura.sports.hp === 3}
+									<Heart /><Heart /><Heart />
+								{:else if user.cultura.sports.hp === 2}
+									<Heart /><Heart /><OutlineHeart />
+								{:else}
+									<Heart /><OutlineHeart /><OutlineHeart />
+								{/if}
+							</div>
 						{:else}
 							<img src={nomovesports} class="w-[50%]" alt="" />
 							<p class="text-sm font-bold">Inativo</p>
@@ -427,7 +446,7 @@
 								</li>
 								<li>
 									&bull; Tempo gasto por empresa: Média dos minutos gastos de cada empresa / 30.
-									Valor mínimo de 330 pontos. Sujeito a feedback caso não seja alcançado
+									Valor mínimo de 330 pontos. Sujeito a feedback caso não seja alcançado.
 								</li>
 								<li>
 									&bull; Diminuição do tempo gasto: Performance do mês anterior - mês atual / mês
@@ -437,8 +456,8 @@
 								<li>&bull; Emissão do boleto Conta Azul (indicação): 20 pontos</li>
 								<li>&bull; Plataforma PlayBPO em dia: 30 pontos</li>
 								<li>&bull; Elogio de cliente: 10 pontos</li>
-								<li>&bull; Primeiro lugar: +30 pontos</li>
-								<li>&bull; Segundo lugar: +15 pontos</li>
+								<li>&bull; Primeiro lugar: 30 pontos</li>
+								<li>&bull; Segundo lugar: 15 pontos</li>
 							</ul>
 							<p class="font-bold">Falhas:</p>
 							<ul class="w-full space-y-2">

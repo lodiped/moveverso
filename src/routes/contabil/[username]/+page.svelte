@@ -85,6 +85,22 @@
 		} else {
 			pulseirasrc = '';
 		}
+		if (user.cultura.sports.hp <= 0 && user.cultura.sports.presente) {
+			try {
+				await get(ref(db, `cultura/${userId!}/sports/presente`));
+				user.cultura.sports.presente = false;
+			} catch (error) {
+				console.error(error);
+			}
+		}
+		if (user.cultura.sports.hp > 0 && !user.cultura.sports.presente) {
+			try {
+				await get(ref(db, `cultura/${userId!}/sports/presente`));
+				user.cultura.sports.presente = true;
+			} catch (error) {
+				console.error(error);
+			}
+		}
 		sumConquistasContabil(userId!);
 	}
 
@@ -131,6 +147,27 @@
 		}
 	}
 
+	async function sportsPoints(uid: string, input: number) {
+		loading = true;
+		logPage.value = 1;
+		try {
+			if (input > 0 || input < 10000) {
+				input = Math.round(input);
+				await set(ref(db, `cultura/${uid}/sports/pontos`), input);
+			} else {
+				alert('Pontos nao podem ser maior que 10000 ou menor que 0');
+				throw new Error('Pontos nao podem ser maior que 10000 ou menor que 0');
+			}
+			await checkContabil();
+			await checkLog(uid);
+			await updateUI();
+		} catch (error) {
+			console.error(error);
+		} finally {
+			loading = false;
+		}
+	}
+
 	async function setTreinamento(uid: string, input: number) {
 		loading = true;
 		logPage.value = 1;
@@ -170,6 +207,29 @@
 			alert(error);
 		} finally {
 			loading = false;
+		}
+	}
+
+	async function setHP(uid: string, input: string) {
+		if (input !== '+' && input !== '-') {
+			throw new Error('Input must be + or -');
+		}
+		logPage.value = 1;
+		try {
+			await runTransaction(ref(db, `cultura/${uid}/sports/hp`), (hp) => {
+				if (input === '+' && user.cultura.sports.hp <= 3) {
+					hp++;
+				}
+				if (input === '-' && user.cultura.sports.hp > 0) {
+					hp--;
+				}
+				return Math.round(hp);
+			});
+			await checkContabil();
+			await checkLog(uid);
+			await updateUI();
+		} catch (error) {
+			console.error(error);
 		}
 	}
 
@@ -414,12 +474,13 @@
 			{#if role.value === 'cultura' || role.value === 'admin'}
 				<CulturaPanel
 					bind:user
-					{toggleSports}
 					{giveCoin}
 					{receiveCoin}
 					{setMedia}
 					{setTreinamento}
 					{setCumbuca}
+					{setHP}
+					{sportsPoints}
 				/>
 			{/if}
 			<Log {user} {remove} {prevPage} {nextPage} />

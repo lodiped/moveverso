@@ -9,15 +9,17 @@
 	let newMedia: number | undefined = $state();
 	let newTreinamento: number | undefined = $state();
 	let newCumbuca: number | undefined = $state();
+	let newSportsPoints: number | undefined = $state();
 
 	let {
 		user = $bindable(),
-		toggleSports,
 		giveCoin,
 		receiveCoin,
 		setMedia,
 		setTreinamento,
-		setCumbuca
+		setCumbuca,
+		setHP,
+		sportsPoints
 	} = $props();
 </script>
 
@@ -42,20 +44,38 @@
 		</div>
 		<div class="flex flex-col items-center gap-3">
 			<p>Move Sports</p>
-			<button
-				disabled={user.cultura.sports.presente}
-				onclick={() => toggleSports(user.id)}
-				class="bg-primary/30 w-full rounded-xl py-3 {user.cultura.sports.presente
-					? 'opacity-50'
-					: ''}">Ativo</button
-			>
-			<button
-				disabled={!user.cultura.sports.presente}
-				onclick={() => toggleSports(user.id)}
-				class="bg-primary/30 w-full rounded-xl py-3 {user.cultura.sports.presente
-					? ''
-					: 'opacity-50'}">Inativo</button
-			>
+			<div class="flex w-full gap-3">
+				<div class="flex w-full flex-col items-center gap-3">
+					<button
+						disabled={user.cultura.sports.hp >= 3}
+						onclick={() => setHP(user.id, '+')}
+						class="bg-primary/30 w-full cursor-pointer rounded-xl py-3 disabled:cursor-default {user
+							.cultura.sports.hp < 3
+							? ''
+							: 'opacity-50'}">+</button
+					>
+					<button
+						disabled={user.cultura.sports.hp <= 0}
+						onclick={() => setHP(user.id, '-')}
+						class="bg-primary/30 w-full cursor-pointer rounded-xl py-3 disabled:cursor-default {user
+							.cultura.sports.hp > 0
+							? ''
+							: 'opacity-50'}">-</button
+					>
+				</div>
+				<div class="flex w-full flex-col items-center gap-3">
+					<input
+						bind:value={newSportsPoints}
+						placeholder="pontos"
+						class="bg-primary/20 w-full appearance-none rounded-xl border border-white/20 py-3"
+					/>
+					<button
+						onclick={() => sportsPoints(user.id, newSportsPoints)}
+						class="bg-primary/30 flex h-full w-full cursor-pointer items-center justify-center rounded-xl py-3"
+						><Save /></button
+					>
+				</div>
+			</div>
 		</div>
 		<div class="flex flex-col items-center gap-3">
 			<p>Move Coin</p>

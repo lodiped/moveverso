@@ -336,7 +336,7 @@ export let logText: any = $state({
 	tarefas90: { desc: '90% das tarefas concluídas', points: 70, type: 'point' },
 	tarefas80: { desc: '80% das tarefas concluídas', points: 50, type: 'point' },
 	tarefas100: { desc: '100% das tarefas concluídas', points: 100, type: 'point' },
-	controleAtv: { desc: 'Controle de Atividades atualizado', points: 30, type: 'point' },
+	controleAtv: { desc: 'Controle de Atividades atualizado', type: 'point' },
 	reclamacao: { desc: 'Reclamação de cliente', points: -10, type: 'point' },
 	ideia: { desc: 'Ideia de melhoria', points: 10, type: 'point' },
 	melhorideia: { desc: 'Melhor ideia do mês', points: 20, type: 'point' },

@@ -411,7 +411,17 @@
 					return conquista;
 				});
 			} else if (type === 'point') {
-				let points = logText[actionId]?.points ?? 0;
+				let points: number;
+				if (logText[actionId].points) {
+					points = logText[actionId]?.points;
+				} else {
+					try {
+						let snap = await get(ref(db, `logs/${uid}/${pushkey}/value`));
+						points = snap.val();
+					} catch (error) {
+						console.error(error);
+					}
+				}
 				let newPoints: number;
 				await runTransaction(ref(db, `bpo/${uid}/total`), (total) => {
 					total -= points;

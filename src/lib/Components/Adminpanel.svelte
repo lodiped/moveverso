@@ -70,6 +70,7 @@
 	let horas = $state(0);
 	let dangerZoneAll = $state(false);
 	let estudoModal = $state(false);
+	let controleAtv: number | undefined = $state();
 
 	let section = $derived(page.url.pathname.split('/')[1]);
 </script>
@@ -96,6 +97,25 @@
 				<button onclick={() => addPoints(30, user.id, 'tarefas70', 'point')}>
 					70% das tarefas concluídas <span class="text-green-600">+30</span></button
 				>
+				<div class="bg-primary/20 flex w-full gap-2 rounded-xl border border-white/20">
+					<input
+						type="number"
+						class=" w-full appearance-none rounded-lg border-0 bg-transparent"
+						placeholder="Controle de Atividades"
+						bind:value={controleAtv}
+					/>
+					<button
+						class="cursor-pointer justify-center text-xl opacity-50 transition-opacity hover:opacity-100"
+						><Info /></button
+					>
+					<button
+						class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {controleAtv
+							? ''
+							: 'pointer-events-none opacity-50'}"
+						onclick={() => addPoints(controleAtv, user.id, 'controleAtv', 'point')}
+						><Save /><span>Salvar</span></button
+					>
+				</div>
 				<button onclick={() => addPoints(30, user.id, 'controleAtv', 'point')}>
 					Controle de Atividades atualizado <span class="text-green-600">+30</span></button
 				>

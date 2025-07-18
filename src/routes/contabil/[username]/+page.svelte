@@ -311,7 +311,10 @@
 			if (actionId) {
 				await set(push(ref(getDatabase(), `logs/${uid}`)), {
 					action: actionId,
-					value: actionId === 'errovalor' || actionId === 'horacurso' ? n : null
+					value:
+						actionId === 'errovalor' || actionId === 'horacurso' || actionId === 'controleAtv'
+							? n
+							: null
 				});
 			}
 			let newTotal = 0;
@@ -407,8 +410,19 @@
 						return conquista;
 					}
 				);
-			} else if (type === 'point') {
-				let points = logText[actionId]?.points ?? 0;
+			}
+			if (type === 'point') {
+				let points: number;
+				if (logText[actionId].points) {
+					points = logText[actionId]?.points;
+				} else {
+					try {
+						let snap = await get(ref(db, `logs/${uid}/${pushkey}/value`));
+						points = snap.val();
+					} catch (error) {
+						console.error(error);
+					}
+				}
 				let newPoints: number;
 				await runTransaction(ref(db, `contabil/${uid}/total`), (total) => {
 					total -= points;

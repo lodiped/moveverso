@@ -71,6 +71,8 @@
 	let dangerZoneAll = $state(false);
 	let estudoModal = $state(false);
 	let controleAtv: number | undefined = $state();
+	let atualizacaoProfissional: number | undefined = $state();
+	let contabilPreju: number | undefined = $state();
 
 	let section = $derived(page.url.pathname.split('/')[1]);
 </script>
@@ -81,20 +83,31 @@
 		<div class="w-full lg:w-1/2">
 			<h3 class="w-full text-center">Pontuações</h3>
 			<div
-				class="*:bg-primary/30 *:backdrop-blur-xs {loading
+				class=" {loading
 					? 'pointer-events-none cursor-default opacity-50'
-					: ''} flex w-full flex-col gap-3 *:w-full *:cursor-pointer *:rounded-lg *:p-2"
+					: ''} flex w-full flex-col gap-3 *:w-full"
 			>
-				<button onclick={() => addPoints(100, user.id, 'tarefas100', 'point')}>
-					100% das tarefas concluídas <span class="text-green-600">+100</span></button
+				<button
+					onclick={() => addPoints(100, user.id, 'tarefas100', 'point')}
+					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
+					>100% das tarefas concluídas <span class="text-green-600">+20</span></button
 				>
-				<button onclick={() => addPoints(80, user.id, 'tarefas90', 'point')}>
+				<button
+					onclick={() => addPoints(80, user.id, 'tarefas90', 'point')}
+					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
+				>
 					90% das tarefas concluídas <span class="text-green-600">+70</span></button
 				>
-				<button onclick={() => addPoints(60, user.id, 'tarefas80', 'point')}>
+				<button
+					onclick={() => addPoints(60, user.id, 'tarefas80', 'point')}
+					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
+				>
 					80% das tarefas concluídas <span class="text-green-600">+50</span></button
 				>
-				<button onclick={() => addPoints(30, user.id, 'tarefas70', 'point')}>
+				<button
+					onclick={() => addPoints(30, user.id, 'tarefas70', 'point')}
+					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
+				>
 					70% das tarefas concluídas <span class="text-green-600">+30</span></button
 				>
 				<div class="bg-primary/20 flex w-full gap-2 rounded-xl border border-white/20">
@@ -110,38 +123,95 @@
 					>
 					<button
 						class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {controleAtv
-							? ''
-							: 'pointer-events-none opacity-50'}"
+							? 'cursor-pointer'
+							: 'pointer-events-none cursor-default opacity-50'}"
 						onclick={() => addPoints(controleAtv, user.id, 'controleAtv', 'point')}
 						><Save /><span>Salvar</span></button
 					>
 				</div>
-				<button onclick={() => addPoints(30, user.id, 'controleAtv', 'point')}>
-					Controle de Atividades atualizado <span class="text-green-600">+30</span></button
+				<button
+					onclick={() => addPoints(10, user.id, 'elogio', 'point')}
+					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
 				>
-				<button onclick={() => addPoints(10, user.id, 'elogio', 'point')}>
 					Elogio do cliente <span class="text-green-600">+10</span></button
 				>
-				<button onclick={() => addPoints(5, user.id, 'ideia', 'point')}>
+				<button
+					onclick={() => addPoints(5, user.id, 'ideia', 'point')}
+					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
+				>
 					Ideia de melhoria <span class="text-green-600">+10</span>
 				</button>
-				<button onclick={() => addPoints(10, user.id, 'maiorideia', 'point')}>
+				<button
+					onclick={() => addPoints(10, user.id, 'maiorideia', 'point')}
+					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
+				>
 					Maior número de ideias no mês <span class="text-green-600">+15</span>
 				</button>
-				<button onclick={() => addPoints(15, user.id, 'melhorideia', 'point')}>
+				<button
+					onclick={() => addPoints(15, user.id, 'melhorideia', 'point')}
+					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
+				>
 					Melhor ideia do mês <span class="text-green-600">+20</span>
 				</button>
-				<button onclick={() => addPoints(15, user.id, 'indicacao', 'point')}>
+				<button
+					onclick={() => addPoints(15, user.id, 'indicacao', 'point')}
+					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
+				>
 					Indicação de cliente <span class="text-green-600">+100</span>
 				</button>
-				<button onclick={() => (estudoModal = true)}> Atualização profissional </button>
-				<button onclick={() => addPoints(-10, user.id, 'reclamacao', 'point')}>
+				<div class="bg-primary/20 flex w-full gap-2 rounded-xl border border-white/20">
+					<input
+						type="number"
+						class=" w-full appearance-none rounded-lg border-0 bg-transparent"
+						placeholder="Atualização Profissional (horas)"
+						bind:value={atualizacaoProfissional}
+					/>
+					<button
+						class="cursor-pointer justify-center text-xl opacity-50 transition-opacity hover:opacity-100"
+						><Info /></button
+					>
+					<button
+						disabled={typeof atualizacaoProfissional !== 'number' || atualizacaoProfissional <= 0}
+						class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {atualizacaoProfissional
+							? ''
+							: 'pointer-events-none opacity-50'}"
+						onclick={() => addPoints(atualizacaoProfissional, user.id, 'horacurso', 'point')}
+						><Save /><span>Salvar</span></button
+					>
+				</div>
+				<button
+					onclick={() => addPoints(-10, user.id, 'reclamacao', 'point')}
+					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
+				>
 					Reclamação de cliente <span class="text-red-500">-10</span>
 				</button>
-				<button onclick={() => addPoints(-10, user.id, 'erro', 'point')}>
+				<button
+					onclick={() => addPoints(-10, user.id, 'erro', 'point')}
+					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
+				>
 					Erro cometido <span class="text-red-500">-10</span>
 				</button>
-				<button onclick={() => (erroModal = true)}> Prejuízo financeiro por erro</button>
+				<div class="bg-primary/20 flex w-full gap-2 rounded-xl border border-white/20">
+					<input
+						type="number"
+						class=" w-full appearance-none rounded-lg border-0 bg-transparent"
+						placeholder="Prejuízo financeiro por erro (em R$)"
+						bind:value={contabilPreju}
+					/>
+					<button
+						class="cursor-pointer justify-center text-xl opacity-50 transition-opacity hover:opacity-100"
+						><Info /></button
+					>
+					<button
+						disabled={typeof contabilPreju !== 'number' || contabilPreju <= 0}
+						class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {contabilPreju
+							? 'cursor-pointer'
+							: 'pointer-events-none cursor-default opacity-50'}"
+						onclick={() =>
+							addPoints(Math.ceil(-contabilPreju! * 0.1), user.id, 'errovalor', 'point')}
+						><Save /><span>Salvar</span></button
+					>
+				</div>
 			</div>
 		</div>
 
@@ -471,42 +541,6 @@
 				<button
 					class="bg-primary/30 border-primary w-fit cursor-pointer rounded-lg border p-2 hover:font-bold hover:opacity-50"
 					onclick={() => (dangerZoneAll = false)}>Fechar</button
-				>
-			</div>
-		</div>
-	</div>
-{/if}
-
-{#if estudoModal}
-	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
-		<div class="bg-secondary/30 flex flex-col gap-10 rounded-xl p-10 backdrop-blur">
-			<h2 class="text-center">Horas de estudo</h2>
-			<div class="flex flex-col items-center gap-5">
-				<div class="flex flex-col items-center gap-1">
-					<div class="flex w-full items-center gap-1">
-						<input
-							class="bg-primary/30 w-full rounded-lg placeholder:text-white/40"
-							type="number"
-							name="horas"
-							id="horas"
-							bind:value={horas}
-							placeholder="Horas de curso"
-						/>
-					</div>
-					<p class="opacity-50">1 hora = 1 ponto</p>
-				</div>
-				<button
-					disabled={horas <= 0 || typeof horas !== 'number'}
-					onclick={() => {
-						addPoints(horas, user.id, 'horacurso'), (estudoModal = false);
-					}}
-					class="bg-primary w-fit cursor-pointer rounded-lg p-2 text-black hover:font-bold hover:opacity-50 disabled:pointer-events-none disabled:cursor-default disabled:opacity-50"
-				>
-					Horas de curso: <span class="text-green-600">{horas}</span>
-				</button>
-				<button
-					class="bg-primary/30 border-primary w-fit cursor-pointer rounded-lg border p-2 hover:font-bold hover:opacity-50"
-					onclick={() => (estudoModal = false)}>Fechar</button
 				>
 			</div>
 		</div>

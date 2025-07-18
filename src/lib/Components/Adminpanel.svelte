@@ -483,43 +483,6 @@
 	</div>
 {/if}
 
-{#if erroModal}
-	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
-		<div class="bg-secondary/30 flex flex-col gap-10 rounded-xl p-10 backdrop-blur">
-			<h2 class="text-center">Prejuízo financeiro por erro</h2>
-			<div class="flex flex-col items-center gap-5">
-				<div class="flex flex-col items-center gap-1">
-					<div class="flex w-full items-center gap-1">
-						<span>R$</span>
-						<input
-							class="bg-primary/30 w-full rounded-lg placeholder:text-white/40"
-							type="number"
-							name="cost"
-							id="cost"
-							bind:value={cost}
-							placeholder="Custo"
-						/>
-					</div>
-					<p class="opacity-50">R$10,00 = 1 ponto</p>
-				</div>
-				<button
-					disabled={cost <= 0 || typeof cost !== 'number'}
-					onclick={() => {
-						addPoints(Math.ceil(-cost * 0.1), user.id, 'errovalor', 'point'), (erroModal = false);
-					}}
-					class="bg-primary w-fit cursor-pointer rounded-lg p-2 text-black hover:font-bold hover:opacity-50 disabled:pointer-events-none disabled:cursor-default disabled:opacity-50"
-				>
-					Prejuízo financeiro por erro <span class="text-red-500">{Math.ceil(-cost * 0.1)}</span>
-				</button>
-				<button
-					class="bg-primary/30 border-primary w-fit cursor-pointer rounded-lg border p-2 hover:font-bold hover:opacity-50"
-					onclick={() => (erroModal = false)}>Fechar</button
-				>
-			</div>
-		</div>
-	</div>
-{/if}
-
 {#if dangerZoneAll}
 	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/30">
 		<div class="bg-secondary/30 flex flex-col gap-10 rounded-xl p-10 backdrop-blur">

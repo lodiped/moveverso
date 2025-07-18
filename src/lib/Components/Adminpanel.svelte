@@ -88,7 +88,10 @@
 					: ''} flex w-full flex-col gap-3 *:w-full"
 			>
 				<button
-					onclick={() => addPoints(100, user.id, 'tarefas100', 'point')}
+					onclick={() => {
+						addPoints(100, user.id, 'tarefas100', 'point');
+						addConquista('conqmestarefa', user.id);
+					}}
 					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
 					>100% das tarefas concluídas <span class="text-green-600">+20</span></button
 				>
@@ -130,7 +133,10 @@
 					>
 				</div>
 				<button
-					onclick={() => addPoints(10, user.id, 'elogio', 'point')}
+					onclick={() => {
+						addPoints(10, user.id, 'elogio', 'point');
+						addConquista('conqelogio', user.id);
+					}}
 					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
 				>
 					Elogio do cliente <span class="text-green-600">+10</span></button
@@ -148,7 +154,10 @@
 					Maior número de ideias no mês <span class="text-green-600">+15</span>
 				</button>
 				<button
-					onclick={() => addPoints(15, user.id, 'melhorideia', 'point')}
+					onclick={() => {
+						addPoints(15, user.id, 'melhorideia', 'point');
+						addConquista('conqmesideia', user.id);
+					}}
 					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
 				>
 					Melhor ideia do mês <span class="text-green-600">+20</span>
@@ -222,14 +231,8 @@
 					? 'pointer-events-none cursor-default opacity-50'
 					: ''} flex w-full flex-col gap-3 *:w-full *:cursor-pointer *:rounded-lg *:p-2"
 			>
-				<button onclick={() => addConquista('conqmestarefa', user.id)}
-					>Mês com 100% das tarefas no prazo</button
-				>
 				<button onclick={() => addConquista('conqmesplanilha', user.id)}
 					>Mês com planilha de atividades preenchidas</button
-				>
-				<button onclick={() => addConquista('conqelogio', user.id)}
-					>Elogio de cliente recebido</button
 				>
 				<button onclick={() => addConquista('conqmaiordomes', user.id)}
 					>Maior pontuação do Mês</button
@@ -240,8 +243,6 @@
 				<button onclick={() => addConquista('conqformacao', user.id)}
 					>Formação Superior concluída</button
 				>
-				<button onclick={() => addConquista('conqmesideia', user.id)}>Mês com melhor ideia</button>
-				<button onclick={() => addConquista('conqsports', user.id)}>Move Sports completo</button>
 			</div>
 			<h3 class="mt-4 w-full text-center text-red-500">Danger Zone</h3>
 			<p class="mb-2 w-full text-center text-sm opacity-50">Esta ação exige confirmação:</p>

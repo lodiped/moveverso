@@ -79,45 +79,47 @@
 
 <h2 class="w-full text-center">Admin</h2>
 {#if section === 'contabil' && (role.value === 'contabil' || role.value === 'admin')}
-	<div class="flex w-full flex-col gap-5 px-2 lg:flex-row lg:px-0">
-		<div class="w-full lg:w-1/2">
-			<h3 class="w-full text-center">Pontuações</h3>
+	<div class="flex w-full flex-col gap-5 px-2 lg:px-0">
+		<div class="w-full">
 			<div
 				class=" {loading
 					? 'pointer-events-none cursor-default opacity-50'
 					: ''} flex w-full flex-col gap-3 *:w-full"
 			>
-				<button
-					onclick={() => {
-						addPoints(100, user.id, 'tarefas100', 'point');
-						addConquista('conqmestarefa', user.id);
-					}}
-					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
-					>100% das tarefas concluídas <span class="text-green-600">+20</span></button
-				>
-				<button
-					onclick={() => addPoints(80, user.id, 'tarefas90', 'point')}
-					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
-				>
-					90% das tarefas concluídas <span class="text-green-600">+70</span></button
-				>
-				<button
-					onclick={() => addPoints(60, user.id, 'tarefas80', 'point')}
-					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
-				>
-					80% das tarefas concluídas <span class="text-green-600">+50</span></button
-				>
-				<button
-					onclick={() => addPoints(30, user.id, 'tarefas70', 'point')}
-					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
-				>
-					70% das tarefas concluídas <span class="text-green-600">+30</span></button
-				>
+				<p class="text-center">Tarefas:</p>
+				<div class="flex gap-3">
+					<button
+						onclick={() => addPoints(30, user.id, 'tarefas70', 'point')}
+						class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
+					>
+						70% <span class="text-green-600">+30</span></button
+					>
+					<button
+						onclick={() => addPoints(60, user.id, 'tarefas80', 'point')}
+						class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
+					>
+						80% <span class="text-green-600">+50</span></button
+					>
+					<button
+						onclick={() => addPoints(80, user.id, 'tarefas90', 'point')}
+						class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
+					>
+						90% <span class="text-green-600">+70</span></button
+					>
+					<button
+						onclick={() => {
+							addPoints(100, user.id, 'tarefas100', 'point');
+							addConquista('conqmestarefa', user.id);
+						}}
+						class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
+						>100% <span class="text-green-600">+20</span></button
+					>
+				</div>
 				<div class="bg-primary/20 flex w-full gap-2 rounded-xl border border-white/20">
 					<input
 						type="number"
 						class=" w-full appearance-none rounded-lg border-0 bg-transparent"
-						placeholder="Controle de Atividades"
+						placeholder="Controle de Atividades atualizado (até 30 pontos)"
 						bind:value={controleAtv}
 					/>
 					<button
@@ -128,46 +130,63 @@
 						class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {controleAtv
 							? 'cursor-pointer'
 							: 'pointer-events-none cursor-default opacity-50'}"
-						onclick={() => addPoints(controleAtv, user.id, 'controleAtv', 'point')}
-						><Save /><span>Salvar</span></button
+						onclick={() => {
+							if (controleAtv! >= 30) {
+								addConquista('conqmesplanilha', user.id);
+							}
+							addPoints(controleAtv, user.id, 'controleAtv', 'point');
+						}}><Save /><span>Salvar</span></button
 					>
 				</div>
-				<button
-					onclick={() => {
-						addPoints(10, user.id, 'elogio', 'point');
-						addConquista('conqelogio', user.id);
-					}}
-					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
-				>
-					Elogio do cliente <span class="text-green-600">+10</span></button
-				>
-				<button
-					onclick={() => addPoints(5, user.id, 'ideia', 'point')}
-					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
-				>
-					Ideia de melhoria <span class="text-green-600">+10</span>
-				</button>
-				<button
-					onclick={() => addPoints(10, user.id, 'maiorideia', 'point')}
-					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
-				>
-					Maior número de ideias no mês <span class="text-green-600">+15</span>
-				</button>
-				<button
-					onclick={() => {
-						addPoints(15, user.id, 'melhorideia', 'point');
-						addConquista('conqmesideia', user.id);
-					}}
-					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
-				>
-					Melhor ideia do mês <span class="text-green-600">+20</span>
-				</button>
+				<p class="text-center">Ideias de melhoria:</p>
+				<div class="flex gap-3">
+					<button
+						onclick={() => addPoints(5, user.id, 'ideia', 'point')}
+						class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
+					>
+						Ideia de melhoria <span class="text-green-600">+10</span>
+					</button>
+					<button
+						onclick={() => addPoints(10, user.id, 'maiorideia', 'point')}
+						class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
+					>
+						Maior número <span class="text-green-600">+15</span>
+					</button>
+					<button
+						onclick={() => {
+							addPoints(15, user.id, 'melhorideia', 'point');
+							addConquista('conqmesideia', user.id);
+						}}
+						class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
+					>
+						Melhor ideia <span class="text-green-600">+20</span>
+					</button>
+				</div>
+				<p class="text-center">Clientes:</p>
+				<div class="flex gap-3">
+					<button
+						onclick={() => addPoints(-10, user.id, 'reclamacao', 'point')}
+						class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
+					>
+						Reclamação de cliente <span class="text-red-500">-10</span>
+					</button>
+					<button
+						onclick={() => {
+							addPoints(10, user.id, 'elogio', 'point');
+							addConquista('conqelogio', user.id);
+						}}
+						class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
+					>
+						Elogio do cliente <span class="text-green-600">+10</span></button
+					>
+				</div>
 				<button
 					onclick={() => addPoints(15, user.id, 'indicacao', 'point')}
 					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
 				>
 					Indicação de cliente <span class="text-green-600">+100</span>
 				</button>
+				<p class="text-center">Profissionalização:</p>
 				<div class="bg-primary/20 flex w-full gap-2 rounded-xl border border-white/20">
 					<input
 						type="number"
@@ -188,12 +207,7 @@
 						><Save /><span>Salvar</span></button
 					>
 				</div>
-				<button
-					onclick={() => addPoints(-10, user.id, 'reclamacao', 'point')}
-					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
-				>
-					Reclamação de cliente <span class="text-red-500">-10</span>
-				</button>
+				<p class="text-center">Erros:</p>
 				<button
 					onclick={() => addPoints(-10, user.id, 'erro', 'point')}
 					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
@@ -224,23 +238,24 @@
 			</div>
 		</div>
 
-		<div class="w-full lg:w-1/2">
+		<div class="w-full">
 			<h3 class="w-full text-center">Conquistas</h3>
 			<div
-				class="*:bg-primary/30 *:backdrop-blur-xs {loading
+				class="{loading
 					? 'pointer-events-none cursor-default opacity-50'
-					: ''} flex w-full flex-col gap-3 *:w-full *:cursor-pointer *:rounded-lg *:p-2"
+					: ''} flex w-full flex-col gap-3"
 			>
-				<button onclick={() => addConquista('conqmesplanilha', user.id)}
-					>Mês com planilha de atividades preenchidas</button
+				<button
+					onclick={() => addConquista('conqmaiordomes', user.id)}
+					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3">Maior pontuação do Mês</button
 				>
-				<button onclick={() => addConquista('conqmaiordomes', user.id)}
-					>Maior pontuação do Mês</button
+				<button
+					onclick={() => addConquista('conqmaiordoano', user.id)}
+					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3">Maior pontuação do Ano</button
 				>
-				<button onclick={() => addConquista('conqmaiordoano', user.id)}
-					>Maior pontuação do Ano</button
-				>
-				<button onclick={() => addConquista('conqformacao', user.id)}
+				<button
+					onclick={() => addConquista('conqformacao', user.id)}
+					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
 					>Formação Superior concluída</button
 				>
 			</div>
@@ -249,11 +264,11 @@
 			<div
 				class="*:bg-primary/30 *:backdrop-blur-xs {loading
 					? 'pointer-events-none cursor-default opacity-50'
-					: ''} flex w-full flex-col gap-3 *:w-full *:cursor-pointer *:rounded-lg *:p-2"
+					: ''} flex w-full flex-col gap-3 *:w-full *:cursor-pointer"
 			>
 				<button
 					onclick={() => (dangerZoneAll = true)}
-					class="w-full cursor-pointer rounded-lg !bg-red-500/70 p-2 hover:opacity-50"
+					class="w-full cursor-pointer rounded-xl !bg-red-500/70 p-3 hover:opacity-50"
 				>
 					Zerar Tudo!
 				</button>

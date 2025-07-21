@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { getBandColor, getBandName } from '$lib/currentUser.svelte';
 	import { titlesfem, titles, role } from '$lib/state.svelte';
+	import { slide } from 'svelte/transition';
 	import movesports from '$lib/assets/sports.png';
 	import nomovesports from '$lib/assets/nosports.png';
 	// @ts-ignore
@@ -13,8 +14,12 @@
 	import Heart from 'virtual:icons/mdi/heart';
 	// @ts-ignore
 	import OutlineHeart from 'virtual:icons/mdi/heart-outline';
+	// @ts-ignore
+	import Bulb from 'virtual:icons/mdi/lightbulb-on-outline';
 	import { untrack } from 'svelte';
 	let { user, sector, imgsrc, pulseirasrc } = $props();
+
+	let ideaHover = $state(false);
 
 	let cultureInfo = $state(false);
 	let progressoInfo = $state(false);
@@ -54,7 +59,26 @@
 		{#if imgsrc}
 			<div class="relative w-full">
 				<img src={imgsrc} alt="Arte do Personagem" class="rounded-3xl" />
-				<img src={pulseirasrc} class="absolute top-0 z-50" alt="" />
+				<img src={pulseirasrc} class="absolute top-0 z-40" alt="" />
+			</div>
+		{/if}
+		{#if role.value && role.value !== 'guest'}
+			<div class="absolute -top-6 left-0 z-50 flex w-full items-center justify-center">
+				<a
+					href="https://form.respondi.app/pj63YtYc"
+					target="_blank"
+					class=" text-accent drop-shadow-accent flex animate-bounce items-center justify-center gap-2 rounded-xl p-2 drop-shadow-[0_0_4px] transition-all"
+					onpointerenter={() => (ideaHover = true)}
+					onpointerleave={() => (ideaHover = false)}
+				>
+					<Bulb class="text-2xl" />
+					{#if ideaHover}
+						<span
+							transition:slide={{ duration: 200, axis: 'x' }}
+							class="text-nowrap break-keep transition-all">Formalize sua ideia</span
+						>
+					{/if}
+				</a>
 			</div>
 		{/if}
 		<h2 class="drop-shadow-accent/70 absolute top-61 text-[1.7rem] drop-shadow-[0_0_10px]">
@@ -478,6 +502,11 @@
 							<ul class="w-full space-y-2">
 								<li>
 									&bull; A partir de 70% das tarefas concluídas você pode ganhar de 30 a 100 pontos
+								</li>
+								<li class="text-accent font-bold">
+									Formalize nas anotações do Gestta as justificativas das atividades que impedem a
+									conclusão das suas tarefas diárias para podermos contabilizar de forma justa as
+									pontuações.
 								</li>
 								<li>
 									&bull; Controle de atividades devidamente atualizado ao final do mês: 30 pontos

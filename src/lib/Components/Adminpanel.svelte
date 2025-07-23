@@ -95,13 +95,13 @@
 						70% <span class="text-green-600">+30</span></button
 					>
 					<button
-						onclick={() => addPoints(60, user.id, 'tarefas80', 'point')}
+						onclick={() => addPoints(50, user.id, 'tarefas80', 'point')}
 						class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
 					>
 						80% <span class="text-green-600">+50</span></button
 					>
 					<button
-						onclick={() => addPoints(80, user.id, 'tarefas90', 'point')}
+						onclick={() => addPoints(70, user.id, 'tarefas90', 'point')}
 						class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
 					>
 						90% <span class="text-green-600">+70</span></button
@@ -112,7 +112,7 @@
 							addConquista('conqmestarefa', user.id);
 						}}
 						class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
-						>100% <span class="text-green-600">+20</span></button
+						>100% <span class="text-green-600">+100</span></button
 					>
 				</div>
 				<div class="bg-primary/20 flex w-full gap-2 rounded-xl border border-white/20">

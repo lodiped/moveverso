@@ -1,5 +1,5 @@
-import type { UserType, UserArray } from '$lib/types.svelte';
 import { onValue, ref, getDatabase, get } from 'firebase/database';
+import type { Unsubscribe } from 'firebase/auth';
 import {
 	faseCalc,
 	nivelCalc,
@@ -15,23 +15,26 @@ export const currentUser = $state({ value: {} });
 export let contabilList = $state({ value: [] as any[] });
 export let bpoList = $state({ value: [] as any[] });
 export let list = $state({ value: [] as any[] });
+
+let unsubscribe: Unsubscribe | null = null;
 export async function listenTotals() {
 	const snap = await get(ref(getDatabase(), 'totals'));
 	if (snap.exists()) {
 		processData(snap.val());
-		console.log('list.value @ listenTotal() in currentUser.svelte.ts: ' + list.value);
+		console.log('list.value @ listenTotal() in currentUser.svelte.ts: ', list.value);
 	} else {
 		console.warn('no data at initial get()');
 	}
 
 	console.log(
-		'initial fetch complete, list.value show be hydrated @ listenTotals() in currentUser.svelte.ts'
+		'initial fetch complete, list.value should be hydrated @ listenTotals() in currentUser.svelte.ts'
 	);
 
-	const unsubscribe = onValue(ref(getDatabase(), 'totals'), (snapshot) => {
+	if (unsubscribe) return;
+	unsubscribe = onValue(ref(getDatabase(), 'totals'), (snapshot) => {
 		if (!snapshot.exists()) return;
 		processData(snapshot.val());
-		console.log('list.value @ onValue() in currentUser.svelte.ts: ' + list.value);
+		console.log('list.value @ onValue() in currentUser.svelte.ts: ', list.value);
 		console.log(
 			'onValue updated, list.value should be re-hydrated @ listenTotals()->onValue() in currentUser.svelte.ts'
 		);
@@ -187,10 +190,11 @@ export async function getCulturaBpo(uid: string) {
 }
 
 export async function getCulturaContabil(uid: string) {
-	console.log('getting CulturaContabil @ getCulturaContabil() in currentUser.svelte.ts');
 	try {
+		console.log('\\ getting CulturaContabil @ getCulturaContabil() in currentUser.svelte.ts');
 		const snapshot = await get(ref(getDatabase(), `cultura/${uid}`));
 		const data = snapshot.exists() ? snapshot.val() : null;
+		console.log('/ got CulturaContabil @ getCulturaContabil() in currentUser.svelte.ts');
 		const idx = contabilArray.value.findIndex((u) => u.id === uid);
 		if (idx < 0) {
 			return;

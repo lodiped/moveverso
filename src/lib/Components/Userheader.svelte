@@ -227,32 +227,34 @@
 			<div class="flex w-full flex-col items-center gap-2">
 				<div
 					class="bg-secondary group relative h-4 w-full rounded-md"
-					title={user.cultura.presenca.treinamento}
+					title={user.cultura ? user.cultura.presenca.treinamento : ''}
 				>
 					<div
 						class="absolute top-0 left-0 flex h-full w-full items-center justify-end rounded-md bg-[slateblue] drop-shadow-[0_0_10px] drop-shadow-[slateblue]/70 transition-all content-['']"
-						style={`width: ${user.cultura.presenca.treinamento}%;`}
+						style={`width: ${user.cultura ? user.cultura.presenca.treinamento : ''}%;`}
 					>
-						<span
-							class="pr-2 text-xs font-bold text-black opacity-50 {user.cultura.presenca
-								.treinamento < 20
-								? 'hidden'
-								: ''}">Treinamentos</span
-						>
+						{#if user.cultura}
+							<span
+								class="pr-2 text-xs font-bold text-black opacity-50 {user.cultura.presenca
+									.treinamento < 20
+									? 'hidden'
+									: ''}">Treinamentos</span
+							>
+						{/if}
 					</div>
 					<div
 						class="pointer-events-none absolute bottom-0 z-50 flex h-[98%] w-full items-center justify-center text-sm opacity-0 transition-opacity group-hover:opacity-100"
 					>
-						<div class="w-fit">{user.cultura.presenca.treinamento}%</div>
+						<div class="w-fit">{user.cultura ? user.cultura.presenca.treinamento : ''}%</div>
 					</div>
 				</div>
 				<div
 					class="bg-secondary group relative h-4 w-full rounded-md"
-					title={user.cultura.presenca.cumbuca}
+					title={user.cultura ? user.cultura.presenca.cumbuca : ''}
 				>
 					<div
 						class="absolute top-0 left-0 flex h-full w-full items-center justify-end rounded-md bg-[slateblue] drop-shadow-[0_0_10px] drop-shadow-[slateblue]/70 transition-all content-['']"
-						style={`width: ${user.cultura.presenca.cumbuca}%;`}
+						style={`width: ${user.cultura ? user.cultura.presenca.cumbuca : ''}%;`}
 					>
 						<span
 							class="pr-2 text-xs font-bold text-black opacity-50 {user.cultura.presenca.cumbuca <
@@ -264,12 +266,12 @@
 					<div
 						class="pointer-events-none absolute bottom-0 z-50 flex h-[98%] w-full items-center justify-center text-sm opacity-0 transition-opacity group-hover:opacity-100"
 					>
-						<div class="w-fit">{user.cultura.presenca.cumbuca}%</div>
+						<div class="w-fit">{user.cultura ? user.cultura.presenca.cumbuca : ''}%</div>
 					</div>
 				</div>
 			</div>
 			<div class="flex w-full items-center justify-between">
-				{#if user.cultura.media !== 0 && (role.value === 'admin' || role.value === 'cultura' || role.value === 'contabil' || role.value === 'bpo')}
+				{#if user.cultura && user.cultura.media !== 0 && (role.value === 'admin' || role.value === 'cultura' || role.value === 'contabil' || role.value === 'bpo')}
 					<div
 						class="drop-shadow-accent flex w-full flex-col items-center gap-1 drop-shadow-[0_0_20px]"
 					>
@@ -303,12 +305,12 @@
 					<div
 						class="pointer-events-none absolute flex h-full -translate-y-10 items-center justify-center opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100"
 					>
-						Pontos: {user.cultura.sports.pontos}
+						Pontos: {user.cultura ? user.cultura.sports.pontos : ''}
 					</div>
 					<div
 						class="flex max-w-35 flex-col items-center justify-between gap-3.5 transition-all group-hover:translate-y-10 group-hover:opacity-0"
 					>
-						{#if user.cultura.sports.presente}
+						{#if user.cultura && user.cultura.sports.presente}
 							<img src={movesports} class="w-[50%]" alt="" />
 							<div class="flex text-red-500">
 								{#if user.cultura.sports.hp === 3}
@@ -331,8 +333,8 @@
 					<div
 						class="pointer-events-none absolute top-0 right-0 flex h-full w-full -translate-y-10 cursor-default flex-col items-center justify-center opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100"
 					>
-						<p class="text-sm">Recebidas: {user.cultura.coins.recebidas}</p>
-						<p class="text-sm">Entregues: {user.cultura.coins.entregues}</p>
+						<p class="text-sm">Recebidas: {user.cultura ? user.cultura.coins.recebidas : ''}</p>
+						<p class="text-sm">Entregues: {user.cultura ? user.cultura.coins.entregues : ''}</p>
 					</div>
 					<div
 						class="pointer-events-none drop-shadow-md drop-shadow-black transition-all group-hover:translate-y-10 group-hover:opacity-0"
@@ -341,7 +343,7 @@
 							<div
 								class="hexagon bg-secondary text-accent flex h-10 cursor-default items-center justify-center text-xl font-bold"
 							>
-								{user.cultura.coins.recebidas}
+								{user.cultura ? user.cultura.coins.recebidas : ''}
 							</div>
 						</div>
 					</div>

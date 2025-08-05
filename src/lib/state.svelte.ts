@@ -92,53 +92,57 @@ export const firstKey = $state({ value: null });
 export const lastKey = $state({ value: null });
 export const pageDirection = $state({ value: 'next' });
 export const hasMore = $state({ value: false });
+const pageSize = 7;
 
+////////////////////////////////// NEW LOG CODE:
 export async function checkLog(uid: string) {
 	const logsRef = ref(getDatabase(), `/logs/${uid}`);
-	console.log('checking log @ checkLog(uid) in state.svelte.ts');
-	try {
-		loading.value = true;
-		let q;
-		if (logPage.value === 1) {
-			q = query(logsRef, orderByKey(), limitToLast(7));
-		} else if (pageDirection.value === 'next') {
-			if (!firstKey) return;
-			q = query(logsRef, orderByKey(), endBefore(firstKey.value), limitToLast(7));
-		} else {
-			if (!lastKey) return;
-			q = query(logsRef, orderByKey(), startAfter(lastKey.value), limitToFirst(7));
-		}
-		const sortSnap = await get(q);
-		const sortData = sortSnap.exists() ? sortSnap.val() : null;
-		if (sortData) {
-			userLog.value = Object.entries(sortData).map(([id, entry]: any) => {
-				return {
-					id,
-					text: logText[entry.action]?.desc ?? '--',
-					type: logText[entry.action]?.type ?? '--',
-					points:
-						logText[entry.action]?.points ??
-						(logText[entry.action].img !== undefined ? logText[entry.action].img : entry.value),
-					...entry
-				};
-			});
-			userLog.value.sort((a, b) => (a.id < b.id ? 1 : -1));
-			if (userLog.value.length > 0) {
-				lastKey.value = userLog.value[0].id;
-				firstKey.value = userLog.value[userLog.value.length - 1].id;
-			} else {
-				hasMore.value = false;
-			}
-			hasMore.value = userLog.value.length === 7;
-		} else {
-			userLog.value = [];
-		}
-	} catch (error) {
-		console.error(error);
-	} finally {
-		loading.value = false;
+	console.log('Loading LOGS @ checkLog() in state.svelte.ts');
+	loading.value = true;
+	let q;
+	if (logPage.value === 1) {
+		q = query(logsRef, orderByKey(), limitToLast(pageSize + 1));
+	} else if (pageDirection.value === 'next') {
+		if (!firstKey) return;
+		q = query(logsRef, orderByKey(), endBefore(firstKey.value), limitToLast(pageSize + 1));
+	} else {
+		if (!lastKey) return;
+		q = query(logsRef, orderByKey(), startAfter(lastKey.value), limitToFirst(pageSize + 1));
+	}
+	const sortSnap = await get(q);
+	const entries = sortSnap.exists() ? Object.entries(sortSnap.val()) : [];
+
+	const hasOverflow = entries.length > pageSize;
+	hasMore.value = hasOverflow;
+
+	const isForwardFetch = pageDirection.value === 'prev';
+
+	const pageItems = hasOverflow
+		? isForwardFetch
+			? entries.slice(0, pageSize)
+			: entries.slice(1)
+		: entries;
+
+	userLog.value = pageItems
+		.map(([id, entry]: [string, any]) => ({
+			id,
+			text: logText[entry.action]?.desc ?? '--',
+			type: logText[entry.action]?.type ?? '--',
+			points:
+				logText[entry.action]?.points ??
+				(logText[entry.action].img !== undefined ? logText[entry.action].img : entry.value),
+			...entry
+		}))
+		.sort((a, b) => (a.id < b.id ? 1 : -1));
+
+	if (userLog.value.length) {
+		lastKey.value = userLog.value[0].id;
+		firstKey.value = userLog.value[userLog.value.length - 1].id;
+	} else {
+		hasMore.value = false;
 	}
 }
+///////////////////////////////////////////////////
 
 export async function checkBpo() {
 	console.log('checking CheckBpo @ checkBpo() in state.svelte.ts');

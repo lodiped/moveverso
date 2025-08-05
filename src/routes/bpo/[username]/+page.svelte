@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { untrack } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	import type { UserType } from '$lib/types.svelte';
 	import { page } from '$app/state';
 	import { runTransaction, set, getDatabase, push } from 'firebase/database';
@@ -62,6 +62,7 @@
 	let pulseirasrc: string = $state('');
 
 	async function updateUI() {
+		await getCulturaBpo(person.id);
 		console.log('updatingUI');
 		u = bpoArray.value[userId!];
 		user.id = u.id;
@@ -232,21 +233,6 @@
 		}
 	}
 
-	async function toggleSports(uid: string) {
-		loading = true;
-		logPage.value = 1;
-		try {
-			await set(ref(db, `cultura/${uid}/sports/presente`), !user.cultura.sports.presente);
-			await checkBpo();
-			await checkLog(uid);
-			await updateUI();
-		} catch (error) {
-			console.error(error);
-		} finally {
-			loading = false;
-		}
-	}
-
 	async function receiveCoin(uid: string) {
 		loading = true;
 		logPage.value = 1;
@@ -352,7 +338,7 @@
 	async function load() {
 		console.log('Loading data');
 		try {
-			if (bpoArray.value.length === 0) {
+			if (!bpoArray.value.length) {
 				console.log('userArray is empty');
 				await checkBpo();
 			} else {
@@ -449,10 +435,12 @@
 	}
 
 	$effect(() => {
-		if (untrack(() => bpoList.value.length === 0)) untrack(() => listenTotals());
-		homepage.value = false;
+		if (!bpoList.value.length) listenTotals();
+		untrack(() => (homepage.value = false));
 		if (!username) return;
-		loading = true;
+		untrack(() => (loading = true));
+	});
+	$effect(() => {
 		(async () => {
 			await load();
 			homeLoading.value = false;

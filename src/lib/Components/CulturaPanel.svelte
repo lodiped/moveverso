@@ -47,7 +47,7 @@
 			<div class="flex w-full gap-3">
 				<div class="flex w-full flex-col items-center gap-3">
 					<button
-						disabled={user.cultura.sports.hp >= 3}
+						disabled={user ? user.cultura.sports.hp >= 3 : false}
 						onclick={() => setHP(user.id, '+')}
 						class="bg-primary/30 w-full cursor-pointer rounded-xl py-3 disabled:cursor-default {user
 							.cultura.sports.hp < 3
@@ -55,7 +55,7 @@
 							: 'opacity-50'}">+</button
 					>
 					<button
-						disabled={user.cultura.sports.hp <= 0}
+						disabled={user ? user.cultura.sports.hp <= 0 : false}
 						onclick={() => setHP(user.id, '-')}
 						class="bg-primary/30 w-full cursor-pointer rounded-xl py-3 disabled:cursor-default {user
 							.cultura.sports.hp > 0

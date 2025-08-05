@@ -63,6 +63,7 @@
 	let sector = 'contabil';
 
 	async function updateUI() {
+		await getCulturaContabil(person.id);
 		console.log('updatingUI @ updateUI() in contabil/[username]/+page.svelte');
 		u = contabilArray.value[userId!];
 		user.id = u.id;
@@ -233,21 +234,6 @@
 		}
 	}
 
-	async function toggleSports(uid: string) {
-		loading = true;
-		logPage.value = 1;
-		try {
-			await set(ref(db, `cultura/${uid}/sports/presente`), !user.cultura.sports.presente);
-			await checkContabil();
-			await checkLog(uid);
-			await updateUI();
-		} catch (error) {
-			console.error(error);
-		} finally {
-			loading = false;
-		}
-	}
-
 	async function receiveCoin(uid: string) {
 		loading = true;
 		logPage.value = 1;
@@ -349,13 +335,17 @@
 	async function load() {
 		console.log('Loading data @ load() in contabil/[username]/+page.svelte');
 		try {
-			if (contabilArray.value.length === 0) {
+			if (!contabilArray.value.length) {
 				console.log('usersArray is empty @ load() in contabil/[username]/+page.svelte');
+				console.log(
+					'\\/ Should start checkContabil() @ load() in contabil/[username]/+page.svelte'
+				);
 				await checkContabil();
 			} else {
 				console.log('usersArray is not empty @ load() in contabil/[username]/+page.svelte');
 			}
 			if (role.value !== 'guest') {
+				console.log('\\/ Should start checkLog() @ load() in contabil/[username]/+page.svelte');
 				await checkLog(username);
 			}
 
@@ -373,6 +363,7 @@
 			};
 			await getCulturaContabil(person.id);
 			updateUI();
+			ready = true;
 		} catch (err) {
 			console.error('User not found', err);
 		} finally {
@@ -452,14 +443,15 @@
 	let ready = $state(false);
 
 	$effect(() => {
-		if (untrack(() => contabilList.value.length === 0)) untrack(() => listenTotals());
+		if (!contabilList.value.length) listenTotals();
 		untrack(() => (homepage.value = false));
-		if (untrack(() => !username)) return;
+		if (!username) return;
 		untrack(() => (loading = true));
+	});
+	$effect(() => {
 		(async () => {
 			await load();
-			untrack(() => (ready = true));
-			untrack(() => (homeLoading.value = false));
+			homeLoading.value = false;
 		})();
 	});
 	async function nextPage() {
@@ -475,8 +467,6 @@
 			await checkLog(user.id);
 		}
 	}
-
-	// FIXME: ajuste do card do personagem quando em widescreen
 </script>
 
 <div

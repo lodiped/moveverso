@@ -11,15 +11,29 @@ import {
 import { onAuthStateChanged } from 'firebase/auth';
 
 // Checa se o usuário é admin ou cultura
-export let role = $state({ value: 'guest' });
+export const role = $state({ value: null as string | null });
 export const authEmail: { value: string | null } = $state({ value: '' });
+export const isLogged = { value: false };
+export const _roleWaiter = $state({ value: [] as Array<(roleValue: string) => void> });
+function resolveRole() {
+	const rv = role.value ?? '';
+	_roleWaiter.value.forEach((r) => {
+		try {
+			r(rv);
+		} catch (error) {
+			console.error(error);
+		}
+	});
+	_roleWaiter.value = [];
+}
 if (typeof window !== 'undefined') {
 	onAuthStateChanged(auth, async (user) => {
+		console.log('onAuthStateChanged!!!');
 		if (!user) {
 			role.value = 'guest';
+			resolveRole();
 			return;
 		}
-
 		const uid = user.uid;
 		const [globalSnap, bpoSnap, contabilSnap, cultSnap] = await Promise.all([
 			get(child(dbRef, `/admins/${uid}`)),
@@ -29,7 +43,6 @@ if (typeof window !== 'undefined') {
 		]);
 
 		authEmail.value = user.email ?? null;
-
 		if (globalSnap.exists()) {
 			role.value = 'admin';
 		} else if (bpoSnap.exists()) {
@@ -41,9 +54,8 @@ if (typeof window !== 'undefined') {
 		} else {
 			role.value = 'user';
 		}
-		console.log(
-			'getting role.value @ onAuthStateChanged(auth, ()) in state.svelte.ts: ' + role.value
-		);
+		resolveRole();
+		isLogged.value = true;
 	});
 }
 
@@ -59,15 +71,6 @@ export const userLog = $state({ value: [] as any[] });
 
 //Front-end stuff
 export const totalConquistas = $state({ value: 0 });
-
-export function sumConquistasCalc(i: number) {
-	totalConquistas.value = 0;
-	for (let y = 0; y < usersArray.value?.[i].conquistas.length; y++) {
-		if (usersArray.value?.[i].conquistas[y].number > 0) {
-			totalConquistas.value += usersArray.value?.[i].conquistas[y].number;
-		}
-	}
-}
 
 export function sumConquistasBpo(i: number) {
 	totalConquistas.value = 0;
@@ -103,21 +106,21 @@ export async function checkLog(uid: string) {
 	if (logPage.value === 1) {
 		q = query(logsRef, orderByKey(), limitToLast(pageSize + 1));
 	} else if (pageDirection.value === 'next') {
-		if (!firstKey) return;
+		if (!firstKey.value) return;
 		q = query(logsRef, orderByKey(), endBefore(firstKey.value), limitToLast(pageSize + 1));
 	} else {
-		if (!lastKey) return;
+		if (!lastKey.value) return;
 		q = query(logsRef, orderByKey(), startAfter(lastKey.value), limitToFirst(pageSize + 1));
 	}
 	const sortSnap = await get(q);
 	const entries = sortSnap.exists() ? Object.entries(sortSnap.val()) : [];
+	console.log('entries @ checkLog() in state.svelte.ts: ', entries);
 
-	const hasOverflow = entries.length > pageSize;
-	hasMore.value = hasOverflow;
+	hasMore.value = entries.length > pageSize;
 
-	const isForwardFetch = pageDirection.value === 'prev';
+	const isForwardFetch = pageDirection.value === 'next';
 
-	const pageItems = hasOverflow
+	const pageItems = hasMore.value
 		? isForwardFetch
 			? entries.slice(0, pageSize)
 			: entries.slice(1)
@@ -130,10 +133,10 @@ export async function checkLog(uid: string) {
 			type: logText[entry.action]?.type ?? '--',
 			points:
 				logText[entry.action]?.points ??
-				(logText[entry.action].img !== undefined ? logText[entry.action].img : entry.value),
+				(logText[entry.action]?.img !== undefined ? logText[entry.action].img : entry.value),
 			...entry
 		}))
-		.sort((a, b) => (a.id < b.id ? 1 : -1));
+		.sort((a, b) => (a.id === b.id ? 0 : a.id < b.id ? 1 : -1));
 
 	if (userLog.value.length) {
 		lastKey.value = userLog.value[0].id;
@@ -198,84 +201,45 @@ export async function checkContabil() {
 		loading.value = true;
 		const snapshot = await get(child(dbRef, '/contabil'));
 		const data = snapshot.exists() ? snapshot.val() : null;
-		contabilArray.value = Object.entries(data).map(([uid, userData]: any) => {
-			const total = userData.total;
-			const ingressMs = userData.ingress;
-			const ingress = msToString(userData.ingress);
-			const fase = faseCalc(total);
-			const current = currentCalc(total, fase);
-			const nivel = nivelCalc(total);
-			const xp = currentXP(total);
-			const conquistas = userData.conquistas
-				? Object.entries(userData.conquistas).map(([conqId, conqData]: any) => ({
-						id: conqId,
-						number: conqData.number,
-						title: logText[conqId]?.title ?? '--',
-						desc: logText[conqId]?.desc ?? '--',
-						img: logText[conqId]?.img ?? '--'
-					}))
-				: [];
+		contabilArray.value = Object.entries(data)
+			.map(([uid, userData]: any) => {
+				const isTestUser = userData.testUser;
+				if (isTestUser && role.value !== 'admin') {
+					console.log('SHITS FUCKED UP RN', role.value);
+					return null;
+				}
+				const total = userData.total;
+				const ingressMs = userData.ingress;
+				const ingress = msToString(userData.ingress);
+				const fase = faseCalc(total);
+				const current = currentCalc(total, fase);
+				const nivel = nivelCalc(total);
+				const xp = currentXP(total);
+				const conquistas = userData.conquistas
+					? Object.entries(userData.conquistas).map(([conqId, conqData]: any) => ({
+							id: conqId,
+							number: conqData.number,
+							title: logText[conqId]?.title ?? '--',
+							desc: logText[conqId]?.desc ?? '--',
+							img: logText[conqId]?.img ?? '--'
+						}))
+					: [];
 
-			return {
-				id: uid,
-				...userData,
-				ingressMs,
-				ingress,
-				current,
-				fase,
-				nivel,
-				xp,
-				conquistas
-			};
-		});
+				return {
+					id: uid,
+					...userData,
+					ingressMs,
+					ingress,
+					current,
+					fase,
+					nivel,
+					xp,
+					conquistas
+				};
+			})
+			.filter((u) => u !== null);
 
 		contabilArray.value = contabilArray.value.map((user, idx) => ({
-			...user,
-			arrayId: idx
-		}));
-
-		loading.value = false;
-	} catch (error) {
-		console.error(error);
-	}
-}
-
-export async function check() {
-	console.log('checking Check @ check() in state.svelte.ts');
-	try {
-		loading.value = true;
-		const snapshot = await get(child(dbRef, '/users'));
-		const data = snapshot.exists() ? snapshot.val() : null;
-		usersArray.value = Object.entries(data).map(([uid, userData]: any) => {
-			const total = userData.total;
-			const ingress = msToString(userData.ingress);
-			const fase = faseCalc(total);
-			const current = currentCalc(total, fase);
-			const nivel = nivelCalc(total);
-			const xp = currentXP(total);
-			const conquistas = userData.conquistas
-				? Object.entries(userData.conquistas).map(([conqId, conqData]: any) => ({
-						id: conqId,
-						number: conqData.number,
-						title: logText[conqId]?.title ?? '--',
-						desc: logText[conqId]?.desc ?? '--',
-						img: logText[conqId]?.img ?? '--'
-					}))
-				: [];
-
-			return {
-				id: uid,
-				...userData,
-				ingress,
-				current,
-				fase,
-				nivel,
-				xp,
-				conquistas
-			};
-		});
-
-		usersArray.value = usersArray.value.map((user, idx) => ({
 			...user,
 			arrayId: idx
 		}));

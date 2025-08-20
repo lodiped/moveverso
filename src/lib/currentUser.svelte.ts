@@ -1,13 +1,6 @@
 import { onValue, ref, getDatabase, get } from 'firebase/database';
 import type { Unsubscribe } from 'firebase/auth';
-import {
-	faseCalc,
-	nivelCalc,
-	currentCalc,
-	usersArray,
-	bpoArray,
-	contabilArray
-} from '$lib/state.svelte';
+import { faseCalc, nivelCalc, currentCalc, bpoArray, contabilArray, role } from '$lib/state.svelte';
 export const currentUid = $state({ value: 'andreussiegrist' });
 // export const currentUser = $state({ value: {} as UserType });
 export const currentUser = $state({ value: {} });
@@ -43,12 +36,15 @@ export async function listenTotals() {
 }
 
 function processData(data: Record<string, { value: number; type: string }>) {
-	const all = Object.entries(data).map(([id, { value, type }]: any) => {
-		const name = names[id] ?? id;
-		const fase = faseCalc(value);
-		const nivel = nivelCalc(currentCalc(value, fase));
-		return { id, name, fase, nivel, total: value, type };
-	});
+	const all = Object.entries(data)
+		.map(([id, { value, type }]: any) => {
+			if (role.value !== 'admin' && id === 'usuarioteste') return null;
+			const name = names[id] ?? id;
+			const fase = faseCalc(value);
+			const nivel = nivelCalc(currentCalc(value, fase));
+			return { id, name, fase, nivel, total: value, type };
+		})
+		.filter((u) => u !== null);
 
 	contabilList.value = all.filter((u) => u.type === 'contabil').sort((a, b) => b.total - a.total);
 	bpoList.value = all.filter((u) => u.type === 'bpo').sort((a, b) => b.total - a.total);
@@ -95,7 +91,8 @@ let names: Record<string, string> = {
 	mariawienen: 'Malu Wienen',
 	eduardoditrich: 'Eduardo Ditrich',
 	asaphtavares: 'Asaph Tavares',
-	tamirisrosa: 'Tamiris Rosa'
+	tamirisrosa: 'Tamiris Rosa',
+	usuarioteste: 'Usuário Teste'
 };
 
 export const pulseira = $state({
@@ -153,24 +150,6 @@ const testing = Object.entries(pulseira).map(([key, val]) => ({
 	name: key,
 	...val
 }));
-// TODO: login para cada usuário ver o seu histórico
-
-export async function getCultura(uid: string) {
-	console.log('getting Cultura @ getCultura() in currentUser.svelte.ts');
-	try {
-		const snapshot = await get(ref(getDatabase(), `cultura/${uid}`));
-		const data = snapshot.exists() ? snapshot.val() : null;
-		const idx = usersArray.value.findIndex((u) => u.id === uid);
-		if (idx < 0) {
-			return;
-		}
-		if (data) {
-			usersArray.value[idx].cultura = data;
-		}
-	} catch (error) {
-		console.error(error);
-	}
-}
 
 export async function getCulturaBpo(uid: string) {
 	console.log('getting CulturaBpo @ getCulturaBpo() in currentUser.svelte.ts');

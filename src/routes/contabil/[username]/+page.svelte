@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { untrack } from 'svelte';
+	import { onMount, untrack } from 'svelte';
 	import type { UserType } from '$lib/types.svelte';
 	import { page } from '$app/state';
 	import { runTransaction, set, getDatabase, push } from 'firebase/database';
@@ -22,7 +22,8 @@
 		pageDirection,
 		hasMore,
 		homepage,
-		homeLoading
+		homeLoading,
+		_roleWaiter
 	} from '$lib/state.svelte';
 	import Userheader from '$lib/Components/Userheader.svelte';
 	import CulturaPanel from '$lib/Components/CulturaPanel.svelte';
@@ -33,7 +34,6 @@
 
 	let username = $derived(page.params.username);
 	let loading = $state(true);
-	let userData = $state<{ name: string; total: number } | null>(null);
 	let imgsrc: string = $state('');
 	let pulseirasrc: string = $state('');
 	let u: any = $state();
@@ -332,8 +332,9 @@
 
 	let person: any = $state();
 
-	async function load() {
+	async function load(nextUser?: string) {
 		console.log('Loading data @ load() in contabil/[username]/+page.svelte');
+		console.log(nextUser);
 		try {
 			if (!contabilArray.value.length) {
 				console.log('usersArray is empty @ load() in contabil/[username]/+page.svelte');
@@ -346,21 +347,23 @@
 			}
 			if (role.value !== 'guest') {
 				console.log('\\/ Should start checkLog() @ load() in contabil/[username]/+page.svelte');
-				await checkLog(username);
+				await checkLog(nextUser ? nextUser : username);
 			}
 
-			const idx = contabilArray.value.findIndex((u) => u.id === username);
+			let idx;
+			if (nextUser) {
+				idx = contabilArray.value.findIndex((u) => u.id === nextUser);
+			} else {
+				idx = contabilArray.value.findIndex((u) => u.id === username);
+			}
 			if (idx < 0) {
 				console.error('User not found');
 				return;
 			}
+			console.log('username: ', username, idx);
 
 			userId = idx;
 			person = contabilArray.value[idx];
-			userData = {
-				name: person.name,
-				total: person.total
-			};
 			await getCulturaContabil(person.id);
 			updateUI();
 			ready = true;
@@ -448,12 +451,45 @@
 		if (!username) return;
 		untrack(() => (loading = true));
 	});
-	$effect(() => {
-		(async () => {
+
+	function waitRole(ms: number) {
+		if (role.value !== null && role.value !== undefined) {
+			return Promise.resolve(role.value);
+		}
+
+		return new Promise((resolve, reject) => {
+			_roleWaiter.value.push(resolve);
+			if (ms != null) {
+				const id = setTimeout(() => {
+					const idx = _roleWaiter.value.indexOf(resolve);
+					if (idx >= 0) _roleWaiter.value.splice(idx, 1);
+					reject(new Error('Timeout'));
+				}, ms);
+				const wrapped = (v: string) => {
+					clearTimeout(id);
+					resolve(v);
+				};
+				_roleWaiter.value[_roleWaiter.value.length - 1] = wrapped;
+			}
+		});
+	}
+	onMount(async () => {
+		try {
+			console.log('onMount running');
+			await waitRole(8000);
 			await load();
 			homeLoading.value = false;
-		})();
+		} catch (error) {
+			console.error(error);
+		}
 	});
+
+	// $effect(() => {
+	// 	(async () => {
+	// 		await load();
+	// 		homeLoading.value = false;
+	// 	})();
+	// });
 	async function nextPage() {
 		if (!hasMore.value) return;
 		pageDirection.value = 'next';
@@ -522,6 +558,8 @@
 							<a
 								onclick={() => {
 									logPage.value = 1;
+									console.log(user.id);
+									load(user.id);
 								}}
 								href={`/contabil/${user.id}`}
 								class="bg-primary/30 hover:bg-primary/50 w-[57%] rounded-lg p-1 px-2 text-left"

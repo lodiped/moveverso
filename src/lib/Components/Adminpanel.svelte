@@ -293,12 +293,14 @@
 				><Info /></button
 			>
 			<button
+				disabled={diaFechamento == 0}
 				class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {diaFechamento
 					? ''
 					: 'pointer-events-none opacity-50'}"
-				onclick={() =>
-					addPoints(diaFechamentoPoints(diaFechamento!), user.id, 'diafechamento', 'point')}
-				><Save /><span>Salvar</span></button
+				onclick={() => {
+					if (diaFechamento! < 6) addConquista('conqfechamento', user.id);
+					addPoints(diaFechamentoPoints(diaFechamento!), user.id, 'diafechamento', 'point');
+				}}><Save /><span>Salvar</span></button
 			>
 		</div>
 		<div class="bg-primary/20 flex w-full gap-2 rounded-xl border border-white/20">
@@ -397,7 +399,10 @@
 					><Info /></button
 				>
 				<button
-					onclick={() => addPoints(30, user.id, 'playbpoup', 'point')}
+					onclick={() => {
+						addConquista('conqplaybpo', user.id);
+						addPoints(30, user.id, 'playbpoup', 'point');
+					}}
 					class="bg-primary/30 w-full rounded-xl p-3"
 					>PlayBPO em dia <span class="text-green-600">+30</span></button
 				>
@@ -415,7 +420,10 @@
 					><Info /></button
 				>
 				<button
-					onclick={() => addPoints(10, user.id, 'elogio', 'point')}
+					onclick={() => {
+						addConquista('conqelogio', user.id);
+						addPoints(10, user.id, 'elogio', 'point');
+					}}
 					class="bg-primary/30 w-full rounded-xl p-3"
 					>Elogio de Cliente <span class="text-green-600">+10</span></button
 				>
@@ -445,7 +453,10 @@
 		<div class="flex w-full flex-col items-center">
 			<div class="flex w-full gap-3 *:cursor-pointer">
 				<button
-					onclick={() => addPoints(5, user.id, 'ideiaaplicadabpo', 'point')}
+					onclick={() => {
+						addConquista('conqideia', user.id);
+						addPoints(5, user.id, 'ideiaaplicadabpo', 'point');
+					}}
 					class="bg-primary/30 w-full rounded-xl p-3"
 					>Idéia aplicada <span class="text-green-600">+5</span></button
 				>
@@ -487,6 +498,17 @@
 					: 'pointer-events-none opacity-50'}"><Save /><span>Salvar</span></button
 			>
 		</div>
+
+		<h3>Conquistas</h3>
+		<button
+			onclick={() => addConquista('conq3fechamento', user.id)}
+			class="bg-primary/30 w-full cursor-pointer rounded-xl p-3"
+			>3 meses de fechamento antes do dia 05</button
+		>
+		<button
+			onclick={() => addConquista('conqedu', user.id)}
+			class="bg-primary/30 w-full cursor-pointer rounded-xl p-3">Mês com educação continuada</button
+		>
 		<p class="font-bold text-red-500 uppercase drop-shadow-lg drop-shadow-red-500/50">
 			Danger Zone
 		</p>

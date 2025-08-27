@@ -24,6 +24,19 @@
 	let cultureInfo = $state(false);
 	let progressoInfo = $state(false);
 	let progressoTab = $state(0);
+	let conquistasInfo = $state(false);
+
+	let toastOpen = $state(false);
+	let toastText = $state('');
+
+	let toastTimeout: any;
+
+	function currentToast() {
+		toastTimeout = setTimeout(() => {
+			toastOpen = false;
+			toastText = '';
+		}, 3000);
+	}
 
 	let firstname = $state('');
 	let lastname = $state('');
@@ -110,10 +123,28 @@
 				<div class="grid grid-cols-3 gap-4">
 					{#each user.conquistas as conquista}
 						{#if conquista.number > 0}
-							<div class=" inline-block w-full text-center align-top">
+							<button
+								class=" inline-block w-full cursor-pointer text-center align-top"
+								onclick={() => {
+									if ((toastOpen = true)) {
+										clearTimeout(toastTimeout);
+										toastOpen = false;
+										toastText = '';
+										setTimeout(() => {
+											toastOpen = true;
+											toastText = conquista.desc;
+											currentToast();
+										}, 200);
+									} else {
+										toastOpen = true;
+										toastText = conquista.desc;
+										currentToast();
+									}
+								}}
+							>
 								<div
 									title={conquista.desc}
-									class="drop-shadow-accent/70 flex cursor-default flex-col justify-start text-4xl drop-shadow-[0_0_20px] hover:scale-105"
+									class="drop-shadow-accent/70 flex flex-col justify-start text-4xl drop-shadow-[0_0_20px] hover:scale-105"
 								>
 									<p class="drop-shadow-md drop-shadow-black">
 										{conquista.img}
@@ -122,12 +153,19 @@
 										<span class="text-lg opacity-50">{conquista.number}x</span>
 									{/if}
 								</div>
-							</div>
+							</button>
 						{/if}
 					{/each}
 				</div>
 			{/if}
 		</div>
+		<button
+			class="bg-primary/30 hover:bg-primary/50 w-2/3 cursor-pointer rounded-lg p-2 text-sm text-white/75 transition-colors"
+			onclick={() => {
+				conquistasInfo = true;
+				console.log(user.conquistas);
+			}}>Ver conquistas</button
+		>
 	</div>
 	<div class="flex w-full flex-col items-start justify-start gap-8 md:w-2/3">
 		<div class="-mb-4 flex w-full justify-center">
@@ -570,5 +608,72 @@
 				onclick={() => (pulseirasInfo = false)}><Close /></button
 			>
 		</div>
+	</div>
+{/if}
+
+{#if conquistasInfo}
+	<!-- svelte-ignore a11y_click_events_have_key_events -->
+	<!-- svelte-ignore a11y_no_static_element_interactions -->
+	<div
+		onclick={() => (conquistasInfo = false)}
+		class="fixed top-0 left-0 z-50 flex h-full w-full flex-col items-center justify-center bg-black/30"
+	>
+		<div
+			onclick={(e) => e.stopPropagation()}
+			class="bg-secondary/30 relative flex flex-col items-center gap-5 rounded-xl p-10 backdrop-blur"
+		>
+			<h3>Conquistas</h3>
+			<div
+				class="grid cursor-default grid-cols-4 grid-rows-2 gap-5 text-center text-sm *:rounded-full"
+			>
+				{#each user.conquistas as conquista}
+					<button
+						onclick={() => {
+							if ((toastOpen = true)) {
+								clearTimeout(toastTimeout);
+								toastOpen = false;
+								toastText = '';
+								setTimeout(() => {
+									toastOpen = true;
+									toastText = conquista.desc;
+									currentToast();
+								}, 200);
+							} else {
+								toastOpen = true;
+								toastText = conquista.desc;
+								currentToast();
+							}
+						}}
+						class="cursor-pointer"
+					>
+						<div
+							title={conquista.desc}
+							class="text-3xl {conquista.number > 0
+								? 'drop-shadow-accent/50 drop-shadow-xl'
+								: 'brightness-50 saturate-0'}"
+						>
+							{conquista.img}
+						</div>
+						<div class={conquista.number > 0 ? 'text-shadow-[0_0_5px_white]' : 'opacity-50'}>
+							{conquista.number}x
+						</div>
+					</button>
+				{/each}
+			</div>
+			<button
+				class="text-primary absolute top-3 right-3 cursor-pointer rounded-full text-2xl"
+				onclick={() => (conquistasInfo = false)}><Close /></button
+			>
+		</div>
+	</div>
+{/if}
+
+{#if toastOpen}
+	<div
+		contenteditable="true"
+		class="bg-accent/10 text-accent border-accent/40 fixed bottom-0 left-0 z-50 mb-10 ml-10 rounded-xl border p-4 px-5 backdrop-blur"
+		transition:slide={{ axis: 'y', duration: 200 }}
+	>
+		{toastText}
 	</div>
 {/if}

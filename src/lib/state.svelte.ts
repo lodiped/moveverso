@@ -95,57 +95,147 @@ export const firstKey = $state({ value: null });
 export const lastKey = $state({ value: null });
 export const pageDirection = $state({ value: 'next' });
 export const hasMore = $state({ value: false });
-const pageSize = 7;
+const pageSize = 10;
 
 ////////////////////////////////// NEW LOG CODE:
+// export async function checkLog(uid: string) {
+// 	const logsRef = ref(getDatabase(), `/logs/${uid}`);
+// 	console.log('Loading LOGS @ checkLog() in state.svelte.ts');
+// 	loading.value = true;
+// 	let q;
+// 	if (logPage.value === 1) {
+// 		q = query(logsRef, orderByKey(), limitToLast(pageSize + 1));
+// 	} else if (pageDirection.value === 'next') {
+// 		if (!firstKey.value) return;
+// 		q = query(logsRef, orderByKey(), endBefore(firstKey.value), limitToLast(pageSize + 1));
+// 	} else {
+// 		if (!lastKey.value) return;
+// 		q = query(logsRef, orderByKey(), startAfter(lastKey.value), limitToFirst(pageSize + 1));
+// 	}
+// 	const sortSnap = await get(q);
+// 	const entries = sortSnap.exists() ? Object.entries(sortSnap.val()) : [];
+// 	console.log('entries @ checkLog() in state.svelte.ts: ', entries);
+
+// 	hasMore.value = entries.length > pageSize;
+
+// 	const isForwardFetch = pageDirection.value === 'next';
+
+// 	const pageItems = hasMore.value
+// 		? isForwardFetch
+// 			? entries.slice(0, pageSize)
+// 			: entries.slice(1)
+// 		: entries;
+
+// 	userLog.value = pageItems
+// 		.map(([id, entry]: [string, any]) => ({
+// 			id,
+// 			text: logText[entry.action]?.desc ?? '--',
+// 			type: logText[entry.action]?.type ?? '--',
+// 			points:
+// 				logText[entry.action]?.points ??
+// 				(logText[entry.action]?.img !== undefined ? logText[entry.action].img : entry.value),
+// 			...entry
+// 		}))
+// 		.sort((a, b) => (a.id === b.id ? 0 : a.id < b.id ? 1 : -1));
+
+// 	if (userLog.value.length) {
+// 		lastKey.value = userLog.value[0].id;
+// 		firstKey.value = userLog.value[userLog.value.length - 1].id;
+// 	} else {
+// 		hasMore.value = false;
+// 	}
+// }
+///////////////////////////////////////////////////
+
+//////////////////////////////////////////////////FFIXED???????????
+
 export async function checkLog(uid: string) {
 	const logsRef = ref(getDatabase(), `/logs/${uid}`);
 	console.log('Loading LOGS @ checkLog() in state.svelte.ts');
 	loading.value = true;
+
+	const pageLimit = pageSize + 1; // request one extra to detect "hasMore"
 	let q;
+
+	// Clarify meaning: pageDirection === 'next' -> go to older items (next page)
 	if (logPage.value === 1) {
-		q = query(logsRef, orderByKey(), limitToLast(pageSize + 1));
+		// initial load: get the newest items (last N)
+		q = query(logsRef, orderByKey(), limitToLast(pageLimit));
 	} else if (pageDirection.value === 'next') {
-		if (!firstKey.value) return;
-		q = query(logsRef, orderByKey(), endBefore(firstKey.value), limitToLast(pageSize + 1));
+		// go to older items - fetch items strictly before the oldest key of current page
+		if (!firstKey.value) {
+			loading.value = false;
+			return;
+		}
+		q = query(logsRef, orderByKey(), endBefore(firstKey.value), limitToLast(pageLimit));
 	} else {
-		if (!lastKey.value) return;
-		q = query(logsRef, orderByKey(), startAfter(lastKey.value), limitToFirst(pageSize + 1));
+		// go to newer items - fetch items strictly after the newest key of current page
+		if (!lastKey.value) {
+			loading.value = false;
+			return;
+		}
+		q = query(logsRef, orderByKey(), startAfter(lastKey.value), limitToFirst(pageLimit));
 	}
-	const sortSnap = await get(q);
-	const entries = sortSnap.exists() ? Object.entries(sortSnap.val()) : [];
-	console.log('entries @ checkLog() in state.svelte.ts: ', entries);
 
-	hasMore.value = entries.length > pageSize;
+	const snap = await get(q);
 
-	const isForwardFetch = pageDirection.value === 'next';
+	// Build entries array using snapshot.forEach to preserve order.
+	// Each entry: [key, value]. Firebase gives children in ascending order by key.
+	const rawEntries: Array<[string, any]> = [];
+	if (snap.exists()) {
+		snap.forEach((child) => {
+			rawEntries.push([child.key as string, child.val()]);
+		});
+	}
 
-	const pageItems = hasMore.value
-		? isForwardFetch
-			? entries.slice(0, pageSize)
-			: entries.slice(1)
-		: entries;
+	// Determine hasMore (we requested pageSize + 1)
+	const hasExtra = rawEntries.length > pageSize;
+	hasMore.value = hasExtra;
 
-	userLog.value = pageItems
-		.map(([id, entry]: [string, any]) => ({
-			id,
-			text: logText[entry.action]?.desc ?? '--',
-			type: logText[entry.action]?.type ?? '--',
-			points:
-				logText[entry.action]?.points ??
-				(logText[entry.action]?.img !== undefined ? logText[entry.action].img : entry.value),
-			...entry
-		}))
-		.sort((a, b) => (a.id === b.id ? 0 : a.id < b.id ? 1 : -1));
+	// Trim the extra item correctly depending on which query was used:
+	// - limitToLast => extra item sits at the start (index 0)
+	// - limitToFirst => extra item sits at the end
+	let pageSlice: Array<[string, any]> = [];
+	if (!hasExtra) {
+		pageSlice = rawEntries.slice();
+	} else {
+		if (logPage.value === 1 || pageDirection.value === 'next') {
+			// initial load and "next" use limitToLast -> keep the last pageSize items
+			pageSlice = rawEntries.slice(-pageSize);
+		} else {
+			// 'prev' path used startAfter + limitToFirst -> keep first pageSize items
+			pageSlice = rawEntries.slice(0, pageSize);
+		}
+	}
 
+	// rawEntries and pageSlice are currently in ascending order (oldest -> newest).
+	// We want to present newest-first, so reverse.
+	pageSlice.reverse();
+
+	// Map to userLog items
+	userLog.value = pageSlice.map(([id, entry]) => ({
+		id,
+		text: logText[entry.action]?.desc ?? '--',
+		type: logText[entry.action]?.type ?? '--',
+		points:
+			logText[entry.action]?.points ??
+			(logText[entry.action]?.img !== undefined ? logText[entry.action].img : entry.value),
+		...entry
+	}));
+
+	// Update cursors for next/prev navigation.
+	// userLog is newest-first now.
 	if (userLog.value.length) {
-		lastKey.value = userLog.value[0].id;
-		firstKey.value = userLog.value[userLog.value.length - 1].id;
+		lastKey.value = userLog.value[0].id; // newest on this page
+		firstKey.value = userLog.value[userLog.value.length - 1].id; // oldest on this page
 	} else {
 		hasMore.value = false;
 	}
+
+	loading.value = false;
 }
-///////////////////////////////////////////////////
+
+/////////////////////////////////////////////////
 
 export async function checkBpo() {
 	console.log('checking CheckBpo @ checkBpo() in state.svelte.ts');
@@ -251,10 +341,10 @@ export async function checkContabil() {
 }
 
 export let logText: any = $state({
-	conqformacao: {
-		title: 'Formação Superior',
-		desc: 'Concluiu uma formação superior',
-		img: '🎓',
+	conqsports: {
+		title: 'Move Sports',
+		desc: 'Completou o desafio Move Sports',
+		img: '🏃‍♂️',
 		type: 'conq'
 	},
 	conqelogio: {
@@ -263,41 +353,82 @@ export let logText: any = $state({
 		img: '💎',
 		type: 'conq'
 	},
+	conqformacao: {
+		title: 'Formação Superior',
+		desc: 'Concluiu uma formação superior',
+		img: '🎓',
+		type: 'conq',
+		area: 'contabil'
+	},
 	conqmesideia: {
 		title: 'Selo Especial',
 		desc: 'Melhor ideia do mês',
 		img: '💡',
-		type: 'conq'
+		type: 'conq',
+		area: 'contabil'
 	},
 	conqmaiordoano: {
 		title: 'Em Órbita',
 		desc: 'Maior pontuação do Ano',
 		img: '🏆',
-		type: 'conq'
+		type: 'conq',
+		area: 'contabil'
 	},
 	conqmaiordomes: {
 		title: 'Decolagem',
 		desc: 'Maior pontuação do Mês',
 		img: '🎖️',
-		type: 'conq'
+		type: 'conq',
+		area: 'contabil'
 	},
 	conqmesplanilha: {
 		title: 'Relógio',
 		desc: 'Mês com planilha de atividades preenchidas',
 		img: '📜',
-		type: 'conq'
+		type: 'conq',
+		area: 'contabil'
 	},
 	conqmestarefa: {
 		title: 'Escudo',
 		desc: 'Mês com 100% das tarefas no prazo',
 		img: '🌟',
-		type: 'conq'
+		type: 'conq',
+		area: 'contabil'
 	},
-	conqsports: {
-		title: 'Move Sports',
-		desc: 'Completou o desafio Move Sports',
-		img: '🏃‍♂️',
-		type: 'conq'
+	conqplaybpo: {
+		title: 'Play BPO',
+		desc: 'Mês com Play BPO atualizado',
+		img: '⏳',
+		type: 'conq',
+		area: 'bpo'
+	},
+	conq3fechamento: {
+		title: '3 Meses',
+		desc: '3 meses de fechamento entregue antes do dia 05',
+		img: '🛡️',
+		type: 'conq',
+		area: 'bpo'
+	},
+	conqfechamento: {
+		title: 'Fechamento',
+		desc: 'Mês com fechamento entregue antes do dia 05',
+		img: '⚔️',
+		type: 'conq',
+		area: 'bpo'
+	},
+	conqideia: {
+		title: 'Ideia de Melhoria',
+		desc: 'Ideia de melhoria',
+		img: '💡',
+		type: 'conq',
+		area: 'bpo'
+	},
+	conqedu: {
+		title: 'Educação',
+		desc: 'Mês com educação continuada',
+		img: '🧠',
+		type: 'conq',
+		area: 'bpo'
 	},
 	elogio: { desc: 'Elogio recebido de cliente', points: 10, type: 'point' },
 	tarefas70: { desc: '70% das tarefas concluídas', points: 30, type: 'point' },

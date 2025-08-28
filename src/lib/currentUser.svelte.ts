@@ -40,8 +40,11 @@ function processData(data: Record<string, { value: number; type: string }>) {
 		.map(([id, { value, type }]: any) => {
 			if (role.value !== 'admin' && id === 'usuarioteste') return null;
 			const name = names[id] ?? id;
-			const fase = faseCalc(value);
-			const nivel = nivelCalc(currentCalc(value, fase));
+			const fase = faseCalc(value, type === 'bpo' ? 'bpo' : '');
+			const nivel = nivelCalc(
+				currentCalc(value, fase, type === 'bpo' ? 'bpo' : ''),
+				type === 'bpo' ? 'bpo' : ''
+			);
 			return { id, name, fase, nivel, total: value, type };
 		})
 		.filter((u) => u !== null);

@@ -247,9 +247,9 @@ export async function checkBpo() {
 			const total = userData.total;
 			const ingressMs = userData.ingress;
 			const ingress = msToString(userData.ingress);
-			const fase = faseCalc(total);
-			const current = currentCalc(total, fase);
-			const nivel = nivelCalc(total);
+			const fase = faseCalc(total, 'bpo');
+			const current = currentCalc(total, fase, 'bpo');
+			const nivel = nivelCalc(total, 'bpo');
 			const xp = currentXP(total, 'bpo');
 			const conquistas = userData.conquistas
 				? Object.entries(userData.conquistas).map(([conqId, conqData]: any) => ({

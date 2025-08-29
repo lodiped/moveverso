@@ -95,7 +95,8 @@ let names: Record<string, string> = {
 	eduardoditrich: 'Eduardo Ditrich',
 	asaphtavares: 'Asaph Tavares',
 	tamirisrosa: 'Tamiris Rosa',
-	usuarioteste: 'Usuário Teste'
+	usuarioteste: 'Usuário Teste',
+	joaomariano: 'João Mariano'
 };
 
 export const pulseira = $state({

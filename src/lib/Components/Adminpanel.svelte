@@ -1,14 +1,9 @@
 <script lang="ts">
-	// @ts-ignore
 	import Save from 'virtual:icons/mdi/floppy';
-	// @ts-ignore
 	import ThumbsUp from 'virtual:icons/mdi/thumbs-up';
-	// @ts-ignore
 	import ThumbsDn from 'virtual:icons/mdi/thumbs-down';
-	// @ts-ignore
 	import Info from 'virtual:icons/mdi/information-slab-circle-outline';
 	import { page } from '$app/state';
-	import { derived } from 'svelte/store';
 	import { role } from '$lib/state.svelte';
 	let {
 		loading,

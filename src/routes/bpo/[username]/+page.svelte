@@ -22,18 +22,17 @@
 		pageDirection,
 		hasMore,
 		homepage,
-		homeLoading
+		homeLoading,
+		_roleWaiter
 	} from '$lib/state.svelte';
 	import Userheader from '$lib/Components/Userheader.svelte';
 	import Adminpanel from '$lib/Components/Adminpanel.svelte';
 	import CulturaPanel from '$lib/Components/CulturaPanel.svelte';
 	import Log from '$lib/Components/Log.svelte';
-	// @ts-ignore
 	import Star from 'virtual:icons/mdi/star-four-points';
 	let sector = 'bpo';
 	let username = $derived(page.params.username);
 	let loading = $state(true);
-	let userData = $state<{ name: string; total: number } | null>(null);
 	let imgsrc: string = $state('');
 	let u: any = $state();
 	let user = $state<UserType>({
@@ -335,20 +334,23 @@
 
 	let person: any = $state();
 
-	async function load() {
-		console.log('Loading data');
+	async function load(nextUser?: string) {
 		try {
 			if (!bpoArray.value.length) {
-				console.log('userArray is empty');
 				await checkBpo();
 			} else {
 				console.log('userArray is not empty');
 			}
 			if (role.value !== 'guest') {
-				await checkLog(username);
+				await checkLog(nextUser ? nextUser : username);
 			}
 
-			const idx = bpoArray.value.findIndex((u) => u.id === username);
+			let idx;
+			if (nextUser) {
+				idx = bpoArray.value.findIndex((u) => u.id === nextUser);
+			} else {
+				idx = bpoArray.value.findIndex((u) => u.id === username);
+			}
 			if (idx < 0) {
 				console.error('User not found');
 				return;
@@ -356,12 +358,9 @@
 
 			userId = idx;
 			person = bpoArray.value[idx];
-			userData = {
-				name: person.name,
-				total: person.total
-			};
 			await getCulturaBpo(person.id);
 			updateUI();
+			ready = true;
 		} catch (err) {
 			console.error('User not found', err);
 		} finally {
@@ -396,7 +395,8 @@
 					conquista--;
 					return conquista;
 				});
-			} else if (type === 'point') {
+			}
+			if (type === 'point') {
 				let points: number;
 				if (logText[actionId].points) {
 					points = logText[actionId]?.points;
@@ -434,18 +434,52 @@
 		}
 	}
 
+	let ready = $state(false);
+
 	$effect(() => {
 		if (!bpoList.value.length) listenTotals();
 		untrack(() => (homepage.value = false));
 		if (!username) return;
 		untrack(() => (loading = true));
 	});
-	$effect(() => {
-		(async () => {
+
+	function waitRole(ms: number) {
+		if (role.value !== null && role.value !== undefined) {
+			return Promise.resolve(role.value);
+		}
+
+		return new Promise((resolve, reject) => {
+			_roleWaiter.value.push(resolve);
+			if (ms != null) {
+				const id = setTimeout(() => {
+					const idx = _roleWaiter.value.indexOf(resolve);
+					if (idx >= 0) _roleWaiter.value.splice(idx, 1);
+					reject(new Error('Timeout'));
+				}, ms);
+				const wrapped = (v: string) => {
+					clearTimeout(id);
+					resolve(v);
+				};
+				_roleWaiter.value[_roleWaiter.value.length - 1] = wrapped;
+			}
+		});
+	}
+	onMount(async () => {
+		try {
+			await waitRole(8000);
 			await load();
 			homeLoading.value = false;
-		})();
+		} catch (error) {
+			console.error(error);
+		}
 	});
+
+	// $effect(() => {
+	// 	(async () => {
+	// 		await load();
+	// 		homeLoading.value = false;
+	// 	})();
+	// });
 	async function nextPage() {
 		if (!hasMore.value) return;
 		pageDirection.value = 'next';
@@ -464,7 +498,7 @@
 <div
 	class="my-2 flex w-full flex-col gap-5 md:w-[44rem] 2xl:w-full 2xl:max-w-[1500px] 2xl:flex-row 2xl:gap-20"
 >
-	{#if userData && user && user.cultura}
+	{#if ready}
 		<div class="flex flex-col gap-5 lg:w-full">
 			<Userheader {user} {imgsrc} {sector} {pulseirasrc} />
 			{#if role.value === 'cultura' || role.value === 'admin'}
@@ -514,6 +548,7 @@
 							<a
 								onclick={() => {
 									logPage.value = 1;
+									load(user.id);
 								}}
 								href={`/bpo/${user.id}`}
 								class="bg-primary/30 hover:bg-primary/50 w-[57%] rounded-lg p-1 px-2 text-left"

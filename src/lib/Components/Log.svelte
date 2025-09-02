@@ -2,7 +2,6 @@
 	import { userLog, role, logPage, hasMore } from '$lib/state.svelte';
 	import { date } from '$lib/time.svelte';
 	let { user, remove, prevPage, nextPage } = $props();
-	// @ts-ignore
 	import Google from 'virtual:icons/mdi/google';
 	import { signInWithPopup } from 'firebase/auth';
 	import { auth, googleProvider } from '$lib/firebase';

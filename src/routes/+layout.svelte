@@ -5,7 +5,6 @@
 	import { role, homepage, loading, homeLoading } from '$lib/state.svelte';
 	import moveverso from '$lib/assets/moveverso.png';
 	import moveversowide from '$lib/assets/moveversowide.png';
-	// @ts-ignore
 	import Sair from 'virtual:icons/mdi/logout';
 	let loadingLocal = $state(false);
 	async function handleLogout() {

@@ -2,7 +2,6 @@
 	import { homepage, logPage, homeLoading } from '$lib/state.svelte';
 	import { listenTotals, bpoList, contabilList } from '$lib/currentUser.svelte';
 	let error = $state(false);
-	// @ts-ignore
 	import Star from 'virtual:icons/mdi/star-four-points';
 
 	let loadDb;

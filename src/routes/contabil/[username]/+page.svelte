@@ -29,7 +29,6 @@
 	import CulturaPanel from '$lib/Components/CulturaPanel.svelte';
 	import Adminpanel from '$lib/Components/Adminpanel.svelte';
 	import Log from '$lib/Components/Log.svelte';
-	// @ts-ignore
 	import Star from 'virtual:icons/mdi/star-four-points';
 
 	let username = $derived(page.params.username);
@@ -72,6 +71,7 @@
 		user.name = u.name;
 		user.fase = u.fase;
 		user.nivel = u.nivel;
+		user.email = u.email;
 		user.xp = u.xp;
 		user.total = u.total;
 		user.current = u.current;
@@ -79,7 +79,6 @@
 		user.conquistas = u.conquistas;
 		user.arrayId = u.arrayId;
 		user.cultura = u.cultura;
-		user.email = u.email;
 		imgsrc = `/assets/${user.gender}/${user.fase}${user.nivel}.webp`;
 		if (getBandColor(user.ingressMs)) {
 			pulseirasrc = `/assets/${user.fase}${user.gender}${getBandColor(user.ingressMs)}.webp`;
@@ -299,7 +298,7 @@
 					action: actionId,
 					value:
 						actionId === 'errovalor' || actionId === 'horacurso' || actionId === 'controleAtv'
-							? n
+							? Math.round(n)
 							: null
 				});
 			}
@@ -333,14 +332,8 @@
 	let person: any = $state();
 
 	async function load(nextUser?: string) {
-		console.log('Loading data @ load() in contabil/[username]/+page.svelte');
-		console.log(nextUser);
 		try {
 			if (!contabilArray.value.length) {
-				console.log('usersArray is empty @ load() in contabil/[username]/+page.svelte');
-				console.log(
-					'\\/ Should start checkContabil() @ load() in contabil/[username]/+page.svelte'
-				);
 				await checkContabil();
 			} else {
 				console.log('usersArray is not empty @ load() in contabil/[username]/+page.svelte');
@@ -360,7 +353,6 @@
 				console.error('User not found');
 				return;
 			}
-			console.log('username: ', username, idx);
 
 			userId = idx;
 			person = contabilArray.value[idx];
@@ -475,7 +467,6 @@
 	}
 	onMount(async () => {
 		try {
-			console.log('onMount running');
 			await waitRole(8000);
 			await load();
 			homeLoading.value = false;
@@ -558,7 +549,6 @@
 							<a
 								onclick={() => {
 									logPage.value = 1;
-									console.log(user.id);
 									load(user.id);
 								}}
 								href={`/contabil/${user.id}`}

@@ -4,17 +4,11 @@
 	import { slide } from 'svelte/transition';
 	import movesports from '$lib/assets/sports.png';
 	import nomovesports from '$lib/assets/nosports.png';
-	// @ts-ignore
 	import Info from 'virtual:icons/mdi/information-slab-circle-outline';
-	// @ts-ignore
 	import Pulseira from 'virtual:icons/fa-solid/ring';
-	// @ts-ignore
 	import Close from 'virtual:icons/mdi/close-circle-outline';
-	// @ts-ignore
 	import Heart from 'virtual:icons/mdi/heart';
-	// @ts-ignore
 	import OutlineHeart from 'virtual:icons/mdi/heart-outline';
-	// @ts-ignore
 	import Bulb from 'virtual:icons/mdi/lightbulb-on-outline';
 	import { untrack } from 'svelte';
 	let { user, sector, imgsrc, pulseirasrc } = $props();

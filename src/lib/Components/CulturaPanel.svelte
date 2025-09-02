@@ -1,9 +1,6 @@
 <script lang="ts">
-	// @ts-ignore
 	import ArrowDn from 'virtual:icons/mdi/arrow-down';
-	// @ts-ignore
 	import ArrowUp from 'virtual:icons/mdi/arrow-up';
-	// @ts-ignore
 	import Save from 'virtual:icons/mdi/floppy';
 
 	let newMedia: number | undefined = $state();

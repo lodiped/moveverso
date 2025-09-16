@@ -34,7 +34,10 @@
 				placeholder="Média"
 			/>
 			<button
-				onclick={() => setMedia(user.id, newMedia)}
+				onclick={() => {
+					setMedia(user.id, newMedia);
+					newMedia = undefined;
+				}}
 				class="bg-primary/30 flex w-full items-center justify-center gap-2 rounded-xl py-3"
 				><Save /><span>Salvar</span></button
 			>
@@ -67,7 +70,10 @@
 						class="bg-primary/20 w-full appearance-none rounded-xl border border-white/20 py-3"
 					/>
 					<button
-						onclick={() => sportsPoints(user.id, newSportsPoints)}
+						onclick={() => {
+							sportsPoints(user.id, newSportsPoints);
+							newSportsPoints = undefined;
+						}}
 						class="bg-primary/30 flex h-full w-full cursor-pointer items-center justify-center rounded-xl py-3"
 						><Save /></button
 					>
@@ -110,12 +116,18 @@
 		</div>
 		<div class="flex w-full gap-3">
 			<button
-				onclick={() => setTreinamento(user.id, newTreinamento)}
+				onclick={() => {
+					setTreinamento(user.id, newTreinamento);
+					newTreinamento = undefined;
+				}}
 				class="bg-primary/30 flex w-full items-center justify-center gap-2 rounded-xl py-3"
 				><Save /><span>Salvar</span></button
 			>
 			<button
-				onclick={() => setCumbuca(user.id, newCumbuca)}
+				onclick={() => {
+					setCumbuca(user.id, newCumbuca);
+					newCumbuca = undefined;
+				}}
 				class="bg-primary/30 flex w-full items-center justify-center gap-2 rounded-xl py-3"
 				><Save /><span>Salvar</span></button
 			>

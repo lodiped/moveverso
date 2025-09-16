@@ -21,28 +21,7 @@
 	let honorario: number | undefined = $state();
 	let honorarioFinal: number = $derived(honorario! / 100);
 
-	let diaFechamento: number | undefined = $state();
-	function diaFechamentoPoints(n: number) {
-		if (typeof diaFechamento !== 'number') {
-			return;
-		}
-		if (n === 1) return 10;
-		if (n === 2) return 9;
-		if (n === 3) return 8;
-		if (n === 4) return 7;
-		if (n === 5) return 6;
-		if (n === 6) return 5;
-		if (n === 7) return 4;
-		if (n === 8) return 3;
-		if (n === 9) return 2;
-		if (n === 10) return 1;
-		if (n === 11) return 0;
-		if (n === 12) return -1;
-		if (n === 13) return -2;
-		if (n === 14) return -3;
-		if (n === 15) return -4;
-		if (n > 15) return -5;
-	}
+	let pontosFechamento: number | undefined = $state();
 
 	let tempoGasto: number | undefined = $state();
 	let tempoGastoPoints = $derived(tempoGasto! / 30);
@@ -130,6 +109,7 @@
 								addConquista('conqmesplanilha', user.id);
 							}
 							addPoints(controleAtv, user.id, 'controleAtv', 'point');
+							controleAtv = undefined;
 						}}><Save /><span>Salvar</span></button
 					>
 				</div>
@@ -198,8 +178,10 @@
 						class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {atualizacaoProfissional
 							? ''
 							: 'pointer-events-none opacity-50'}"
-						onclick={() => addPoints(atualizacaoProfissional, user.id, 'horacurso', 'point')}
-						><Save /><span>Salvar</span></button
+						onclick={() => {
+							addPoints(atualizacaoProfissional, user.id, 'horacurso', 'point');
+							atualizacaoProfissional = undefined;
+						}}><Save /><span>Salvar</span></button
 					>
 				</div>
 				<p class="text-center">Erros:</p>
@@ -225,9 +207,10 @@
 						class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {contabilPreju
 							? 'cursor-pointer'
 							: 'pointer-events-none cursor-default opacity-50'}"
-						onclick={() =>
-							addPoints(Math.ceil(-contabilPreju! * 0.1), user.id, 'errovalor', 'point')}
-						><Save /><span>Salvar</span></button
+						onclick={() => {
+							addPoints(Math.ceil(-contabilPreju! * 0.1), user.id, 'errovalor', 'point');
+							contabilPreju = undefined;
+						}}><Save /><span>Salvar</span></button
 					>
 				</div>
 			</div>
@@ -280,21 +263,22 @@
 			<input
 				type="number"
 				class=" w-full appearance-none rounded-lg border-0 bg-transparent"
-				placeholder="Dia do Fechamento"
-				bind:value={diaFechamento}
+				placeholder="Pontos do Fechamento"
+				bind:value={pontosFechamento}
 			/>
 			<button
 				class="cursor-pointer justify-center text-xl opacity-50 transition-opacity hover:opacity-100"
 				><Info /></button
 			>
 			<button
-				disabled={diaFechamento == 0}
-				class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {diaFechamento
+				disabled={pontosFechamento == 0}
+				class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {pontosFechamento
 					? ''
 					: 'pointer-events-none opacity-50'}"
 				onclick={() => {
-					if (diaFechamento! < 6) addConquista('conqfechamento', user.id);
-					addPoints(diaFechamentoPoints(diaFechamento!), user.id, 'diafechamento', 'point');
+					if (pontosFechamento! < 6) addConquista('conqfechamento', user.id);
+					addPoints(pontosFechamento!, user.id, 'diafechamento', 'point');
+					pontosFechamento = undefined;
 				}}><Save /><span>Salvar</span></button
 			>
 		</div>
@@ -313,8 +297,10 @@
 				class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {tempoGasto
 					? ''
 					: 'pointer-events-none opacity-50'}"
-				onclick={() => addPoints(tempoGastoPoints, user.id, 'tempogasto', 'point')}
-				><Save /><span>Salvar</span></button
+				onclick={() => {
+					addPoints(tempoGastoPoints, user.id, 'tempogasto', 'point');
+					tempoGasto = undefined;
+				}}><Save /><span>Salvar</span></button
 			>
 		</div>
 		<div class="flex w-full gap-2">
@@ -326,7 +312,10 @@
 					bind:value={deltaTempoDown}
 				/>
 				<button
-					onclick={() => addPoints(deltaTempoFn(deltaTempoDown!), user.id, 'delta', 'point')}
+					onclick={() => {
+						addPoints(deltaTempoFn(deltaTempoDown!), user.id, 'delta', 'point');
+						deltaTempoDown = undefined;
+					}}
 					class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {deltaTempoDown
 						? ''
 						: 'pointer-events-none opacity-50'}"
@@ -347,7 +336,10 @@
 					bind:value={deltaTempoUp}
 				/>
 				<button
-					onclick={() => addPoints(deltaTempoFn(-deltaTempoUp!), user.id, 'delta', 'point')}
+					onclick={() => {
+						addPoints(deltaTempoFn(-deltaTempoUp!), user.id, 'delta', 'point');
+						deltaTempoUp = undefined;
+					}}
 					class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {deltaTempoUp
 						? ''
 						: 'pointer-events-none opacity-50'}"
@@ -371,7 +363,10 @@
 				><Info /></button
 			>
 			<button
-				onclick={() => addPoints(honorarioFinal, user.id, 'honorario', 'point')}
+				onclick={() => {
+					addPoints(honorarioFinal, user.id, 'honorario', 'point');
+					honorario = undefined;
+				}}
 				class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {honorario
 					? ''
 					: 'pointer-events-none opacity-50'}"><Save /><span>Salvar</span></button
@@ -487,7 +482,10 @@
 				><Info /></button
 			>
 			<button
-				onclick={() => addPoints(-prejuFinal, user.id, 'prejuizo', 'point')}
+				onclick={() => {
+					addPoints(-prejuFinal, user.id, 'prejuizo', 'point');
+					preju = undefined;
+				}}
 				class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {preju
 					? ''
 					: 'pointer-events-none opacity-50'}"><Save /><span>Salvar</span></button

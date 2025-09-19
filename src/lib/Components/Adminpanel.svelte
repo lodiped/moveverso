@@ -308,7 +308,30 @@
 				<input
 					type="number"
 					class=" w-full appearance-none rounded-lg border-0 bg-transparent"
-					placeholder="Redução de Tempo (%)"
+					placeholder="Redução de Produtividade (%)"
+					bind:value={deltaTempoUp}
+				/>
+				<button
+					onclick={() => {
+						addPoints(deltaTempoFn(-deltaTempoUp!), user.id, 'delta', 'point');
+						deltaTempoUp = undefined;
+					}}
+					class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {deltaTempoUp
+						? ''
+						: 'pointer-events-none opacity-50'}"
+					><ThumbsDn class="text-red-600 md:text-white" /><span class="hidden md:block">Salvar</span
+					></button
+				>
+			</div>
+			<button
+				class="cursor-pointer justify-center text-xl opacity-50 transition-opacity hover:opacity-100"
+				><Info /></button
+			>
+			<div class="bg-primary/20 flex w-full gap-2 rounded-xl border border-white/20">
+				<input
+					type="number"
+					class=" w-full appearance-none rounded-lg border-0 bg-transparent"
+					placeholder="Aumento de Produtividade (%)"
 					bind:value={deltaTempoDown}
 				/>
 				<button
@@ -321,29 +344,6 @@
 						: 'pointer-events-none opacity-50'}"
 					><ThumbsUp class="text-green-600 md:text-white" /><span class="hidden md:block"
 						>Salvar</span
-					></button
-				>
-			</div>
-			<button
-				class="cursor-pointer justify-center text-xl opacity-50 transition-opacity hover:opacity-100"
-				><Info /></button
-			>
-			<div class="bg-primary/20 flex w-full gap-2 rounded-xl border border-white/20">
-				<input
-					type="number"
-					class=" w-full appearance-none rounded-lg border-0 bg-transparent"
-					placeholder="Aumento do Tempo (%)"
-					bind:value={deltaTempoUp}
-				/>
-				<button
-					onclick={() => {
-						addPoints(deltaTempoFn(-deltaTempoUp!), user.id, 'delta', 'point');
-						deltaTempoUp = undefined;
-					}}
-					class="bg-primary/30 m-1 flex items-center justify-center gap-1 rounded-lg p-2 {deltaTempoUp
-						? ''
-						: 'pointer-events-none opacity-50'}"
-					><ThumbsDn class="text-red-600 md:text-white" /><span class="hidden md:block">Salvar</span
 					></button
 				>
 			</div>

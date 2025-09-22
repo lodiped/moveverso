@@ -446,7 +446,7 @@ export let logText: any = $state({
 	errovalor: { desc: 'Prejuízo financeiro por erro', type: 'point' },
 	// BPO
 	diafechamento: { desc: 'Dia do Fechamento', type: 'point' },
-	delta: { desc: 'Redução/Aumento de Tempo', type: 'point' },
+	delta: { desc: 'Redução/Aumento de Produtividade', type: 'point' },
 	honorario: { desc: 'Total de Honorários', type: 'point' },
 	playbpodown: { desc: 'Plataforma PlayBPO incorreta', points: -30, type: 'point' },
 	playbpoup: { desc: 'Plataforma PlayBPO em dia', points: 30, type: 'point' },

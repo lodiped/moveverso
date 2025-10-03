@@ -156,7 +156,7 @@
 					>
 				</div>
 				<button
-					onclick={() => addPoints(15, user.id, 'indicacao', 'point')}
+					onclick={() => addPoints(100, user.id, 'indicacao', 'point')}
 					class="bg-primary/30 w-full cursor-pointer rounded-xl py-3"
 				>
 					Indicação de cliente <span class="text-green-600">+100</span>

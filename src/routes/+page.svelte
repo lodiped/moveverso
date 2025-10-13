@@ -53,7 +53,7 @@
 				class="drop-shadow-accent/60 w-1/2 rounded-lg px-5 py-4 text-center font-['Grifter'] text-xl tracking-wider uppercase transition-all {selected ===
 				'bpo'
 					? 'bg-accent scale-110 text-black/60 drop-shadow-[0_0_15px]'
-					: 'text-accent bg-primary/10 cursor-pointer'}">BPO</button
+					: 'text-accent bg-primary/10 cursor-pointer'}">Financeiro</button
 			>
 		</div>
 		<div

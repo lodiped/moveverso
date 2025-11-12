@@ -7,6 +7,7 @@
 	import moveverso from '$lib/assets/moveverso.png';
 	import moveversowide from '$lib/assets/moveversowide.png';
 	import Sair from 'virtual:icons/mdi/logout';
+	import Star from 'virtual:icons/mdi/star-four-points';
 	let loadingLocal = $state(false);
 	async function handleLogout() {
 		loadingLocal = true;
@@ -25,21 +26,58 @@
 
 	// \/ \/ \/ \/ \/ \/ START - FINALIZAR BUTTON - START \/ \/ \/ \/ \/ \/
 
+	let finalizando = $state(false);
+
 	async function finalizar() {
+		finalizando = true;
 		let currentMonth = date.getMonth() + 1;
-		let snapshot = await get(ref(getDatabase(), `historicoIdx`));
-		let array = [];
-		if (snapshot) array = snapshot.val() ?? [];
 		let hasMonthlyRecord = false;
-		for (let i = 0; i < array.length; i++) {
-			let checkMonth = new Date(array[i]).getMonth() + 1;
-			if (currentMonth === checkMonth) {
-				hasMonthlyRecord = true;
-				break;
+		let monthlyRecordMs = 0;
+		try {
+			console.log('finalizar rodando');
+			let snapshot = await get(ref(getDatabase(), `historicoIdx`));
+			console.log('finalizar(): snapshot', snapshot);
+			let array = [];
+			if (snapshot) array = snapshot.val() ?? [];
+			for (let i = 0; i < array.length; i++) {
+				let checkMonth = new Date(array[i] * 1000).getMonth() + 1;
+				console.log('forloop rodando');
+				if (array.length > 0) {
+					if (currentMonth === checkMonth) {
+						hasMonthlyRecord = true;
+						monthlyRecordMs = array[i];
+						console.log('finalizar(): tem hasMonthlyRecord');
+						break;
+					}
+				}
 			}
-		}
-		if (hasMonthlyRecord) {
-			set(ref(getDatabase(), `historicoIdx/${array.length}`), new Date());
+			console.log('finalizar(): forloop rodado');
+			let dateMs: number = +(Date.now() / 1000).toFixed(0);
+			try {
+				await set(ref(getDatabase(), `historicoIdx/${array.length}`), dateMs);
+				try {
+					let newsnapshot = await get(ref(getDatabase(), `totals`));
+					let totalsToRecord = newsnapshot ? newsnapshot.val() : null;
+					if (totalsToRecord === null) {
+						throw new Error('Totals nao encontrados');
+					}
+					await set(ref(getDatabase(), `historico/${dateMs}`), totalsToRecord);
+					if (hasMonthlyRecord) {
+						console.log('LEMBRAR DE FAZER A FUNCAO PRA OVERRIDE');
+					}
+				} catch (error) {
+					console.error(error);
+					finalizando = false;
+				}
+				console.log('Checar db: ', monthlyRecordMs, ' - ', dateMs);
+			} catch (error) {
+				console.error(error);
+				finalizando = false;
+			}
+			finalizando = false;
+		} catch (error) {
+			console.error(error);
+			finalizando = false;
 		}
 	}
 
@@ -86,12 +124,19 @@
 	<div class="fixed right-2 bottom-2 flex flex-col gap-2">
 		{#if role.value === 'admin' || role.value === 'bpo' || role.value === 'contabil'}
 			<button
-				onclick={() => {
-					finalizar();
+				onclick={async () => {
+					console.log('finalizar iniciado');
+					await finalizar();
 				}}
-				class="text-accent bg-accent/10 hover:drop-shadow-accent glass-bg flex items-center gap-3 rounded-full p-3 px-6 transition-all hover:-translate-y-1 hover:drop-shadow-[0_0_10px] active:translate-y-0"
+				class="text-accent bg-accent/10 hover:drop-shadow-accent glass-bg flex items-center justify-center gap-3 rounded-full p-3 px-6 transition-all hover:-translate-y-1 hover:drop-shadow-[0_0_10px] active:translate-y-0"
 			>
-				Finalizar Mês
+				{#if finalizando}
+					<Star
+						class="text-accent drop-shadow-accent w-[10ch] animate-spin text-xl drop-shadow-[0_0_10px]"
+					/>
+				{:else}
+					Finalizar Mês
+				{/if}
 			</button>
 		{/if}
 		<button

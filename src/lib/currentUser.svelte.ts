@@ -69,13 +69,16 @@ export function msToString(ms: number): string {
 	return fmt.format(new Date(ms));
 }
 
-let names: Record<string, string> = {
+export let names: Record<string, string> = {
 	leticiaguidolin: 'Leticia Guidolin',
 	heloisasilva: 'Heloísa Silva',
 	andreussiegrist: 'Andreus Siegrist',
+	camilarodiger: 'Camila Rödiger',
 	cristinameyer: 'Cristina Meyer',
+	estermarcon: 'Ester Marcon',
 	fernandafrandolosobpo: 'Fernanda Frandoloso',
 	francielyoliveira: 'Franciely Oliveira',
+	henriquesantos: 'Henrique Santos',
 	larissamartins: 'Larissa Martins',
 	leonardosilva: 'Leonardo Silva',
 	lucaseyng: 'Lucas Eyng',
@@ -87,7 +90,6 @@ let names: Record<string, string> = {
 	alineferreira: 'Aline Ferreira',
 	fernandogranciano: 'Fernando Granciano',
 	cassiarodrigues: 'Cassia Rodrigues',
-	ketelinnascimento: 'Ketelin Nascimento',
 	lauanysantos: 'Lauany Santos',
 	thiagolopes: 'Thiago Lopes',
 	carolinebarros: 'Caroline Barros',
@@ -97,7 +99,8 @@ let names: Record<string, string> = {
 	asaphtavares: 'Asaph Tavares',
 	tamirisrosa: 'Tamiris Rosa',
 	usuarioteste: 'Usuário Teste',
-	joaomariano: 'João Mariano'
+	joaomariano: 'João Mariano',
+	ketelinnascimento: 'Ketelin Nascimento'
 };
 
 export const pulseira = $state({

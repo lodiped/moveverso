@@ -49,14 +49,14 @@
 	});
 </script>
 
-<div class="flex w-full justify-center p-5">
+<!-- <div class="flex w-full justify-center p-5">
 	<p
 		class="flex w-fit animate-pulse items-center gap-4 rounded-xl border border-red-400/75 bg-red-400/30 p-4 px-4 text-red-400/75"
 	>
 		<Info class="w-1/5 text-2xl text-red-400/75 md:w-auto" />
 		<span>Dados iniciais incompletos. Aguarde atualização em breve.</span>
 	</p>
-</div>
+</div> -->
 <div
 	class="flex flex-col items-center justify-center gap-5 px-8 md:flex-row md:items-start md:px-0"
 >

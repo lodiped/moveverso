@@ -8,9 +8,8 @@
 		nivelCalc,
 		currentCalc
 	} from '$lib/state.svelte';
-	import { listenTotals, bpoList, contabilList, names } from '$lib/currentUser.svelte';
-	import { get, ref, getDatabase } from 'firebase/database';
-	let error = $state(false);
+	import { listenTotals, bpoList, contabilList, list, names } from '$lib/currentUser.svelte';
+	import { get, ref, getDatabase, limitToLast } from 'firebase/database';
 	import Star from 'virtual:icons/mdi/star-four-points';
 	import { msToString } from '$lib/time.svelte';
 	import Filter from 'virtual:icons/mdi/slider';
@@ -19,18 +18,7 @@
 	import Chevron from 'virtual:icons/mdi/chevron-down';
 	import { onMount } from 'svelte';
 
-	let loadDb;
-	// async function getTotals() {
-	// 	loading = true;
-	// 	try {
-	// 		const snapshot = await get(ref(getDatabase(), 'totals'));
-	// 		list = snapshot.val();
-	// 	} catch (error) {
-	// 		console.error(error);
-	// 	} finally {
-	// 		loading = false;
-	// 	}
-	// }
+	let error = $state(false);
 
 	// \/ \/ \/ \/ \/ \/ FETCH HISTORICO \/ \/ \/ \/ \/ \/
 
@@ -45,7 +33,7 @@
 		try {
 			const snapshot = await get(ref(getDatabase(), 'historicoIdx'));
 			historicoIdx = snapshot.val();
-			console.log('historicoIdx: ', historicoIdx);
+			return historicoIdx;
 		} catch (error) {
 			console.error(error);
 		}
@@ -56,10 +44,9 @@
 			if (snapshot.exists()) {
 				historicoObj = snapshot.val();
 				processData(historicoObj);
-
 				historicoTab = i;
 			}
-			console.log('historicoObj: ', historicoObj);
+			return historicoObj;
 		} catch (error) {
 			console.error(error);
 		}
@@ -78,28 +65,48 @@
 				return { id, name, fase, nivel, total: value, type };
 			})
 			.filter((u) => u !== null);
-
 		historicoContabil = all.filter((u) => u.type === 'contabil').sort((a, b) => b.total - a.total);
 		historicoBPO = all.filter((u) => u.type === 'bpo').sort((a, b) => b.total - a.total);
+		return all;
 	}
 
 	// /\ /\ /\ /\ /\ /\ /\ END - FETCH HISTORICO - END /\ /\ /\ /\ /\ /\ /\
 
-	let date = new Date();
-	let month = $state(date.toLocaleString('pt-BR', { month: 'long' }));
-	let currentMonth = $derived(month);
+	// \/ \/ \/ \/ \/ \/ \/ FETCH AND LOG \/ \/ \/ \/ \/ \/ \/
 
-	let unsubscribe: any;
-	$effect(() => {
-		homepage.value = true;
-		listenTotals().then((fn) => {
-			unsubscribe = fn;
-			homeLoading.value = false;
-		});
-		return () => {
-			unsubscribe?.();
-		};
-	});
+	let sum: any = $state([]);
+	async function logStuff() {
+		try {
+			let index = await fetchHistoricoIdx();
+			let listAtLocation: any = {};
+			if (!index) {
+				throw new Error('no Index (fetchHistoricoIdx() failed or empty?)');
+			}
+			let location = index[index.length - 2];
+			if (list) {
+				listAtLocation = await getHistorico(location, index.length - 1);
+			}
+			listAtLocation = processData(listAtLocation);
+			list.value.forEach((el) => {
+				const originalTotal = el.total ?? 0;
+				const item = { ...el }; // clone, not the same reference
+				const prev = listAtLocation.find((p: any) => p.id === item.id);
+				item.total = prev ? originalTotal - (prev.total ?? 0) : 0;
+				sum.push(item);
+			});
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
+	let contabilParsed: any = $state([]);
+	let bpoParsed: any = $state([]);
+	// /\ /\ /\ /\ /\ END - FETCH AND LOG - END /\ /\ /\ /\ /\
+
+	let date = new Date();
+	date.setMonth(date.getMonth() - 1);
+	let month = $state(date.toLocaleString('pt-BR', { month: 'long' }));
+	let lastMonth = $derived(month);
 
 	let selectedTab: string | null = $state('contabil');
 	let rankTab: string | null = $state('geral');
@@ -124,13 +131,44 @@
 		selectedTab = selected;
 	}
 
-	function setRank(rank: 'geral' | 'mensal') {
-		localStorage.setItem('rank', rank);
+	function setRank(rank?: string | null) {
+		if (!rank) {
+			let storedRank = localStorage.getItem('rank');
+			rank = storedRank;
+		}
+		if (rank) {
+			localStorage.setItem('rank', rank);
+		}
 		rankTab = rank;
+		if (rankTab === 'mensal') {
+			contabilParsed = sum
+				.filter((u: any) => u.type === 'contabil')
+				.sort((a: any, b: any) => b.total - a.total);
+			bpoParsed = sum
+				.filter((u: any) => u.type === 'bpo')
+				.sort((a: any, b: any) => b.total - a.total);
+		} else {
+			contabilParsed = contabilList.value;
+			bpoParsed = bpoList.value;
+		}
 	}
 
 	onMount(() => {
 		getSelected();
+	});
+
+	let unsubscribe: any;
+	$effect(() => {
+		homepage.value = true;
+		listenTotals().then(async (fn) => {
+			await logStuff();
+			setRank();
+			unsubscribe = fn;
+			homeLoading.value = false;
+		});
+		return () => {
+			unsubscribe?.();
+		};
 	});
 </script>
 
@@ -144,7 +182,7 @@
 {/snippet}
 
 {#snippet historicoBtn()}
-	{#if rankTab === 'mensal' && !homeLoading.value && !error && (role.value === 'admin' || role.value === 'bpo' || role.value === 'cultura' || role.value === 'contabil')}
+	{#if rankTab === 'mensal' && !homeLoading.value && !error}
 		<div class="flex w-full justify-center">
 			<button
 				transition:slide
@@ -152,7 +190,7 @@
 					fetchHistoricoIdx();
 					historico = true;
 				}}
-				class="glass-bg text-accent hover:drop-shadow-accent relative flex w-fit items-center justify-center gap-4 rounded-lg px-4 py-2 transition-all hover:-translate-y-1 hover:drop-shadow-[0_0_15px] active:translate-y-0"
+				class="glass-bg text-accent hover:drop-shadow-accent relative flex w-fit items-center justify-center gap-4 rounded-full px-4 py-2 transition-all hover:-translate-y-1 hover:drop-shadow-[0_0_15px] active:translate-y-0"
 				>Histórico
 				{@render starDecal()}
 			</button>
@@ -163,7 +201,7 @@
 {#snippet rankSwitch()}
 	<div class="flex w-full items-center justify-between p-2">
 		<div class="text-accent w-full font-['Grifter'] text-2xl tracking-wider capitalize">
-			{rankTab === 'geral' ? 'Geral' : currentMonth}
+			{rankTab === 'geral' ? 'Geral' : lastMonth}
 		</div>
 		<div class="flex w-full items-center justify-end gap-2 pb-2">
 			<Filter />
@@ -235,12 +273,14 @@
 					{@render rankSwitch()}
 					<div class="flex w-full items-center justify-center">
 						<span class="w-[7%] text-end text-sm">Nº.</span>
-						<span class="w-[57%] px-2 text-sm">Nome</span>
-						<span class="w-[11%] text-end text-sm">Nível</span>
-						<span class="w-[11%] text-end text-sm">Fase</span>
+						<span class="px-2 text-sm {rankTab === 'geral' ? 'w-[57%]' : 'w-[79%]'}">Nome</span>
+						{#if rankTab === 'geral'}
+							<span class="w-[11%] text-end text-sm">Nível</span>
+							<span class="w-[11%] text-end text-sm">Fase</span>
+						{/if}
 						<span class="w-[13%] text-end text-sm">Total</span>
 					</div>
-					{#each contabilList.value as user, i}
+					{#each contabilParsed as user, i}
 						<div
 							class="nth-3:bg-accent/30 nth-3:drop-shadow-accent/50 nth-4:bg-primary/25 nth-5:bg-accent/8 flex w-full items-center justify-center rounded-lg px-1 nth-3:drop-shadow-[0_0_15px]"
 						>
@@ -251,11 +291,15 @@
 									homeLoading.value = true;
 								}}
 								href={`/contabil/${user.id}`}
-								class="bg-primary/10 hover:bg-primary/30 glass-bg w-[57%] rounded-full p-1 px-4 text-left transition-all"
-								>{user.name}</a
+								class="bg-primary/30 hover:bg-primary/50 rounded-lg p-1 px-2 text-left transition-all {rankTab ===
+								'geral'
+									? 'w-[57%]'
+									: 'w-[79%]'}">{user.name}</a
 							>
-							<span class="w-[11%] text-end">{user.nivel}</span>
-							<span class="w-[11%] text-end">{user.fase}</span>
+							{#if rankTab === 'geral'}
+								<span class="w-[11%] text-end">{user.nivel}</span>
+								<span class="w-[11%] text-end">{user.fase}</span>
+							{/if}
 							<span class="w-[13%] text-end">{user.total}</span>
 						</div>
 					{/each}
@@ -272,12 +316,14 @@
 					{@render rankSwitch()}
 					<div class="flex w-full items-center justify-center">
 						<span class="w-[7%] text-end text-sm">Nº.</span>
-						<span class="w-[57%] px-2 text-sm">Nome</span>
-						<span class="w-[11%] text-end text-sm">Nível</span>
-						<span class="w-[11%] text-end text-sm">Fase</span>
+						<span class="px-2 text-sm {rankTab === 'geral' ? 'w-[57%]' : 'w-[79%]'}">Nome</span>
+						{#if rankTab === 'geral'}
+							<span class="w-[11%] text-end text-sm">Nível</span>
+							<span class="w-[11%] text-end text-sm">Fase</span>
+						{/if}
 						<span class="w-[13%] text-end text-sm">Total</span>
 					</div>
-					{#each bpoList.value as user, i}
+					{#each bpoParsed as user, i}
 						<div
 							class="nth-3:bg-accent/30 nth-3:drop-shadow-accent/50 nth-4:bg-primary/25 nth-5:bg-accent/8 flex w-full items-center justify-center rounded-lg px-1 nth-3:drop-shadow-[0_0_15px]"
 						>
@@ -288,11 +334,15 @@
 									homeLoading.value = true;
 								}}
 								href={`/bpo/${user.id}`}
-								class="bg-primary/30 hover:bg-primary/50 w-[57%] rounded-lg p-1 px-2 text-left transition-all"
-								>{user.name}</a
+								class="bg-primary/30 hover:bg-primary/50 rounded-lg p-1 px-2 text-left transition-all {rankTab ===
+								'geral'
+									? 'w-[57%]'
+									: 'w-[79%]'}">{user.name}</a
 							>
-							<span class="w-[11%] text-end">{user.nivel}</span>
-							<span class="w-[11%] text-end">{user.fase}</span>
+							{#if rankTab === 'geral'}
+								<span class="w-[11%] text-end">{user.nivel}</span>
+								<span class="w-[11%] text-end">{user.fase}</span>
+							{/if}
 							<span class="w-[13%] text-end">{user.total}</span>
 						</div>
 					{/each}
@@ -363,12 +413,10 @@
 											>
 												<span class="w-[7%] pr-0.5 text-end opacity-50">{i + 1}.</span>
 												<div
-													class="bg-primary/30 hover:bg-primary/50 w-[57%] rounded-lg p-1 px-2 text-left transition-all"
+													class="bg-primary/30 hover:bg-primary/50 w-[79%] rounded-lg p-1 px-2 text-left transition-all"
 												>
 													{user.name}
 												</div>
-												<span class="w-[11%] text-end">{user.nivel}</span>
-												<span class="w-[11%] text-end">{user.fase}</span>
 												<span class="w-[13%] text-end">{user.total}</span>
 											</div>
 										{/each}
@@ -379,12 +427,10 @@
 											>
 												<span class="w-[7%] pr-0.5 text-end opacity-50">{i + 1}.</span>
 												<div
-													class="bg-primary/30 hover:bg-primary/50 w-[57%] rounded-lg p-1 px-2 text-left transition-all"
+													class="bg-primary/30 hover:bg-primary/50 w-[79%] rounded-lg p-1 px-2 text-left transition-all"
 												>
 													{user.name}
 												</div>
-												<span class="w-[11%] text-end">{user.nivel}</span>
-												<span class="w-[11%] text-end">{user.fase}</span>
 												<span class="w-[13%] text-end">{user.total}</span>
 											</div>
 										{/each}

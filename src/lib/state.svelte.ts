@@ -97,56 +97,6 @@ export const pageDirection = $state({ value: 'next' });
 export const hasMore = $state({ value: false });
 const pageSize = 10;
 
-////////////////////////////////// NEW LOG CODE:
-// export async function checkLog(uid: string) {
-// 	const logsRef = ref(getDatabase(), `/logs/${uid}`);
-// 	console.log('Loading LOGS @ checkLog() in state.svelte.ts');
-// 	loading.value = true;
-// 	let q;
-// 	if (logPage.value === 1) {
-// 		q = query(logsRef, orderByKey(), limitToLast(pageSize + 1));
-// 	} else if (pageDirection.value === 'next') {
-// 		if (!firstKey.value) return;
-// 		q = query(logsRef, orderByKey(), endBefore(firstKey.value), limitToLast(pageSize + 1));
-// 	} else {
-// 		if (!lastKey.value) return;
-// 		q = query(logsRef, orderByKey(), startAfter(lastKey.value), limitToFirst(pageSize + 1));
-// 	}
-// 	const sortSnap = await get(q);
-// 	const entries = sortSnap.exists() ? Object.entries(sortSnap.val()) : [];
-// 	console.log('entries @ checkLog() in state.svelte.ts: ', entries);
-
-// 	hasMore.value = entries.length > pageSize;
-
-// 	const isForwardFetch = pageDirection.value === 'next';
-
-// 	const pageItems = hasMore.value
-// 		? isForwardFetch
-// 			? entries.slice(0, pageSize)
-// 			: entries.slice(1)
-// 		: entries;
-
-// 	userLog.value = pageItems
-// 		.map(([id, entry]: [string, any]) => ({
-// 			id,
-// 			text: logText[entry.action]?.desc ?? '--',
-// 			type: logText[entry.action]?.type ?? '--',
-// 			points:
-// 				logText[entry.action]?.points ??
-// 				(logText[entry.action]?.img !== undefined ? logText[entry.action].img : entry.value),
-// 			...entry
-// 		}))
-// 		.sort((a, b) => (a.id === b.id ? 0 : a.id < b.id ? 1 : -1));
-
-// 	if (userLog.value.length) {
-// 		lastKey.value = userLog.value[0].id;
-// 		firstKey.value = userLog.value[userLog.value.length - 1].id;
-// 	} else {
-// 		hasMore.value = false;
-// 	}
-// }
-///////////////////////////////////////////////////
-
 //////////////////////////////////////////////////FFIXED???????????
 
 export async function checkLog(uid: string) {

@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { signInWithPopup } from 'firebase/auth';
+	import { googleProvider } from '$lib/firebase';
 	import { signOut } from 'firebase/auth';
 	import { get, ref, getDatabase, set } from 'firebase/database';
 	import { auth } from '$lib/firebase';
@@ -8,7 +10,11 @@
 	import moveversowide from '$lib/assets/moveversowide.png';
 	import Sair from 'virtual:icons/mdi/logout';
 	import Star from 'virtual:icons/mdi/star-four-points';
+	import Close from 'virtual:icons/mdi/close-circle-outline';
+	import Google from 'virtual:icons/mdi/google';
 	let loadingLocal = $state(false);
+
+	let logoutModal = $state(false);
 	async function handleLogout() {
 		loadingLocal = true;
 		try {
@@ -19,6 +25,7 @@
 		} finally {
 			role.value = 'guest';
 			loadingLocal = false;
+			logoutModal = false;
 			return;
 		}
 	}
@@ -27,6 +34,7 @@
 	// \/ \/ \/ \/ \/ \/ START - FINALIZAR BUTTON - START \/ \/ \/ \/ \/ \/
 
 	let finalizando = $state(false);
+	let finalizarModal = $state(false);
 
 	async function finalizar() {
 		finalizando = true;
@@ -78,12 +86,24 @@
 		} catch (error) {
 			console.error(error);
 			finalizando = false;
+		} finally {
+			finalizarModal = false;
 		}
 	}
 
 	// /\ /\ /\ /\ /\ /\ END - FINALIZAR BUTTON - END /\ /\ /\ /\ /\ /\
 
 	let { children } = $props();
+
+	async function handleGoogleSignIn() {
+		try {
+			const result = await signInWithPopup(auth, googleProvider);
+			const user = result.user;
+			console.log('GOOGLE STUFF: ', user);
+		} catch (error) {
+			console.log(error);
+		}
+	}
 </script>
 
 <svelte:head>
@@ -124,9 +144,8 @@
 	<div class="fixed right-2 bottom-2 flex flex-col gap-2">
 		{#if role.value === 'admin' || role.value === 'bpo' || role.value === 'contabil'}
 			<button
-				onclick={async () => {
-					console.log('finalizar iniciado');
-					await finalizar();
+				onclick={() => {
+					finalizarModal = true;
 				}}
 				class="text-accent bg-accent/10 hover:drop-shadow-accent glass-bg flex items-center justify-center gap-3 rounded-full p-3 px-6 transition-all hover:-translate-y-1 hover:drop-shadow-[0_0_10px] active:translate-y-0"
 			>
@@ -140,7 +159,7 @@
 			</button>
 		{/if}
 		<button
-			onclick={() => handleLogout()}
+			onclick={() => (logoutModal = true)}
 			class="text-accent hover:drop-shadow-accent actice:translate-y-0 flex items-center justify-center gap-3 px-6 hover:drop-shadow-[0_0_10px] {loadingLocal
 				? 'pointer-events-none opacity-50'
 				: ''} bg-accent/10 glass-bg cursor-pointer rounded-full p-3 transition-all hover:-translate-y-1"
@@ -148,5 +167,64 @@
 			<span>Sair</span>
 			<Sair />
 		</button>
+	</div>
+{:else}
+	<div class="fixed right-2 bottom-2 flex flex-col gap-2">
+		<button
+			onclick={handleGoogleSignIn}
+			class="text-accent hover:drop-shadow-accent actice:translate-y-0 flex items-center justify-center gap-3 px-6 hover:drop-shadow-[0_0_10px] {loadingLocal
+				? 'pointer-events-none opacity-50'
+				: ''} bg-accent/10 glass-bg cursor-pointer rounded-full p-3 transition-all hover:-translate-y-1"
+		>
+			<Google />
+			<span>Entrar</span>
+		</button>
+	</div>
+{/if}
+
+{#if logoutModal}
+	<!-- svelte-ignore a11y_click_events_have_key_events -->
+	<!-- svelte-ignore a11y_no_static_element_interactions -->
+	<div
+		onclick={() => (logoutModal = false)}
+		class="fixed flex h-screen w-screen items-center justify-center bg-black/20"
+	>
+		<div
+			onclick={(e) => e.stopPropagation()}
+			class="bg-secondary/30 relative flex max-w-[80ch] flex-col items-center gap-10 rounded-xl p-10 backdrop-blur"
+		>
+			Tem certeza que deseja sair?
+			<button class="bg-primary/30 rounded-lg p-3 px-5" onclick={() => handleLogout()}>Sim</button>
+			<button
+				class=" text-primary absolute top-2 right-2 rounded-full text-2xl"
+				onclick={() => (logoutModal = false)}
+				><Close />
+			</button>
+		</div>
+	</div>
+{/if}
+
+{#if finalizarModal}
+	<!-- svelte-ignore a11y_click_events_have_key_events -->
+	<!-- svelte-ignore a11y_no_static_element_interactions -->
+	<div
+		onclick={() => (finalizarModal = false)}
+		class="fixed flex h-screen w-screen items-center justify-center bg-black/20"
+	>
+		<div
+			onclick={(e) => e.stopPropagation()}
+			class="bg-secondary/30 relative flex max-w-[80ch] flex-col items-center gap-10 rounded-xl p-10 backdrop-blur"
+		>
+			Tem certeza que deseja finalizar o mês? Esta ação irá enviar os dados para a base de dados dos
+			históricos.
+			<button class="bg-primary/30 rounded-lg p-3 px-5" onclick={async () => await finalizar()}
+				>Confirmar Finalização</button
+			>
+			<button
+				class=" text-primary absolute top-2 right-2 rounded-full text-2xl"
+				onclick={() => (finalizarModal = false)}
+				><Close />
+			</button>
+		</div>
 	</div>
 {/if}

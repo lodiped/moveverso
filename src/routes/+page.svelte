@@ -33,6 +33,10 @@
 		try {
 			const snapshot = await get(ref(getDatabase(), 'historicoIdx'));
 			historicoIdx = snapshot.val();
+			console.log('historicoIdx: ', historicoIdx);
+			let currentDate = new Date().getMonth();
+			let testDate = new Date(historicoIdx[historicoIdx.length - 2] * 1000).getMonth();
+			console.log('testDate and currentDate: ', testDate, currentDate);
 			return historicoIdx;
 		} catch (error) {
 			console.error(error);

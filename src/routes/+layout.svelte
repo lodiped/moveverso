@@ -1,11 +1,20 @@
 <script lang="ts">
 	import { signInWithPopup } from 'firebase/auth';
 	import { googleProvider } from '$lib/firebase';
+	import { names } from '$lib/currentUser.svelte';
 	import { signOut } from 'firebase/auth';
-	import { get, ref, getDatabase, set } from 'firebase/database';
+	import { get, ref, getDatabase, set, remove } from 'firebase/database';
 	import { auth } from '$lib/firebase';
 	import '../app.css';
-	import { role, homepage, loading, homeLoading } from '$lib/state.svelte';
+	import {
+		role,
+		homepage,
+		loading,
+		homeLoading,
+		nivelCalc,
+		faseCalc,
+		currentCalc
+	} from '$lib/state.svelte';
 	import moveverso from '$lib/assets/moveverso.png';
 	import moveversowide from '$lib/assets/moveversowide.png';
 	import Sair from 'virtual:icons/mdi/logout';
@@ -42,42 +51,47 @@
 		let hasMonthlyRecord = false;
 		let monthlyRecordMs = 0;
 		try {
-			console.log('finalizar rodando');
 			let snapshot = await get(ref(getDatabase(), `historicoIdx`));
-			console.log('finalizar(): snapshot', snapshot);
 			let array = [];
 			if (snapshot) array = snapshot.val() ?? [];
 			for (let i = 0; i < array.length; i++) {
 				let checkMonth = new Date(array[i] * 1000).getMonth() + 1;
-				console.log('forloop rodando');
 				if (array.length > 0) {
 					if (currentMonth === checkMonth) {
 						hasMonthlyRecord = true;
 						monthlyRecordMs = array[i];
-						console.log('finalizar(): tem hasMonthlyRecord');
 						break;
 					}
 				}
 			}
-			console.log('finalizar(): forloop rodado');
 			let dateMs: number = +(Date.now() / 1000).toFixed(0);
+
 			try {
-				await set(ref(getDatabase(), `historicoIdx/${array.length}`), dateMs);
 				try {
 					let newsnapshot = await get(ref(getDatabase(), `totals`));
 					let totalsToRecord = newsnapshot ? newsnapshot.val() : null;
 					if (totalsToRecord === null) {
 						throw new Error('Totals nao encontrados');
 					}
-					await set(ref(getDatabase(), `historico/${dateMs}`), totalsToRecord);
 					if (hasMonthlyRecord) {
-						console.log('LEMBRAR DE FAZER A FUNCAO PRA OVERRIDE');
+						try {
+							await remove(ref(getDatabase(), `historico/${monthlyRecordMs}`));
+							await remove(ref(getDatabase(), `historicoIdx/${array.indexOf(monthlyRecordMs)}`));
+							await set(ref(getDatabase(), `historico/${dateMs}`), totalsToRecord);
+							await set(ref(getDatabase(), `historicoIdx/${array.length - 1}`), dateMs);
+							window.location.reload();
+						} catch (err) {
+							console.error(err);
+						}
+					} else {
+						await set(ref(getDatabase(), `historicoIdx/${array.length}`), dateMs);
+						await set(ref(getDatabase(), `historico/${dateMs}`), totalsToRecord);
+						window.location.reload();
 					}
 				} catch (error) {
 					console.error(error);
 					finalizando = false;
 				}
-				console.log('Checar db: ', monthlyRecordMs, ' - ', dateMs);
 			} catch (error) {
 				console.error(error);
 				finalizando = false;
@@ -213,7 +227,7 @@
 	>
 		<div
 			onclick={(e) => e.stopPropagation()}
-			class="bg-secondary/30 relative flex max-w-[80ch] flex-col items-center gap-10 rounded-xl p-10 backdrop-blur"
+			class="bg-secondary/30 relative z-50 flex max-w-[80ch] flex-col items-center gap-10 rounded-xl p-10 backdrop-blur"
 		>
 			Tem certeza que deseja finalizar o mês? Esta ação irá enviar os dados para a base de dados dos
 			históricos.

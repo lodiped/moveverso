@@ -9,7 +9,7 @@
 		currentCalc
 	} from '$lib/state.svelte';
 	import { listenTotals, bpoList, contabilList, list, names } from '$lib/currentUser.svelte';
-	import { get, ref, getDatabase, limitToLast } from 'firebase/database';
+	import { get, ref, getDatabase } from 'firebase/database';
 	import Star from 'virtual:icons/mdi/star-four-points';
 	import { msToString } from '$lib/time.svelte';
 	import Filter from 'virtual:icons/mdi/slider';
@@ -33,10 +33,6 @@
 		try {
 			const snapshot = await get(ref(getDatabase(), 'historicoIdx'));
 			historicoIdx = snapshot.val();
-			console.log('historicoIdx: ', historicoIdx);
-			let currentDate = new Date().getMonth();
-			let testDate = new Date(historicoIdx[historicoIdx.length - 2] * 1000).getMonth();
-			console.log('testDate and currentDate: ', testDate, currentDate);
 			return historicoIdx;
 		} catch (error) {
 			console.error(error);
@@ -82,6 +78,7 @@
 	async function logStuff() {
 		try {
 			let index = await fetchHistoricoIdx();
+			let checkDate = new Date(historicoIdx[historicoIdx.length - 1] * 1000).getMonth() + 1;
 			let listAtLocation: any = {};
 			if (!index) {
 				throw new Error('no Index (fetchHistoricoIdx() failed or empty?)');
@@ -90,12 +87,20 @@
 			if (list) {
 				listAtLocation = await getHistorico(location, index.length - 1);
 			}
+			console.log(checkDate, date.getMonth() + 2);
 			listAtLocation = processData(listAtLocation);
 			list.value.forEach((el) => {
+				if (date.getMonth() + 2 !== checkDate) {
+					el.total = 0;
+				}
 				const originalTotal = el.total ?? 0;
 				const item = { ...el }; // clone, not the same reference
 				const prev = listAtLocation.find((p: any) => p.id === item.id);
-				item.total = prev ? originalTotal - (prev.total ?? 0) : 0;
+				if (date.getMonth() + 2 !== checkDate) {
+					item.total = 0;
+				} else {
+					item.total = prev ? originalTotal - (prev.total ?? 0) : 0;
+				}
 				sum.push(item);
 			});
 		} catch (error) {
@@ -105,6 +110,7 @@
 
 	let contabilParsed: any = $state([]);
 	let bpoParsed: any = $state([]);
+
 	// /\ /\ /\ /\ /\ END - FETCH AND LOG - END /\ /\ /\ /\ /\
 
 	let date = new Date();

@@ -84,7 +84,7 @@ export let names: Record<string, string> = {
 	lucaseyng: 'Lucas Eyng',
 	luizfaquim: 'Luiz Faquim',
 	philipemendes: 'Philipe Mendes',
-	raffasouza: 'Raffa Souza',
+	raffasouza: 'Raffaella Souza',
 	rafaelwolskibpo: 'Rafael Wolski',
 	rafaelwolskicontabil: 'Rafael Wolski',
 	robersoncorrea: 'Roberson Correa',

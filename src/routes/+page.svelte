@@ -10,17 +10,78 @@
 	} from '$lib/state.svelte';
 	import { listenTotals, bpoList, contabilList, list, names } from '$lib/currentUser.svelte';
 	import { get, ref, getDatabase } from 'firebase/database';
-	import Star from 'virtual:icons/mdi/star-four-points';
 	import { msToString } from '$lib/time.svelte';
-	import Filter from 'virtual:icons/mdi/slider';
-
 	import { slide } from 'svelte/transition';
-	import Chevron from 'virtual:icons/mdi/chevron-down';
 	import { onMount } from 'svelte';
+
+	import Star from 'virtual:icons/mdi/star-four-points';
+	import Filter from 'virtual:icons/mdi/slider';
+	import Chevron from 'virtual:icons/mdi/chevron-down';
 
 	let error = $state(false);
 
+	// CALCULATE 2025
+
+	const epoch2025 = 1767225599;
+	const start2025 = 1735693199;
+	let historico2025: any = $state([]);
+	let bpo2025: any = $state([]);
+	let contabil2025: any = $state([]);
+	async function calculate2025() {
+		console.log(processData(historicoObj));
+		const snapshot = await get(ref(getDatabase(), 'historico'));
+		const data = snapshot.exists() ? snapshot.val() : null;
+		console.log(data);
+		Object.keys(data).forEach((key) => {
+			const value = data[key];
+			if (Number(key) > start2025 && Number(key) < epoch2025) {
+				historico2025.push(value);
+			}
+		});
+		console.log(historico2025);
+		accumulateIncrements(historico2025);
+	}
+
+	function accumulateIncrements(list: any) {
+		const totals: any = {};
+		const prev: any = {};
+
+		for (const snap of list) {
+			for (const [name, obj] of Object.entries(snap) as any) {
+				const cur = Number(obj.value) || 0;
+				const last = prev.hasOwnProperty(name) ? prev[name] : 0;
+				const delta = cur - last;
+
+				if (!totals[name]) totals[name] = { value: 0, type: obj.type ?? null };
+				totals[name].value += delta;
+				totals[name].type = obj.type ?? totals[name].type;
+
+				prev[name] = cur;
+			}
+		}
+		console.log('hit');
+		console.log(process2025(totals));
+		return totals;
+	}
+
+	function process2025(data: Record<string, { value: number; type: string }>) {
+		const all = Object.entries(data)
+			.map(([id, { value, type }]: any) => {
+				if (role.value !== 'admin' && id === 'usuarioteste') return null;
+				const name = names[id] ?? id;
+				return { id, name, total: value, type };
+			})
+			.filter((u) => u !== null);
+
+		contabil2025 = all.filter((u) => u.type === 'contabil').sort((a, b) => b.total - a.total);
+		bpo2025 = all.filter((u) => u.type === 'bpo').sort((a, b) => b.total - a.total);
+		return all;
+	}
+	///////////////////
+
 	// \/ \/ \/ \/ \/ \/ FETCH HISTORICO \/ \/ \/ \/ \/ \/
+
+	let histTab: 'tudo' | '2025' = $state('tudo');
 
 	let historico = $state(false);
 	let historicoTab: number | null = $state(null);
@@ -192,13 +253,14 @@
 {/snippet}
 
 {#snippet historicoBtn()}
-	{#if rankTab === 'mensal' && !homeLoading.value && !error}
+	{#if !homeLoading.value && !error}
 		<div class="flex w-full justify-center">
 			<button
 				transition:slide
 				onclick={() => {
 					fetchHistoricoIdx();
 					historico = true;
+					historicoTab = null;
 				}}
 				class="glass-bg text-accent hover:drop-shadow-accent relative flex w-fit items-center justify-center gap-4 rounded-full px-4 py-2 transition-all hover:-translate-y-1 hover:drop-shadow-[0_0_15px] active:translate-y-0"
 				>Histórico
@@ -371,89 +433,166 @@
 	<!-- svelte-ignore a11y_click_events_have_key_events -->
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
-		onclick={() => (historico = false)}
-		class="fixed inset-0 z-50 flex h-full w-full items-center justify-center bg-black/30"
+		onclick={() => {
+			historico = false;
+			historicoTab = null;
+		}}
+		class="fixed inset-0 z-50 flex h-full w-full items-center justify-center bg-black/50"
 	>
-		<div
-			onclick={(e) => e.stopPropagation()}
-			class="bg-secondary/30 flex w-[80ch] flex-col items-center gap-10 rounded-xl p-10 backdrop-blur"
-		>
+		<div onclick={(e) => e.stopPropagation()} class="flex w-[80ch] flex-col items-center gap-5">
 			<h2 class="text-center">Histórico</h2>
-			<div class="flex w-full flex-col items-center gap-5">
-				<div class="flex w-full flex-col items-center justify-center gap-1">
-					{#if historicoIdx}
-						{#each historicoIdx as idx, i}
-							<button
-								onclick={() => {
-									if (historicoTab === i) {
-										historicoTab = null;
-									} else {
-										getHistorico(idx, i);
-									}
-								}}
-								class="flex w-full items-center justify-between rounded-full bg-white/10 px-5 py-2"
-							>
-								<div>
-									{msToString(idx)}
-								</div>
-								<div><Chevron /></div>
-							</button>
-							{#if historicoTab === i}
-								<div class="flex w-full flex-col items-center gap-2 px-3 pb-5" transition:slide>
-									<div class="flex w-[20rem] justify-center rounded-xl border border-white/20">
-										<button
-											onclick={() => setSelected('contabil')}
-											class="drop-shadow-accent/60 w-1/2 rounded-lg px-4 py-3 text-center font-['Grifter'] text-base tracking-wider uppercase transition-all {selectedTab ===
-											'contabil'
-												? 'bg-accent scale-110 text-black/60 drop-shadow-[0_0_15px]'
-												: 'text-accent bg-primary/10 cursor-pointer'}">Contábil</button
-										>
-										<button
-											onclick={() => setSelected('bpo')}
-											class="drop-shadow-accent/60 w-1/2 rounded-lg px-4 py-3 text-center font-['Grifter'] text-base tracking-wider uppercase transition-all {selectedTab ===
-											'bpo'
-												? 'bg-accent scale-110 text-black/60 drop-shadow-[0_0_15px]'
-												: 'text-accent bg-primary/10 cursor-pointer'}">Financeiro</button
-										>
+			<div class="-mb-3 flex w-full items-center justify-start gap-2">
+				<button
+					onclick={() => {
+						histTab = 'tudo';
+					}}
+					class="glass-bg {histTab === 'tudo'
+						? 'bg-accent text-black'
+						: 'bg-secondary/30 text-accent'}  hover:drop-shadow-accent relative flex w-fit items-center justify-center gap-4 rounded-full px-4 py-2 transition-all hover:-translate-y-1 hover:drop-shadow-[0_0_15px] active:translate-y-0"
+					>Tudo</button
+				>
+				<button
+					onclick={() => {
+						histTab = '2025';
+						calculate2025();
+					}}
+					class="glass-bg {histTab === '2025'
+						? 'bg-accent text-black'
+						: 'bg-secondary/30 text-accent'}  hover:drop-shadow-accent relative flex w-fit items-center justify-center gap-4 rounded-full px-4 py-2 transition-all hover:-translate-y-1 hover:drop-shadow-[0_0_15px] active:translate-y-0"
+					>2025</button
+				>
+			</div>
+			<div
+				class="bg-secondary/30 flex w-full flex-col items-center gap-5 rounded-xl p-10 backdrop-blur"
+			>
+				{#if histTab === 'tudo'}
+					<div class="flex w-full flex-col items-center justify-center gap-1">
+						{#if historicoIdx}
+							{#each historicoIdx as idx, i}
+								<button
+									onclick={() => {
+										if (historicoTab === i) {
+											historicoTab = null;
+										} else {
+											getHistorico(idx, i);
+										}
+									}}
+									class="flex w-full items-center justify-between rounded-full bg-white/10 px-5 py-2"
+								>
+									<div>
+										{msToString(idx)}
 									</div>
-									{#if selectedTab === 'contabil'}
-										{#each historicoContabil as user}
-											<div
-												class="nth-2:bg-accent/30 nth-2:drop-shadow-accent/50 nth-3:bg-primary/25 nth-4:bg-accent/8 flex w-full items-center justify-center rounded-lg px-1 nth-2:drop-shadow-[0_0_15px]"
+									<div><Chevron /></div>
+								</button>
+								{#if historicoTab === i}
+									<div class="flex w-full flex-col items-center gap-2 px-3 pb-5" transition:slide>
+										<div class="flex w-[20rem] justify-center rounded-xl border border-white/20">
+											<button
+												onclick={() => setSelected('contabil')}
+												class="drop-shadow-accent/60 w-1/2 rounded-lg px-4 py-3 text-center font-['Grifter'] text-base tracking-wider uppercase transition-all {selectedTab ===
+												'contabil'
+													? 'bg-accent scale-110 text-black/60 drop-shadow-[0_0_15px]'
+													: 'text-accent bg-primary/10 cursor-pointer'}">Contábil</button
 											>
-												<span class="w-[7%] pr-0.5 text-end opacity-50">{i + 1}.</span>
-												<div
-													class="bg-primary/30 hover:bg-primary/50 w-[79%] rounded-lg p-1 px-2 text-left transition-all"
-												>
-													{user.name}
-												</div>
-												<span class="w-[13%] text-end">{user.total}</span>
-											</div>
-										{/each}
-									{:else if selectedTab === 'bpo'}
-										{#each historicoBPO as user}
-											<div
-												class="nth-2:bg-accent/30 nth-2:drop-shadow-accent/50 nth-3:bg-primary/25 nth-4:bg-accent/8 flex w-full items-center justify-center rounded-lg px-1 nth-2:drop-shadow-[0_0_15px]"
+											<button
+												onclick={() => setSelected('bpo')}
+												class="drop-shadow-accent/60 w-1/2 rounded-lg px-4 py-3 text-center font-['Grifter'] text-base tracking-wider uppercase transition-all {selectedTab ===
+												'bpo'
+													? 'bg-accent scale-110 text-black/60 drop-shadow-[0_0_15px]'
+													: 'text-accent bg-primary/10 cursor-pointer'}">Financeiro</button
 											>
-												<span class="w-[7%] pr-0.5 text-end opacity-50">{i + 1}.</span>
+										</div>
+										{#if selectedTab === 'contabil'}
+											{#each historicoContabil as user, y}
 												<div
-													class="bg-primary/30 hover:bg-primary/50 w-[79%] rounded-lg p-1 px-2 text-left transition-all"
+													class="nth-2:bg-accent/30 nth-2:drop-shadow-accent/50 nth-3:bg-primary/25 nth-4:bg-accent/8 flex w-full items-center justify-center rounded-lg px-1 nth-2:drop-shadow-[0_0_15px]"
 												>
-													{user.name}
+													<span class="w-[7%] pr-0.5 text-end opacity-50">{y + 1}.</span>
+													<div
+														class="bg-primary/30 hover:bg-primary/50 w-[79%] rounded-lg p-1 px-2 text-left transition-all"
+													>
+														{user.name}
+													</div>
+													<span class="w-[13%] text-end">{user.total}</span>
 												</div>
-												<span class="w-[13%] text-end">{user.total}</span>
-											</div>
-										{/each}
-									{/if}
+											{/each}
+										{:else if selectedTab === 'bpo'}
+											{#each historicoBPO as user, y}
+												<div
+													class="nth-2:bg-accent/30 nth-2:drop-shadow-accent/50 nth-3:bg-primary/25 nth-4:bg-accent/8 flex w-full items-center justify-center rounded-lg px-1 nth-2:drop-shadow-[0_0_15px]"
+												>
+													<span class="w-[7%] pr-0.5 text-end opacity-50">{y + 1}.</span>
+													<div
+														class="bg-primary/30 hover:bg-primary/50 w-[79%] rounded-lg p-1 px-2 text-left transition-all"
+													>
+														{user.name}
+													</div>
+													<span class="w-[13%] text-end">{user.total}</span>
+												</div>
+											{/each}
+										{/if}
+									</div>
+								{/if}
+							{/each}
+						{/if}
+					</div>
+				{/if}
+				{#if histTab === '2025'}
+					<div class="flex w-full flex-col items-center gap-2 px-3 pb-5" transition:slide>
+						<div class="flex w-[20rem] justify-center rounded-xl border border-white/20">
+							<button
+								onclick={() => setSelected('contabil')}
+								class="drop-shadow-accent/60 w-1/2 rounded-lg px-4 py-3 text-center font-['Grifter'] text-base tracking-wider uppercase transition-all {selectedTab ===
+								'contabil'
+									? 'bg-accent scale-110 text-black/60 drop-shadow-[0_0_15px]'
+									: 'text-accent bg-primary/10 cursor-pointer'}">Contábil</button
+							>
+							<button
+								onclick={() => setSelected('bpo')}
+								class="drop-shadow-accent/60 w-1/2 rounded-lg px-4 py-3 text-center font-['Grifter'] text-base tracking-wider uppercase transition-all {selectedTab ===
+								'bpo'
+									? 'bg-accent scale-110 text-black/60 drop-shadow-[0_0_15px]'
+									: 'text-accent bg-primary/10 cursor-pointer'}">Financeiro</button
+							>
+						</div>
+						{#if selectedTab === 'contabil'}
+							{#each contabil2025 as user, y}
+								<div
+									class="nth-2:bg-accent/30 nth-2:drop-shadow-accent/50 nth-3:bg-primary/25 nth-4:bg-accent/8 flex w-full items-center justify-center rounded-lg px-1 nth-2:drop-shadow-[0_0_15px]"
+								>
+									<span class="w-[7%] pr-0.5 text-end opacity-50">{y + 1}.</span>
+									<div
+										class="bg-primary/30 hover:bg-primary/50 w-[79%] rounded-lg p-1 px-2 text-left transition-all"
+									>
+										{user.name}
+									</div>
+									<span class="w-[13%] text-end">{user.total}</span>
 								</div>
-							{/if}
-						{/each}
-					{/if}
-				</div>
+							{/each}
+						{:else if selectedTab === 'bpo'}
+							{#each bpo2025 as user, y}
+								<div
+									class="nth-2:bg-accent/30 nth-2:drop-shadow-accent/50 nth-3:bg-primary/25 nth-4:bg-accent/8 flex w-full items-center justify-center rounded-lg px-1 nth-2:drop-shadow-[0_0_15px]"
+								>
+									<span class="w-[7%] pr-0.5 text-end opacity-50">{y + 1}.</span>
+									<div
+										class="bg-primary/30 hover:bg-primary/50 w-[79%] rounded-lg p-1 px-2 text-left transition-all"
+									>
+										{user.name}
+									</div>
+									<span class="w-[13%] text-end">{user.total}</span>
+								</div>
+							{/each}
+						{/if}
+					</div>
+				{/if}
 			</div>
 			<button
 				class="bg-primary text-secondary w-fit cursor-pointer rounded-lg p-2 px-4"
-				onclick={() => (historico = false)}>Fechar</button
+				onclick={() => {
+					historico = false;
+					historicoTab = null;
+				}}>Fechar</button
 			>
 		</div>
 	</div>

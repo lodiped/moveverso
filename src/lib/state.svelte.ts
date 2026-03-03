@@ -284,6 +284,7 @@ export async function checkContabil() {
 			arrayId: idx
 		}));
 
+		console.log('contabilArray.value', contabilArray.value);
 		loading.value = false;
 	} catch (error) {
 		console.error(error);

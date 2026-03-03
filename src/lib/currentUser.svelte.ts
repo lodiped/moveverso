@@ -37,9 +37,8 @@ export async function listenTotals() {
 
 function processData(data: Record<string, { value: number; type: string }>) {
 	const all = Object.entries(data)
-		.map(([id, { value, type }]: any) => {
+		.map(([id, { value, type, name }]: any) => {
 			if (role.value !== 'admin' && id === 'usuarioteste') return null;
-			const name = names[id] ?? id;
 			const fase = faseCalc(value, type === 'bpo' ? 'bpo' : '');
 			const nivel = nivelCalc(
 				currentCalc(value, fase, type === 'bpo' ? 'bpo' : ''),

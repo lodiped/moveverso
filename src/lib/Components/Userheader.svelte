@@ -366,6 +366,7 @@
 						class="pointer-events-none absolute top-0 right-0 flex h-full w-full -translate-y-10 cursor-default flex-col items-center justify-center opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100"
 					>
 						<p class="text-sm">Recebidas: {user.cultura ? user.cultura.coins.recebidas : ''}</p>
+						<p class="text-sm">(Saldo: {user.cultura ? user.cultura.coins.current : ''})</p>
 						<p class="text-sm">Entregues: {user.cultura ? user.cultura.coins.entregues : ''}</p>
 					</div>
 					<div
@@ -620,7 +621,7 @@
 			<div
 				class="grid cursor-default grid-cols-4 grid-rows-2 gap-5 text-center text-sm *:rounded-full"
 			>
-				{#each user.conquistas as conquista}
+				{#each user.conquistas as conquista, i}
 					<button
 						onclick={() => {
 							if ((toastOpen = true)) {
